@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  warning = FALSE
 )
 ```
 
@@ -27,3 +28,31 @@ You can install the development version of autovi like so:
 ``` r
 remotes::install_github("TengMCing/autovi")
 ```
+
+## Examples
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+
+```{r}
+keras_mod <- keras::load_model_tf(here::here("temp_model/32"))
+dgp_mod <- visage::poly_model(x = visage::rand_uniform(-1, 1), sigma = 1)
+
+this_dat <- dgp_mod$gen(300)
+this_mod <- dgp_mod$fit(this_dat)
+
+my_vi <- autovi::auto_vi(fitted_mod = this_mod,
+                         keras_mod = keras_mod,
+                         node_index = 1L)
+
+my_vi$check(boot_draws = 100L, null_draws = 100L)
+my_vi
+```
+
+
+```{r}
+my_vi$summary_plot()
+```
+
