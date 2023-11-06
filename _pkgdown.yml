@@ -1,0 +1,33 @@
+url: https://tengmcing.github.io/autovi/
+
+template:
+  bootstrap: 5
+  bootswatch: minty
+  bslib:
+    pkgdown-nav-height: 100px
+reference:
+- title: "Portals to class instantiate methods"
+  desc: >
+    Functions to build an instance
+  contents:
+  - auto_vi
+- title: "Auto visual inference class"
+  desc: >
+    Auto visual inference class
+  contents:
+  - AUTO_VI
+  - AUTO_VI$..init..
+  - AUTO_VI$..str..
+  - AUTO_VI$get_fitted_and_resid
+  - AUTO_VI$get_dat
+  - AUTO_VI$plot_resid
+  - AUTO_VI$save_plot
+  - AUTO_VI$remove_plot
+  - AUTO_VI$vss
+  - AUTO_VI$rotate_resid
+  - AUTO_VI$null_vss
+  - AUTO_VI$boot_vss
+  - AUTO_VI$check
+  - AUTO_VI$lr_ratio
+  - AUTO_VI$summary_plot
+  - AUTO_VI$check_result
