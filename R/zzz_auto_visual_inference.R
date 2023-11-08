@@ -301,3 +301,5 @@ AUTO_VI$lr_ratio
 #' @param check_result List. The result. Default is `self$check_result`.
 #' @return A `ggplot`.
 AUTO_VI$summary_plot
+
+
