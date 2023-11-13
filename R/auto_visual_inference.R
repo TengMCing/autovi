@@ -196,25 +196,53 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     return(result)
   }
 
+
+# unique_obs_correction ---------------------------------------------------
+
+  unique_obs_correction_ <- function(vss, unique_ratio) {
+    log((exp(vss) - 1) / unique_ratio + 1)
+  }
+
 # boot_vss ----------------------------------------------------------------
 
   boot_vss_ <- function(draws = 100L,
                         fitted_mod = self$fitted_mod,
                         keras_mod = self$keras_mod,
+                        correction = TRUE,
+                        jitter = FALSE,
+                        factor = 1L,
                         dat = self$get_dat(),
                         node_index = 1L,
                         keep_boot_dat = FALSE,
                         keep_boot_plot = FALSE) {
 
     dat_list <- lapply(1:draws, function(i) {
-      new_row_id <- sample(1:nrow(dat), replace = TRUE)
-      new_mod <- stats::update(fitted_mod, data = dat[new_row_id, ])
-      tibble::tibble(.fitted = new_mod$fitted.values,
-                     .resid = new_mod$residuals)
+      if (jitter) {
+        new_dat <- dat
+        for (i in 1:ncol(dat)) {
+          if (i == 1) next
+          new_dat[[i]] <- jitter(new_dat[[i]], factor = factor)
+        }
+        new_mod <- stats::update(fitted_mod, data = new_dat)
+        tibble::tibble(.fitted = new_mod$fitted.values,
+                       .resid = new_mod$residuals,
+                       .unique_ratio = NA)
+      } else {
+        new_row_id <- sample(1:nrow(dat), replace = TRUE)
+        new_mod <- stats::update(fitted_mod, data = dat[new_row_id, ])
+        tibble::tibble(.fitted = new_mod$fitted.values,
+                       .resid = new_mod$residuals,
+                       .unique_ratio = length(intersect(1:nrow(dat), new_row_id))/nrow(dat))
+      }
     })
 
     p_list <- lapply(dat_list, function(this_dat) self$plot_resid(this_dat))
     vss <- self$vss(p_list, keras_mod, node_index = node_index)
+
+    if (correction && !jitter) {
+      unique_ratio <- unlist(lapply(dat_list, function(x) x$.unique_ratio))
+      vss <- self$unique_obs_correction(vss, unique_ratio)
+    }
 
     result <- tibble::tibble(vss = vss)
 
@@ -232,6 +260,9 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                      fitted_mod = self$fitted_mod,
                      keras_mod = self$keras_mod,
                      method = self$rotate_resid,
+                     correction = TRUE,
+                     jitter = FALSE,
+                     factor = 1L,
                      dat = self$get_dat(),
                      node_index = self$node_index,
                      keep_dat = FALSE,
@@ -250,6 +281,9 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     boot_dist <- self$boot_vss(boot_draws,
                                fitted_mod = fitted_mod,
                                keras_mod = keras_mod,
+                               correction = correction,
+                               jitter = jitter,
+                               factor = factor,
                                dat = dat,
                                node_index = node_index,
                                keep_boot_dat = keep_dat,
@@ -405,6 +439,7 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                              vss = vss_,
                              rotate_resid = rotate_resid_,
                              null_vss = null_vss_,
+                             unique_obs_correction = unique_obs_correction_,
                              boot_vss = boot_vss_,
                              check = check_,
                              lr_ratio = lr_ratio_,
