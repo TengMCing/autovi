@@ -237,6 +237,11 @@ AUTO_VI$null_vss
 #' Default is `self$fitted_mod`.
 #' @param keras_mod Keras model. A trained computer vision model.
 #' Default is `self$keras_mod`.
+#' @param correction Boolean. Correction for bootstrapped visual signal
+#' strength due to the reduction of unique data points in null plots.
+#' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
+#' data instead of sampling from the original data with replacement.
+#' @param factor Numeric. See [jitter()] for more details.
 #' @param dat Data frame. The data used to fit the model.
 #' Default is `self$get_dat()`.
 #' @param node_index Integer. An index indicating which node of the output layer
@@ -268,6 +273,11 @@ AUTO_VI$boot_vss
 #' @param method Function. A method to simulate residuals from the null
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid]. Default is `self$rotate_resid`.
+#' @param correction Boolean. Correction for bootstrapped visual signal
+#' strength due to the reduction of unique data points in null plots.
+#' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
+#' data instead of sampling from the original data with replacement.
+#' @param factor Numeric. See [jitter()] for more details.
 #' @param dat Data frame. The data used to fit the model.
 #' Default is `self$get_dat()`.
 #' @param node_index Integer. An index indicating which node of the output layer
