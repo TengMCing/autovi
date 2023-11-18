@@ -54,7 +54,7 @@ my_vi$plot_resid()
 # Predict the visual signal strength for the target residual plot.
 my_vi$plot_resid() %>%
   my_vi$vss()
-#> [1] 4.414991
+#> [1] 4.368939
 ```
 
 ``` r
@@ -62,7 +62,7 @@ my_vi$plot_resid() %>%
 # We simulate 100 null data sets and 1000 bootstrapped data sets, 
 # and let the keras model predict the visual signal strength 
 # for each residual plot. 
-my_vi$check(boot_draws = 1000L, null_draws = 100L)
+my_vi$check(boot_draws = 1000L, null_draws = 100L, correction = TRUE)
 
 # Print the object to get a summary of the result.
 my_vi
@@ -73,22 +73,22 @@ my_vi
 #>  - Keras model: (None, 32, 32, 3) -> (None, 1)
 #>     - Output node index: 1
 #>  - Result:
-#>     - Observed visual signal strength: 4.415 (p-value = 0)
+#>     - Observed visual signal strength: 4.369 (p-value = 0)
 #>     - Null visual signal strength: [100 draws]
-#>        - Mean: 0.1221
+#>        - Mean: 0.06388
 #>        - Quantiles: 
 #>           ╔═════════════════════════════════════════════════╗
 #>           ║   25%    50%    75%    80%    90%    95%    99% ║
-#>           ║0.0000 0.0000 0.0000 0.0000 0.2131 0.6236 2.3753 ║
+#>           ║0.0000 0.0000 0.0000 0.0000 0.1828 0.3287 1.3006 ║
 #>           ╚═════════════════════════════════════════════════╝
 #>     - Bootstrapped visual signal strength: [300000 draws]
-#>        - Mean: 4.459 (p-value = 0)
+#>        - Mean: 4.381 (p-value = 0)
 #>        - Quantiles: 
 #>           ╔══════════════════════════════════════════╗
 #>           ║  25%   50%   75%   80%   90%   95%   99% ║
-#>           ║4.323 4.457 4.611 4.644 4.733 4.807 4.934 ║
+#>           ║4.229 4.394 4.546 4.585 4.685 4.765 4.931 ║
 #>           ╚══════════════════════════════════════════╝
-#>     - Likelihood ratio: 1.966 (boot) / 0 (null) = Inf
+#>     - Likelihood ratio: 1.648 (boot) / 0 (null) = Inf
 ```
 
 ``` r

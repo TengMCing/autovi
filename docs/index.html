@@ -101,13 +101,13 @@
 <code class="sourceCode R"><span><span class="co"># Predict the visual signal strength for the target residual plot.</span></span>
 <span><span class="va">my_vi</span><span class="op">$</span><span class="fu">plot_resid</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="va">my_vi</span><span class="op">$</span><span class="fu">vss</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4.414991</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 4.368939</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run an automatic check for the fitted model.</span></span>
 <span><span class="co"># We simulate 100 null data sets and 1000 bootstrapped data sets, </span></span>
 <span><span class="co"># and let the keras model predict the visual signal strength </span></span>
 <span><span class="co"># for each residual plot. </span></span>
-<span><span class="va">my_vi</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>boot_draws <span class="op">=</span> <span class="fl">1000L</span>, null_draws <span class="op">=</span> <span class="fl">100L</span><span class="op">)</span></span>
+<span><span class="va">my_vi</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>boot_draws <span class="op">=</span> <span class="fl">1000L</span>, null_draws <span class="op">=</span> <span class="fl">100L</span>, correction <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Print the object to get a summary of the result.</span></span>
 <span><span class="va">my_vi</span></span>
@@ -118,22 +118,22 @@
 <span><span class="co">#&gt;  - Keras model: (None, 32, 32, 3) -&gt; (None, 1)</span></span>
 <span><span class="co">#&gt;     - Output node index: 1</span></span>
 <span><span class="co">#&gt;  - Result:</span></span>
-<span><span class="co">#&gt;     - Observed visual signal strength: 4.415 (p-value = 0)</span></span>
+<span><span class="co">#&gt;     - Observed visual signal strength: 4.369 (p-value = 0)</span></span>
 <span><span class="co">#&gt;     - Null visual signal strength: [100 draws]</span></span>
-<span><span class="co">#&gt;        - Mean: 0.1221</span></span>
+<span><span class="co">#&gt;        - Mean: 0.06388</span></span>
 <span><span class="co">#&gt;        - Quantiles: </span></span>
 <span><span class="co">#&gt;           ╔═════════════════════════════════════════════════╗</span></span>
 <span><span class="co">#&gt;           ║   25%    50%    75%    80%    90%    95%    99% ║</span></span>
-<span><span class="co">#&gt;           ║0.0000 0.0000 0.0000 0.0000 0.2131 0.6236 2.3753 ║</span></span>
+<span><span class="co">#&gt;           ║0.0000 0.0000 0.0000 0.0000 0.1828 0.3287 1.3006 ║</span></span>
 <span><span class="co">#&gt;           ╚═════════════════════════════════════════════════╝</span></span>
 <span><span class="co">#&gt;     - Bootstrapped visual signal strength: [300000 draws]</span></span>
-<span><span class="co">#&gt;        - Mean: 4.459 (p-value = 0)</span></span>
+<span><span class="co">#&gt;        - Mean: 4.381 (p-value = 0)</span></span>
 <span><span class="co">#&gt;        - Quantiles: </span></span>
 <span><span class="co">#&gt;           ╔══════════════════════════════════════════╗</span></span>
 <span><span class="co">#&gt;           ║  25%   50%   75%   80%   90%   95%   99% ║</span></span>
-<span><span class="co">#&gt;           ║4.323 4.457 4.611 4.644 4.733 4.807 4.934 ║</span></span>
+<span><span class="co">#&gt;           ║4.229 4.394 4.546 4.585 4.685 4.765 4.931 ║</span></span>
 <span><span class="co">#&gt;           ╚══════════════════════════════════════════╝</span></span>
-<span><span class="co">#&gt;     - Likelihood ratio: 1.966 (boot) / 0 (null) = Inf</span></span></code></pre></div>
+<span><span class="co">#&gt;     - Likelihood ratio: 1.648 (boot) / 0 (null) = Inf</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Draw a summary plot.</span></span>
 <span><span class="va">my_vi</span><span class="op">$</span><span class="fu">summary_plot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
