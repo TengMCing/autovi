@@ -5,33 +5,37 @@
 \title{Conduct a auto visual inference check with a computer vision model}
 \arguments{
 \item{null_draws}{Integer. Number of simulation draws for
-\link{AUTO_VI$null_vss}. Default is \code{100L}.}
+\code{\link[=AUTO_VI$null_vss]{AUTO_VI$null_vss()}}.}
 
 \item{boot_draws}{Integer. Number of simulation draws for
-\link{AUTO_VI$boot_vss}. Default is \code{100L}.}
+\code{\link[=AUTO_VI$boot_vss]{AUTO_VI$boot_vss()}}.}
 
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.
-Default is \code{self$fitted_mod}.}
+\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model.
-Default is \code{self$keras_mod}.}
+\item{keras_mod}{Keras model. A trained computer vision model.}
 
 \item{method}{Function. A method to simulate residuals from the null
 hypothesis distribution. For \code{lm}, the recommended method is residual
-rotation \link{AUTO_VI$rotate_resid}. Default is \code{self$rotate_resid}.}
+rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
+
+\item{correction}{Boolean. Correction for bootstrapped visual signal
+strength due to the reduction of unique data points in null plots.}
+
+\item{jitter}{Boolean. Whether to use \code{jitter()} to generate bootstrapped
+data instead of sampling from the original data with replacement.}
+
+\item{factor}{Numeric. See also \code{\link[=jitter]{jitter()}}.}
 
 \item{dat}{Data frame. The data used to fit the model.
-Default is \code{self$get_dat()}.}
+See also \code{\link[=AUTO_VI$get_dat]{AUTO_VI$get_dat()}}.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
 contains the visual signal strength. This is particularly useful
-when the keras model has more than one output nodes. Default is \code{1L}.}
+when the keras model has more than one output nodes.}
 
-\item{keep_dat}{Boolean. Whether to keep the simulated data.
-Default is \code{FALSE}.}
+\item{keep_dat}{Boolean. Whether to keep the simulated data.}
 
-\item{keep_plot}{Boolean. Whether to keep the simulated plots.
-Default is \code{FALSE}.}
+\item{keep_plot}{Boolean. Whether to keep the simulated plots.}
 }
 \value{
 Return the object itself.
@@ -39,4 +43,22 @@ Return the object itself.
 \description{
 This function conducts a visual inference
 check with a computer vision model.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$check(
+  null_draws = 100L,
+  boot_draws = 100L,
+  fitted_mod = self$fitted_mod,
+  keras_mod = self$keras_mod,
+  method = self$rotate_resid,
+  correction = FALSE,
+  jitter = FALSE,
+  factor = 1L,
+  dat = self$get_dat(),
+  node_index = self$node_index,
+  keep_dat = FALSE,
+  keep_plot = FALSE
+)
+}\if{html}{\out{</div>}}
+}
 }

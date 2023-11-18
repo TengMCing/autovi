@@ -6,22 +6,25 @@
 \arguments{
 \item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model. Default is
-\code{NULL}.}
+\item{keras_mod}{Keras model. A trained computer vision model.}
 
-\item{dat}{Data frame. The data used to fit the model. Default is \code{NULL}.}
+\item{dat}{Data frame. The data used to fit the model.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
 contains the visual signal strength. This is particularly useful
-when the keras model has more than one output nodes. Default is \code{1L}.}
+when the keras model has more than one output nodes.}
 }
 \value{
 Return the object itself.
 }
 \description{
 This function will be called after an instance is built. User
-input will be stored in the environment. The response variable of this model
-is \code{y}.
+input will be stored in the environment.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$..init..(fitted_mod, keras_mod = NULL, dat = NULL, node_index = 1L)
+}\if{html}{\out{</div>}}
+}
 }
 \examples{
 my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))

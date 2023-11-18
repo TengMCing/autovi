@@ -4,27 +4,23 @@
 \alias{AUTO_VI$null_vss}
 \title{Simulate null plots and predict the visual signal strength}
 \arguments{
-\item{draws}{Integer. Number of simulation draws. Default is \code{100L}.}
+\item{draws}{Integer. Number of simulation draws.}
 
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.
-Default is \code{self$fitted_mod}.}
+\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model.
-Default is \code{self$keras_mod}.}
+\item{keras_mod}{Keras model. A trained computer vision model.}
 
 \item{method}{Function. A method to simulate residuals from the null
 hypothesis distribution. For \code{lm}, the recommended method is residual
-rotation \link{AUTO_VI$rotate_resid}. Default is \code{self$rotate_resid}.}
+rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
 contains the visual signal strength. This is particularly useful
-when the keras model has more than one output nodes. Default is \code{1L}.}
+when the keras model has more than one output nodes.}
 
-\item{keep_null_dat}{Boolean. Whether to keep the simulated null data.
-Default is \code{FALSE}.}
+\item{keep_null_dat}{Boolean. Whether to keep the simulated null data.}
 
-\item{keep_null_plot}{Boolean. Whether to keep the simulated null plots.
-Default is \code{FALSE}.}
+\item{keep_null_plot}{Boolean. Whether to keep the simulated null plots.}
 }
 \value{
 A tibble with 1 to 3 columns depending on the argument
@@ -33,4 +29,17 @@ A tibble with 1 to 3 columns depending on the argument
 \description{
 This function simulates null plots from the null hypothesis
 distribution, and predicts the visual signal strength.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$null_vss(
+  draws = 100L,
+  fitted_mod = self$fitted_mod,
+  keras_mod = self$keras_mod,
+  method = self$rotate_resid,
+  node_index = self$node_index,
+  keep_null_dat = FALSE,
+  keep_null_plot = FALSE
+)
+}\if{html}{\out{</div>}}
+}
 }

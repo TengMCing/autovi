@@ -4,36 +4,46 @@
 \alias{AUTO_VI$plot_resid}
 \title{Draw a standard residual plot}
 \arguments{
-\item{x}{Data frame. A data frame containing variables \code{.resid} and
-\code{.fitted}. Default is \code{self$get_fitted_and_resid()}.}
+\item{dat}{Data frame. A data frame containing variables \code{.resid} and
+\code{.fitted}. See also \code{\link[=AUTO_VI$get_fitted_and_resid]{AUTO_VI$get_fitted_and_resid()}}.}
 
 \item{theme}{\code{ggtheme}. A \code{ggplot} theme object.
-Default is \code{ggplot2::theme_light(base_size = 11/5)}.}
+See also \code{\link[ggplot2:ggtheme]{ggplot2::theme_light()}}.}
 
-\item{alpha}{Numeric. Alpha of dot. Value between 0 and 1. Default is \code{1}.}
+\item{alpha}{Numeric. Alpha of dot. Value between 0 and 1.}
 
-\item{size}{Numeric. Size of dot. Value between 0 and 1. Default is \code{0.5}.}
+\item{size}{Numeric. Size of dot. Value between 0 and 1.}
 
-\item{stroke}{Numeric. Stroke of dot. Value between 0 and 1.
-Default is \code{0.5}.}
+\item{stroke}{Numeric. Stroke of dot. Value between 0 and 1.}
 
-\item{remove_axis}{Boolean. Whether or not to remove the axis.
-Default is \code{TRUE}.}
+\item{remove_axis}{Boolean. Whether or not to remove the axis.}
 
-\item{remove_legend}{Boolean. Whether or not to remove the legend.
-Default is \code{TRUE}.}
+\item{remove_legend}{Boolean. Whether or not to remove the legend.}
 
-\item{remove_grid_line}{Boolean. Whether or not to remove the grid lines.
-Default is \code{TRUE}.}
+\item{remove_grid_line}{Boolean. Whether or not to remove the grid lines.}
 
-\item{add_zero_line}{Boolean. Whether or not to add a zero horizontal line.
-Default is \code{TRUE}.}
+\item{add_zero_line}{Boolean. Whether or not to add a zero horizontal line.}
 }
 \value{
 A \code{ggplot}.
 }
 \description{
 This function draws a standard residual plot.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$plot_resid(
+  dat = self$get_fitted_and_resid(),
+  theme = ggplot2::theme_light(base_size = 11/5),
+  alpha = 1,
+  size = 0.5,
+  stroke = 0.5,
+  remove_axis = TRUE,
+  remove_legend = TRUE,
+  remove_grid_line = TRUE,
+  add_zero_line = TRUE
+)
+}\if{html}{\out{</div>}}
+}
 }
 \examples{
 

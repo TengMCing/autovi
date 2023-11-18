@@ -6,19 +6,30 @@
 \arguments{
 \item{p}{\code{ggplot}. A plot.}
 
-\item{path}{Character. Path to save. Default is \code{tempfile(fileext = '.png')}.}
+\item{path}{Character. Path to save. See also \code{\link[=tempfile]{tempfile()}}.}
 
-\item{width}{Numeric. Width of the plot. Default is \code{7/5}.}
+\item{width}{Numeric. Width of the plot.}
 
-\item{height}{Numeric. Height of the plot. Default is \code{7/4}.}
+\item{height}{Numeric. Height of the plot.}
 
-\item{...}{Arguments passed to \link[ggplot2:ggsave]{ggplot2::ggsave}.}
+\item{...}{Arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
 }
 \value{
 A string indicating the path to the file.
 }
 \description{
-This function saves a plot with \link[ggplot2:ggsave]{ggplot2::ggsave}.
+This function saves a plot with \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$save_plot(
+  p,
+  path = tempfile(fileext = ".png"),
+  width = 7/5,
+  height = 7/4,
+  ...
+)
+}\if{html}{\out{</div>}}
+}
 }
 \examples{
 

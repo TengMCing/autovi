@@ -37,22 +37,51 @@ library(tidyverse)
 
 
 ```{r}
+
+# Load keras model for predicting visual signal strength.
 keras_mod <- keras::load_model_tf(here::here("temp_model/32"))
+
+# To illustrate the use of this package we define the data generating process for data simulation. 
 dgp_mod <- visage::poly_model(x = visage::rand_uniform(-1, 1), sigma = 1)
 
+# Simulate 300 observations.
 this_dat <- dgp_mod$gen(300)
-this_mod <- dgp_mod$fit(this_dat)
 
+# Get the fitted model (`lm`) on the simulated data.
+this_mod <- dgp_mod$fit(this_dat)
+```
+
+```{r}
+# Init an instance.
 my_vi <- autovi::auto_vi(fitted_mod = this_mod,
                          keras_mod = keras_mod,
                          node_index = 1L)
 
-my_vi$check(boot_draws = 100L, null_draws = 100L)
+# Have a look at the target residual plot.
+my_vi$plot_resid()
+```
+
+```{r}
+# Predict the visual signal strength for the target residual plot.
+my_vi$plot_resid() %>%
+  my_vi$vss()
+```
+
+
+```{r}
+# Run an automatic check for the fitted model.
+# We simulate 100 null data sets and 1000 bootstrapped data sets, 
+# and let the keras model predict the visual signal strength 
+# for each residual plot. 
+my_vi$check(boot_draws = 1000L, null_draws = 100L, correction = TRUE)
+
+# Print the object to get a summary of the result.
 my_vi
 ```
 
 
 ```{r}
+# Draw a summary plot.
 my_vi$summary_plot()
 ```
 

@@ -13,6 +13,11 @@ Return the object itself.
 }
 \description{
 This function removes a plot.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$remove_plot(path, check_ext = TRUE)
+}\if{html}{\out{</div>}}
+}
 }
 \examples{
 

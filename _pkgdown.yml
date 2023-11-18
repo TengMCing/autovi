@@ -6,11 +6,6 @@ template:
   bslib:
     pkgdown-nav-height: 100px
 reference:
-- title: "Portals to class instantiate methods"
-  desc: >
-    Functions to build an instance
-  contents:
-  - auto_vi
 - title: "Auto visual inference class"
   desc: >
     Auto visual inference class

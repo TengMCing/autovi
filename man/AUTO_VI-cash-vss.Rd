@@ -4,18 +4,27 @@
 \alias{AUTO_VI$vss}
 \title{Predict the visual signal strength}
 \arguments{
-\item{p}{\code{ggplot}/List. A \code{ggplot} or a list of \code{ggplot}.}
+\item{p}{\code{ggplot}/List. A \code{ggplot} or a list of \code{ggplot}.
+See also \code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model.
-Default is \code{self$keras_mod}.}
+\item{keras_mod}{Keras model. A trained computer vision model.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
 contains the visual signal strength. This is particularly useful
-when the keras model has more than one output nodes. Default is \code{1L}.}
+when the keras model has more than one output nodes.}
 }
 \value{
 A numeric vector.
 }
 \description{
 This function predicts the visual signal strength.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$vss(
+  p = self$plot_resid(),
+  keras_mod = self$keras_mod,
+  node_index = self$node_index
+)
+}\if{html}{\out{</div>}}
+}
 }

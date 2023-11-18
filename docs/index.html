@@ -76,17 +76,40 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">keras_mod</span> <span class="op">&lt;-</span> <span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keras/man/save_model_tf.html" class="external-link">load_model_tf</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"temp_model/32"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Load keras model for predicting visual signal strength.</span></span>
+<span><span class="va">keras_mod</span> <span class="op">&lt;-</span> <span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keras/man/save_model_tf.html" class="external-link">load_model_tf</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"temp_model/32"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># To illustrate the use of this package we define the data generating process for data simulation. </span></span>
 <span><span class="va">dgp_mod</span> <span class="op">&lt;-</span> <span class="fu">visage</span><span class="fu">::</span><span class="fu"><a href="https://tengmcing.github.io/visage/reference/portal.html" class="external-link">poly_model</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">visage</span><span class="fu">::</span><span class="fu"><a href="https://tengmcing.github.io/visage/reference/portal.html" class="external-link">rand_uniform</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Simulate 300 observations.</span></span>
 <span><span class="va">this_dat</span> <span class="op">&lt;-</span> <span class="va">dgp_mod</span><span class="op">$</span><span class="fu">gen</span><span class="op">(</span><span class="fl">300</span><span class="op">)</span></span>
-<span><span class="va">this_mod</span> <span class="op">&lt;-</span> <span class="va">dgp_mod</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="va">this_dat</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">my_vi</span> <span class="op">&lt;-</span> <span class="fu">autovi</span><span class="fu">::</span><span class="fu"><a href="reference/portal.html">auto_vi</a></span><span class="op">(</span>fitted_mod <span class="op">=</span> <span class="va">this_mod</span>,</span>
+<span><span class="co"># Get the fitted model (`lm`) on the simulated data.</span></span>
+<span><span class="va">this_mod</span> <span class="op">&lt;-</span> <span class="va">dgp_mod</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="va">this_dat</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Init an instance.</span></span>
+<span><span class="va">my_vi</span> <span class="op">&lt;-</span> <span class="fu">autovi</span><span class="fu">::</span><span class="fu"><a href="reference/AUTO_VI.html">auto_vi</a></span><span class="op">(</span>fitted_mod <span class="op">=</span> <span class="va">this_mod</span>,</span>
 <span>                         keras_mod <span class="op">=</span> <span class="va">keras_mod</span>,</span>
 <span>                         node_index <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">my_vi</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>boot_draws <span class="op">=</span> <span class="fl">100L</span>, null_draws <span class="op">=</span> <span class="fl">100L</span><span class="op">)</span></span>
+<span><span class="co"># Have a look at the target residual plot.</span></span>
+<span><span class="va">my_vi</span><span class="op">$</span><span class="fu">plot_resid</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Predict the visual signal strength for the target residual plot.</span></span>
+<span><span class="va">my_vi</span><span class="op">$</span><span class="fu">plot_resid</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="va">my_vi</span><span class="op">$</span><span class="fu">vss</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4.414991</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Run an automatic check for the fitted model.</span></span>
+<span><span class="co"># We simulate 100 null data sets and 1000 bootstrapped data sets, </span></span>
+<span><span class="co"># and let the keras model predict the visual signal strength </span></span>
+<span><span class="co"># for each residual plot. </span></span>
+<span><span class="va">my_vi</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>boot_draws <span class="op">=</span> <span class="fl">1000L</span>, null_draws <span class="op">=</span> <span class="fl">100L</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Print the object to get a summary of the result.</span></span>
 <span><span class="va">my_vi</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── &lt;AUTO_VI object&gt;</span></span>
@@ -95,25 +118,26 @@
 <span><span class="co">#&gt;  - Keras model: (None, 32, 32, 3) -&gt; (None, 1)</span></span>
 <span><span class="co">#&gt;     - Output node index: 1</span></span>
 <span><span class="co">#&gt;  - Result:</span></span>
-<span><span class="co">#&gt;     - Observed visual signal strength: 4.398 (p-value = 0)</span></span>
+<span><span class="co">#&gt;     - Observed visual signal strength: 4.415 (p-value = 0)</span></span>
 <span><span class="co">#&gt;     - Null visual signal strength: [100 draws]</span></span>
-<span><span class="co">#&gt;        - Mean: 0.09791</span></span>
+<span><span class="co">#&gt;        - Mean: 0.1221</span></span>
 <span><span class="co">#&gt;        - Quantiles: </span></span>
 <span><span class="co">#&gt;           ╔═════════════════════════════════════════════════╗</span></span>
 <span><span class="co">#&gt;           ║   25%    50%    75%    80%    90%    95%    99% ║</span></span>
-<span><span class="co">#&gt;           ║0.0000 0.0000 0.0000 0.0000 0.1729 0.6822 1.7068 ║</span></span>
+<span><span class="co">#&gt;           ║0.0000 0.0000 0.0000 0.0000 0.2131 0.6236 2.3753 ║</span></span>
 <span><span class="co">#&gt;           ╚═════════════════════════════════════════════════╝</span></span>
-<span><span class="co">#&gt;     - Bootstrapped visual signal strength: [100 draws]</span></span>
-<span><span class="co">#&gt;        - Mean: 4.099 (p-value = 0)</span></span>
+<span><span class="co">#&gt;     - Bootstrapped visual signal strength: [300000 draws]</span></span>
+<span><span class="co">#&gt;        - Mean: 4.459 (p-value = 0)</span></span>
 <span><span class="co">#&gt;        - Quantiles: </span></span>
 <span><span class="co">#&gt;           ╔══════════════════════════════════════════╗</span></span>
 <span><span class="co">#&gt;           ║  25%   50%   75%   80%   90%   95%   99% ║</span></span>
-<span><span class="co">#&gt;           ║3.951 4.123 4.249 4.284 4.412 4.452 4.594 ║</span></span>
+<span><span class="co">#&gt;           ║4.323 4.457 4.611 4.644 4.733 4.807 4.934 ║</span></span>
 <span><span class="co">#&gt;           ╚══════════════════════════════════════════╝</span></span>
-<span><span class="co">#&gt;     - Likelihood ratio: 0.8637 (boot) / 0 (null) = Inf</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_vi</span><span class="op">$</span><span class="fu">summary_plot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
+<span><span class="co">#&gt;     - Likelihood ratio: 1.966 (boot) / 0 (null) = Inf</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Draw a summary plot.</span></span>
+<span><span class="va">my_vi</span><span class="op">$</span><span class="fu">summary_plot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

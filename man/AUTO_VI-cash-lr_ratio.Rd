@@ -11,4 +11,9 @@ This function estimates the likelihood
 of observing the visual signal strength in terms of the bootstrapped
 distribution and the simulated null distribution, and computes the ratio
 between these two likelihood.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$lr_ratio()
+}\if{html}{\out{</div>}}
+}
 }

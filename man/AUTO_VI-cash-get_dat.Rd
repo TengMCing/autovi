@@ -4,15 +4,19 @@
 \alias{AUTO_VI$get_dat}
 \title{Get data out of a model object}
 \arguments{
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}. Default is
-\code{self$fitted_mod}.}
+\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
 }
 \value{
 A tibble.
 }
 \description{
 This function gets the data out of a model object
-by using \link[stats:model.frame]{stats::model.frame} if \code{self$dat} is \code{NULL}.
+by using \code{\link[stats:model.frame]{stats::model.frame()}} if \code{self$dat} is \code{NULL}.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$get_dat(fitted_mod = self$fitted_mod)
+}\if{html}{\out{</div>}}
+}
 }
 \examples{
 

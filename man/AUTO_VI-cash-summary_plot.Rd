@@ -4,11 +4,16 @@
 \alias{AUTO_VI$summary_plot}
 \title{Draw a summary plot for the result}
 \arguments{
-\item{check_result}{List. The result. Default is \code{self$check_result}.}
+\item{check_result}{List. The result.}
 }
 \value{
 A \code{ggplot}.
 }
 \description{
 This function draws a summary plot for the result.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$summary_plot(check_result = self$check_result)
+}\if{html}{\out{</div>}}
+}
 }

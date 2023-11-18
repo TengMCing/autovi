@@ -4,6 +4,6 @@
 \alias{AUTO_VI$check_result}
 \title{List of diagnostic results}
 \description{
-A list, will be initialized after the method \link{AUTO_VI$check} is
-run.
+A list, will be initialized after the method \code{\link[=AUTO_VI$check]{AUTO_VI$check()}}
+is run.
 }
