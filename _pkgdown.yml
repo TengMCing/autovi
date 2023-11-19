@@ -6,6 +6,12 @@ template:
   bslib:
     pkgdown-nav-height: 100px
 reference:
+- title: "Pre-trained computer vision models"
+  desc: >
+    Pre-trained computer vision models for visual signal strength prediction
+  contents:
+  - list_keras_models
+  - get_keras_model
 - title: "Auto visual inference class"
   desc: >
     Auto visual inference class

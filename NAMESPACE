@@ -2,3 +2,5 @@
 
 export(AUTO_VI)
 export(auto_vi)
+export(get_keras_model)
+export(list_keras_models)

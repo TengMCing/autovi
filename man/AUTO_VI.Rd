@@ -31,7 +31,7 @@ when the keras model has more than one output nodes.}
 as default.}
 }
 \value{
-An instance enviroment.
+An instance environment.
 }
 \description{
 This is the class of auto visual inference,
