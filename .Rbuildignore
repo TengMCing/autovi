@@ -4,5 +4,6 @@
 ^LICENSE\.md$
 ^_pkgdown\.yml$
 ^docs$
+^keras_model$
 ^pkgdown$
 ^README\.Rmd$

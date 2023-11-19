@@ -20,7 +20,7 @@ AUTO_VI <- new.env()
 #' @param env Environment. The instance environment.
 #' @param init_call Call. Contents of the `..init_call...` It is recommended to leave it
 #' as default.
-#' @return An instance enviroment.
+#' @return An instance environment.
 #'
 #' @details # Class information
 #' ## Parent classes
