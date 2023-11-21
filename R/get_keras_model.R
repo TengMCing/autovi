@@ -43,9 +43,5 @@ get_keras_model <- function(model_name) {
 
   mod <- keras::keras$models$load_model(file.path(temp_folder, paste0(model_name, ".keras")))
 
-  # Clean up
-  file.remove(temp)
-  unlink(temp_folder, recursive = TRUE)
-
   return(mod)
 }
