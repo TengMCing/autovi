@@ -25,20 +25,22 @@ AUTO_VI <- new.env()
 #' @details # Class information
 #' ## Parent classes
 #' * Direct:
-#'     * [bandicoot::BASE]
+#'    * [bandicoot::BASE]
 #'
 #' ## New attributes
 #' * C:
-#'     * [AUTO_VI$check_result]
+#'    * [AUTO_VI$check_result]
 #'
 #' ## New methods
+#' * A:
+#'    * [AUTO_VI$auxiliary()]
 #' * B:
 #'    * [AUTO_VI$boot_vss()]
 #' * C:
 #'    * [AUTO_VI$check()]
 #' * G:
-#'     * [AUTO_VI$get_dat()]
-#'     * [AUTO_VI$get_fitted_and_resid()]
+#'    * [AUTO_VI$get_dat()]
+#'    * [AUTO_VI$get_fitted_and_resid()]
 #' * I:
 #'    * [AUTO_VI$..init..()]
 #' * L:
@@ -46,6 +48,7 @@ AUTO_VI <- new.env()
 #' * N:
 #'    * [AUTO_VI$null_vss()]
 #' * P:
+#'    * [AUTO_VI$p_value]
 #'    * [AUTO_VI$plot_resid()]
 #' * R:
 #'    * [AUTO_VI$remove_plot()]
@@ -54,6 +57,8 @@ AUTO_VI <- new.env()
 #'    * [AUTO_VI$save_plot()]
 #'    * [AUTO_VI$..str..()]
 #'    * [AUTO_VI$summary_plot()]
+#' * U:
+#'    * [AUTO_VI$unique_obs_correction()]
 #' * V:
 #'    * [AUTO_VI$vss()]
 #'
@@ -171,6 +176,38 @@ AUTO_VI$get_fitted_and_resid
 #' my_vi$get_dat()
 AUTO_VI$get_dat
 
+#' Compute auxiliary variables for the keras model
+#'
+#' @name AUTO_VI$auxiliary
+#'
+#' @description This function computes a vector of auxiliary variables
+#' including the number of observation (`n`),
+#' monotonic measure (`measure_monotonic`),
+#' sparse measure (`measure_sparse`), splines measure (`measure_splines`), and
+#' striped measure (`measure_striped`). Scagnostics are computed using
+#' [cassowaryr::sc_monotonic()], [cassowaryr::sc_sparse2()], [cassowaryr::sc_splines()],
+#' and [cassowaryr::sc_striped()].
+#'
+#' If you wish to calculate additional auxiliary variables for your keras
+#' model, please override this method. Ensure that it accepts a data frame
+#' with columns named `.fitted` and `.resid` as input and returns
+#' a vector of values.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$auxiliary(dat = seflf$get_fitted_and_resid())
+#' ```
+#'
+#' @param dat Data frame. A data frame containing variables `.resid` and
+#' `.fitted`. See also [AUTO_VI$get_fitted_and_resid()].
+#' @return A vector of auxiliary values.
+#'
+#' @examples
+#'
+#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi$auxiliary()
+AUTO_VI$auxiliary
+
 #' Draw a standard residual plot
 #'
 #' @name AUTO_VI$plot_resid
@@ -274,6 +311,7 @@ AUTO_VI$remove_plot
 #' ```
 #' AUTO_VI$vss(
 #'   p = self$plot_resid(),
+#'   auxiliary = NULL,
 #'   keras_mod = self$keras_mod,
 #'   node_index = self$node_index
 #' )
@@ -281,6 +319,10 @@ AUTO_VI$remove_plot
 #'
 #' @param p `ggplot`/List. A `ggplot` or a list of `ggplot`.
 #' See also [AUTO_VI$plot_resid()].
+#' @param auxiliary Numeric. A vector of auxiliary values. This is only used
+#' when the keras model has multiple inputs. If it is not provided, the
+#' values will be automatically computed based on the residual plot of the
+#' fitted model. See also [AUTO_VI$auxiliary()].
 #' @param keras_mod Keras model. A trained computer vision model.
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
@@ -326,7 +368,7 @@ AUTO_VI$rotate_resid
 #'   draws = 100L,
 #'   fitted_mod = self$fitted_mod,
 #'   keras_mod = self$keras_mod,
-#'   method = self$rotate_resid,
+#'   null_method = self$rotate_resid,
 #'   node_index = self$node_index,
 #'   keep_null_dat = FALSE,
 #'   keep_null_plot = FALSE
@@ -336,7 +378,7 @@ AUTO_VI$rotate_resid
 #' @param draws Integer. Number of simulation draws.
 #' @param fitted_mod Model. A model object, e.g. `lm`.
 #' @param keras_mod Keras model. A trained computer vision model.
-#' @param method Function. A method to simulate residuals from the null
+#' @param null_method Function. A method to simulate residuals from the null
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid()].
 #' @param node_index Integer. An index indicating which node of the output layer
@@ -347,6 +389,33 @@ AUTO_VI$rotate_resid
 #' @return A tibble with 1 to 3 columns depending on the argument
 #' `keep_null_dat` and `keep_null_plot`.
 AUTO_VI$null_vss
+
+#' Compute the adjustment factor for the reduction of the number of
+#' unique observations
+#'
+#' @name AUTO_VI$unique_obs_correction
+#'
+#' @description This function computes the adjustment factor for the reduction
+#' of the number of unique observations. Once we bootstrap the data and refit
+#' the model, the residual plot will usually have less observations due to
+#' sampling with replacement. The visual signal strength of this plot will
+#' also decrease. To correct this effect, we can scale the visual signal
+#' strength based on the unique number of observations in the
+#' bootstrapped data.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$unique_obs_correction(vss, overlap_ratio)
+#' ```
+#'
+#' @param vss Numeric. Visual signal strength.
+#' @param overlap_ratio. Numeric. A value between 0 and 1 indicating the
+#' percentage of original observations presenting in the bootstrapped data.
+#' @return A numeric value representing the adjusted visual signal strength.
+#'
+#' @examples
+#' AUTO_VI$unique_obs_correction(1, 2/3)
+AUTO_VI$unique_obs_correction
 
 #' Predict visual signal strength for bootstrapped residual plots
 #'
@@ -395,7 +464,8 @@ AUTO_VI$boot_vss
 #' @name AUTO_VI$check
 #'
 #' @description This function conducts a visual inference
-#' check with a computer vision model.
+#' check with a computer vision model. The result will be stored in
+#' `self$check_result`.
 #'
 #' ## Usage
 #' ```
@@ -404,7 +474,7 @@ AUTO_VI$boot_vss
 #'   boot_draws = 100L,
 #'   fitted_mod = self$fitted_mod,
 #'   keras_mod = self$keras_mod,
-#'   method = self$rotate_resid,
+#'   null_method = self$rotate_resid,
 #'   correction = FALSE,
 #'   jitter = FALSE,
 #'   factor = 1L,
@@ -421,7 +491,7 @@ AUTO_VI$boot_vss
 #' [AUTO_VI$boot_vss()].
 #' @param fitted_mod Model. A model object, e.g. `lm`.
 #' @param keras_mod Keras model. A trained computer vision model.
-#' @param method Function. A method to simulate residuals from the null
+#' @param null_method Function. A method to simulate residuals from the null
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid()].
 #' @param correction Boolean. Correction for bootstrapped visual signal
@@ -453,8 +523,28 @@ AUTO_VI$check
 #' AUTO_VI$lr_ratio()
 #' ```
 #'
-#' @return A named vector with three elements `boot`, `null` and `ratio`.
+#' @return A named vector with three elements `boot_likelihood`,
+#' `null_likelihood` and `lr_ratio`.
 AUTO_VI$lr_ratio
+
+#' Compute the p-value based on the check result
+#'
+#' @name AUTO_VI$p_value
+#'
+#' @description This function computes the p-value of observing the
+#' visual signal strength of the original residual plot based on the null
+#' distribution, and computes the p-value of observing the mean of the
+#' bootstrapped distribution based on the null distribution.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$p_value(type = "null")
+#' ```
+#'
+#' @param type Character. Either "null" or "boot".
+#' @return A numeric value representing the desired p-value.
+AUTO_VI$p_value
+
 
 #' Draw a summary plot for the result
 #'
@@ -464,10 +554,9 @@ AUTO_VI$lr_ratio
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$summary_plot(check_result = self$check_result)
+#' AUTO_VI$summary_plot()
 #' ```
 #'
-#' @param check_result List. The result.
 #' @return A `ggplot`.
 AUTO_VI$summary_plot
 

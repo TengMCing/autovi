@@ -64,6 +64,10 @@ with S3 class \code{bandicoot_oop}.
 
 \subsection{New methods}{
 \itemize{
+\item A:
+\itemize{
+\item \code{\link[=AUTO_VI$auxiliary]{AUTO_VI$auxiliary()}}
+}
 \item B:
 \itemize{
 \item \code{\link[=AUTO_VI$boot_vss]{AUTO_VI$boot_vss()}}
@@ -91,6 +95,7 @@ with S3 class \code{bandicoot_oop}.
 }
 \item P:
 \itemize{
+\item \link{AUTO_VI$p_value}
 \item \code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}}
 }
 \item R:
@@ -103,6 +108,10 @@ with S3 class \code{bandicoot_oop}.
 \item \code{\link[=AUTO_VI$save_plot]{AUTO_VI$save_plot()}}
 \item \code{\link[=AUTO_VI$..str..]{AUTO_VI$..str..()}}
 \item \code{\link[=AUTO_VI$summary_plot]{AUTO_VI$summary_plot()}}
+}
+\item U:
+\itemize{
+\item \code{\link[=AUTO_VI$unique_obs_correction]{AUTO_VI$unique_obs_correction()}}
 }
 \item V:
 \itemize{

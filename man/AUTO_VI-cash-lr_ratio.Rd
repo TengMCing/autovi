@@ -4,7 +4,8 @@
 \alias{AUTO_VI$lr_ratio}
 \title{Compute the likelihood ratio using the simulated result}
 \value{
-A named vector with three elements \code{boot}, \code{null} and \code{ratio}.
+A named vector with three elements \code{boot_likelihood},
+\code{null_likelihood} and \code{lr_ratio}.
 }
 \description{
 This function estimates the likelihood

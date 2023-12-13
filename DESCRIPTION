@@ -1,7 +1,7 @@
 Package: autovi
 Type: Package
 Title: Auto visual inference with computer vision models
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(given = "Weihao",
            family = "Li",
@@ -25,7 +25,8 @@ Imports:
     keras,
     reticulate,
     visage,
-    utils
+    utils,
+    cassowaryr
 Suggests:
     rmarkdown,
     knitr,

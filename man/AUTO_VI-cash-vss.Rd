@@ -7,6 +7,11 @@
 \item{p}{\code{ggplot}/List. A \code{ggplot} or a list of \code{ggplot}.
 See also \code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}}.}
 
+\item{auxiliary}{Numeric. A vector of auxiliary values. This is only used
+when the keras model has multiple inputs. If it is not provided, the
+values will be automatically computed based on the residual plot of the
+fitted model. See also \code{\link[=AUTO_VI$auxiliary]{AUTO_VI$auxiliary()}}.}
+
 \item{keras_mod}{Keras model. A trained computer vision model.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
@@ -22,6 +27,7 @@ This function predicts the visual signal strength.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$vss(
   p = self$plot_resid(),
+  auxiliary = NULL,
   keras_mod = self$keras_mod,
   node_index = self$node_index
 )

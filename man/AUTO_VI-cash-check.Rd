@@ -14,7 +14,7 @@
 
 \item{keras_mod}{Keras model. A trained computer vision model.}
 
-\item{method}{Function. A method to simulate residuals from the null
+\item{null_method}{Function. A method to simulate residuals from the null
 hypothesis distribution. For \code{lm}, the recommended method is residual
 rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
 
@@ -42,7 +42,8 @@ Return the object itself.
 }
 \description{
 This function conducts a visual inference
-check with a computer vision model.
+check with a computer vision model. The result will be stored in
+\code{self$check_result}.
 \subsection{Usage}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$check(
@@ -50,7 +51,7 @@ check with a computer vision model.
   boot_draws = 100L,
   fitted_mod = self$fitted_mod,
   keras_mod = self$keras_mod,
-  method = self$rotate_resid,
+  null_method = self$rotate_resid,
   correction = FALSE,
   jitter = FALSE,
   factor = 1L,

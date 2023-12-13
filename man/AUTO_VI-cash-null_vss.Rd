@@ -10,7 +10,7 @@
 
 \item{keras_mod}{Keras model. A trained computer vision model.}
 
-\item{method}{Function. A method to simulate residuals from the null
+\item{null_method}{Function. A method to simulate residuals from the null
 hypothesis distribution. For \code{lm}, the recommended method is residual
 rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
 
@@ -35,7 +35,7 @@ distribution, and predicts the visual signal strength.
   draws = 100L,
   fitted_mod = self$fitted_mod,
   keras_mod = self$keras_mod,
-  method = self$rotate_resid,
+  null_method = self$rotate_resid,
   node_index = self$node_index,
   keep_null_dat = FALSE,
   keep_null_plot = FALSE
