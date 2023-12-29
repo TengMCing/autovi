@@ -59,16 +59,24 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     # Only these scagnostics work.
     # Other measures will crash R so we did not train the CV model for them.
     # (13/12/2023)
+    # temp_dat <- tempfile(fileext = ".csv")
+    # utils::write.csv(data.frame(fitted = dat$.fitted, resid = dat$.resid),
+    #                  temp_dat)
+    #
+    # read_com <- paste0("x <- utils::read.csv(", temp_dat, ");")
+    # cal_monotonic <- paste0("")
+    # system2("Rscript", c("-e", "''"))
+
     measure_monotonic <- try_or_zero(cassowaryr::sc_monotonic, dat$.fitted, dat$.resid)
     measure_sparse <- try_or_zero(cassowaryr::sc_sparse2, dat$.fitted, dat$.resid)
     measure_splines <- try_or_zero(cassowaryr::sc_splines, dat$.fitted, dat$.resid)
     measure_striped <- try_or_zero(cassowaryr::sc_striped, dat$.fitted, dat$.resid)
 
-    return(c(n = n,
-             measure_monotonic = measure_monotonic,
+    return(c(measure_monotonic = measure_monotonic,
              measure_sparse = measure_sparse,
              measure_splines = measure_splines,
-             measure_striped = measure_striped))
+             measure_striped = measure_striped,
+             n = n))
   }
 
 # plot_resid --------------------------------------------------------------
@@ -131,7 +139,7 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
     # Decide if `auxiliary` is provided and if it is needed to be computed automatically.
     if (mutltiple_inputs_flag && is.null(auxiliary)) {
-      auxiliary <- self$auxiliary()
+      auxiliary <- data.frame(as.list(self$auxiliary()))
     }
 
     # Decide if the input is a list of plots or a single plot.
@@ -165,6 +173,8 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     # Init a temporary file for storing images.
     temp_path <- tempfile(fileext = ".png")
 
+    # Init progress bar
+    cli::cli_progress_bar("Preparing input images", total = length(p_list))
     i <- 0
     for (x in p_list) {
       i <- i + 1
@@ -180,7 +190,13 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
       # Store the array into the batch
       input_batch[[i]] <- input_array
+
+      # Update progress bar
+      cli::cli_progress_update()
     }
+
+    # Remove progress bar
+    cli::cli_progress_done()
 
     # Convert a list of Numpy arrays to a batch.
     input_batch <- np$stack(input_batch)
@@ -191,6 +207,8 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     } else {
       output <- keras_mod$predict(input_batch, verbose = 0L)
     }
+
+    cli::cli_alert_success("{.vrb Predict visual signal strength for {length(p_list)} image{?s}.}")
 
     # Clean up.
     self$remove_plot(temp_path)
@@ -235,18 +253,44 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                         keep_null_dat = FALSE,
                         keep_null_plot = FALSE) {
 
+    # cli::cli_div(theme = list(span.vrb = list(color = "yellow",
+    #                                           `font-weight` = "bold"),
+    #                           span.unit = list(color = "magenta"),
+    #                           .val = list(digits = 3),
+    #                           span.side = list(color = "grey")))
+    # cli::cli_h3("{.field null distribution} = {.val {draws}} {.unit draw{?s}} | {.field }")
+
+    # cli::cli_h3("{.field activeTime} = {.val {activeTime}} {.unit time index{?es}} | {.field adjDist} = {.val {adjDist}} {.unit meter{?s}}")
     # Simulate null data.
     dat_list <- lapply(1:draws, function(i) null_method(fitted_mod))
+
+    cli::cli_alert_success("{.vrb Generate null data.}")
 
     # Generate null plots.
     p_list <- lapply(dat_list, function(this_dat) self$plot_resid(this_dat))
 
+    cli::cli_alert_success("{.vrb Generate null plots.}")
+
     # Calculate auxiliary data if needed.
     auxiliary <- NULL
     if (length(keras_mod$inputs) > 1) {
-      auxiliary <- lapply(dat_list, function(this_dat) self$auxiliary(this_dat))
+
+      # Init progress bar
+      # cli::cli_progress_bar("Computing auxiliary inputs", total = length(dat_list))
+
+      auxiliary <- lapply(dat_list, function(this_dat) {
+        val <- self$auxiliary(this_dat)
+        # cli::cli_progress_update()
+        return(val)
+      })
+
+      # Remove progress bar
+      # cli::cli_progress_done()
+
       auxiliary <- as.data.frame(t(as.data.frame(auxiliary)))
       rownames(auxiliary) <- NULL
+
+      cli::cli_alert_success("{.vrb Compute auxilary inputs.}")
     }
 
     # Predict visual signal strength for these plots.
@@ -259,6 +303,8 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
     if (keep_null_dat) result$dat <- dat_list
     if (keep_null_plot) result$plot <- p_list
+
+    # cli::cli_end()
 
     return(result)
   }
@@ -323,8 +369,8 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     auxiliary <- NULL
     if (length(keras_mod$inputs) > 1) {
       auxiliary <- lapply(dat_list, function(this_dat) self$auxiliary(this_dat))
-      auxiliary <- as.data.frame(t(as.data.frame(auxiliary_dat)))
-      rownames(auxiliary_dat) <- NULL
+      auxiliary <- as.data.frame(t(as.data.frame(auxiliary)))
+      rownames(auxiliary) <- NULL
     }
 
     # Predict visual signal strength for these plots.
@@ -400,9 +446,9 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
     # Compute the likelihoods and ratio.
     lr_ratio <- self$lr_ratio()
-    self$check_result$boot_likelihood <- lr_ratio$boot_likelihood
-    self$check_result$null_likelihood <- lr_ratio$null_likelihood
-    self$check_result$lr_ratio <- lr_ratio$lr_ratio
+    self$check_result$boot_likelihood <- lr_ratio["boot_likelihood"]
+    self$check_result$null_likelihood <- lr_ratio["null_likelihood"]
+    self$check_result$lr_ratio <- lr_ratio["lr_ratio"]
 
     return(invisible(self))
   }

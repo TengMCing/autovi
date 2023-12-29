@@ -181,10 +181,10 @@ AUTO_VI$get_dat
 #' @name AUTO_VI$auxiliary
 #'
 #' @description This function computes a vector of auxiliary variables
-#' including the number of observation (`n`),
-#' monotonic measure (`measure_monotonic`),
-#' sparse measure (`measure_sparse`), splines measure (`measure_splines`), and
-#' striped measure (`measure_striped`). Scagnostics are computed using
+#' including monotonic measure (`measure_monotonic`),
+#' sparse measure (`measure_sparse`), splines measure (`measure_splines`),
+#' striped measure (`measure_striped`), and the number of observation (`n`).
+#' Scagnostics are computed using
 #' [cassowaryr::sc_monotonic()], [cassowaryr::sc_sparse2()], [cassowaryr::sc_splines()],
 #' and [cassowaryr::sc_striped()].
 #'

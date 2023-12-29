@@ -12,10 +12,10 @@ A vector of auxiliary values.
 }
 \description{
 This function computes a vector of auxiliary variables
-including the number of observation (\code{n}),
-monotonic measure (\code{measure_monotonic}),
-sparse measure (\code{measure_sparse}), splines measure (\code{measure_splines}), and
-striped measure (\code{measure_striped}). Scagnostics are computed using
+including monotonic measure (\code{measure_monotonic}),
+sparse measure (\code{measure_sparse}), splines measure (\code{measure_splines}),
+striped measure (\code{measure_striped}), and the number of observation (\code{n}).
+Scagnostics are computed using
 \code{\link[cassowaryr:sc_monotonic]{cassowaryr::sc_monotonic()}}, \code{\link[cassowaryr:sc_sparse2]{cassowaryr::sc_sparse2()}}, \code{\link[cassowaryr:sc_splines]{cassowaryr::sc_splines()}},
 and \code{\link[cassowaryr:sc_striped]{cassowaryr::sc_striped()}}.
 
