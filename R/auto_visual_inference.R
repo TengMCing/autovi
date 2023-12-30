@@ -208,7 +208,7 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
       output <- keras_mod$predict(input_batch, verbose = 0L)
     }
 
-    cli::cli_alert_success("{.vrb Predict visual signal strength for {length(p_list)} image{?s}.}")
+    cli::cli_alert_success("Predict visual signal strength for {length(p_list)} image{?s}.")
 
     # Clean up.
     self$remove_plot(temp_path)
@@ -253,44 +253,37 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                         keep_null_dat = FALSE,
                         keep_null_plot = FALSE) {
 
-    # cli::cli_div(theme = list(span.vrb = list(color = "yellow",
-    #                                           `font-weight` = "bold"),
-    #                           span.unit = list(color = "magenta"),
-    #                           .val = list(digits = 3),
-    #                           span.side = list(color = "grey")))
-    # cli::cli_h3("{.field null distribution} = {.val {draws}} {.unit draw{?s}} | {.field }")
-
-    # cli::cli_h3("{.field activeTime} = {.val {activeTime}} {.unit time index{?es}} | {.field adjDist} = {.val {adjDist}} {.unit meter{?s}}")
     # Simulate null data.
     dat_list <- lapply(1:draws, function(i) null_method(fitted_mod))
 
-    cli::cli_alert_success("{.vrb Generate null data.}")
+    cli::cli_alert_success("Generate null data.")
 
     # Generate null plots.
     p_list <- lapply(dat_list, function(this_dat) self$plot_resid(this_dat))
 
-    cli::cli_alert_success("{.vrb Generate null plots.}")
+    cli::cli_alert_success("Generate null plots.")
 
     # Calculate auxiliary data if needed.
     auxiliary <- NULL
     if (length(keras_mod$inputs) > 1) {
 
       # Init progress bar
-      # cli::cli_progress_bar("Computing auxiliary inputs", total = length(dat_list))
+      cli::cli_progress_bar("Computing auxiliary inputs", total = length(dat_list))
 
-      auxiliary <- lapply(dat_list, function(this_dat) {
-        val <- self$auxiliary(this_dat)
-        # cli::cli_progress_update()
-        return(val)
-      })
+      auxiliary <- list()
+      for (i in 1:length(dat_list)) {
+        this_dat <- dat_list[[i]]
+        auxiliary[[i]] <- self$auxiliary(this_dat)
+        cli::cli_progress_update()
+      }
 
       # Remove progress bar
-      # cli::cli_progress_done()
+      cli::cli_progress_done()
 
       auxiliary <- as.data.frame(t(as.data.frame(auxiliary)))
       rownames(auxiliary) <- NULL
 
-      cli::cli_alert_success("{.vrb Compute auxilary inputs.}")
+      cli::cli_alert_success("Compute auxilary inputs.")
     }
 
     # Predict visual signal strength for these plots.
@@ -303,8 +296,6 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
     if (keep_null_dat) result$dat <- dat_list
     if (keep_null_plot) result$plot <- p_list
-
-    # cli::cli_end()
 
     return(result)
   }
@@ -362,15 +353,34 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
       })
     }
 
+    cli::cli_alert_success("Generate bootstrapped data.")
+
     # Generate null plots.
     p_list <- lapply(dat_list, function(this_dat) self$plot_resid(this_dat))
+
+    cli::cli_alert_success("Generate bootstrapped plots.")
 
     # Calculate auxiliary data.
     auxiliary <- NULL
     if (length(keras_mod$inputs) > 1) {
-      auxiliary <- lapply(dat_list, function(this_dat) self$auxiliary(this_dat))
+
+      # Init progress bar
+      cli::cli_progress_bar("Computing auxiliary inputs", total = length(dat_list))
+
+      auxiliary <- list()
+      for (i in 1:length(dat_list)) {
+        this_dat <- dat_list[[i]]
+        auxiliary[[i]] <- self$auxiliary(this_dat)
+        cli::cli_progress_update()
+      }
+
+      # Remove progress bar
+      cli::cli_progress_done()
+
       auxiliary <- as.data.frame(t(as.data.frame(auxiliary)))
       rownames(auxiliary) <- NULL
+
+      cli::cli_alert_success("Compute auxilary inputs.")
     }
 
     # Predict visual signal strength for these plots.
