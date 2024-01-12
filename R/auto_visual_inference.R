@@ -203,9 +203,9 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
     # Predict the batch.
     if (mutltiple_inputs_flag) {
-      output <- keras_mod$predict(list(input_batch, auxiliary), verbose = 0L)
+      output <- keras_mod(list(input_batch, auxiliary))$numpy()
     } else {
-      output <- keras_mod$predict(input_batch, verbose = 0L)
+      output <- keras_mod(input_batch)$numpy()
     }
 
     cli::cli_alert_success("Predict visual signal strength for {length(p_list)} image{?s}.")
@@ -214,8 +214,9 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     self$remove_plot(temp_path)
 
     # Extract the value of a particular output node.
-    return(output[, node_index])
+    if (is.vector(output) && is.atomic(output)) return(output)
 
+    return(output[, node_index])
   }
 
 
