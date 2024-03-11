@@ -30,5 +30,8 @@ reference:
   - AUTO_VI$boot_vss
   - AUTO_VI$check
   - AUTO_VI$lr_ratio
+  - AUTO_VI$auxiliary
+  - AUTO_VI$p_value
+  - AUTO_VI$unique_obs_correction
   - AUTO_VI$summary_plot
   - AUTO_VI$check_result

@@ -8,7 +8,7 @@ AUTO_VI$null_vss(
   draws = 100L,
   fitted_mod = self$fitted_mod,
   keras_mod = self$keras_mod,
-  method = self$rotate_resid,
+  null_method = self$rotate_resid,
   node_index = self$node_index,
   keep_null_dat = FALSE,
   keep_null_plot = FALSE
@@ -24,7 +24,7 @@ AUTO_VI$null_vss(
   draws = 100L,
   fitted_mod = self$fitted_mod,
   keras_mod = self$keras_mod,
-  method = self$rotate_resid,
+  null_method = self$rotate_resid,
   node_index = self$node_index,
   keep_null_dat = FALSE,
   keep_null_plot = FALSE
@@ -42,7 +42,7 @@ AUTO_VI$null_vss(
     
     <a class="navbar-brand me-2" href="../index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ distribution, and predicts the visual signal strength.</p><div class="section">
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">draws =</span> 100L,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fitted_mod =</span> self<span class="sc">$</span>fitted_mod,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">keras_mod =</span> self<span class="sc">$</span>keras_mod,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> self<span class="sc">$</span>rotate_resid,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">null_method =</span> self<span class="sc">$</span>rotate_resid,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">node_index =</span> self<span class="sc">$</span>node_index,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_null_dat =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_null_plot =</span> <span class="cn">FALSE</span></span>
@@ -108,7 +108,7 @@ distribution, and predicts the visual signal strength.</p><div class="section">
 <dd><p>Keras model. A trained computer vision model.</p></dd>
 
 
-<dt>method</dt>
+<dt>null_method</dt>
 <dd><p>Function. A method to simulate residuals from the null
 hypothesis distribution. For <code>lm</code>, the recommended method is residual
 rotation <code><a href="AUTO_VI-cash-rotate_resid.html">AUTO_VI$rotate_resid()</a></code>.</p></dd>
