@@ -637,9 +637,11 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
     pca <- stats::prcomp(raw_feature, center = FALSE, scale. = FALSE)
 
-    feature$pc1 <- pca$x[, 1]
-    feature$pc2 <- pca$x[, 2]
+    feature <- cbind(feature, as.data.frame(pca$x))
+    feature <- tibble::as_tibble(feature)
 
+    attr(feature, "sdev") <- pca$sdev
+    attr(feature, "rotation") <- pca$rotation
     return(feature)
   }
 
