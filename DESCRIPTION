@@ -22,7 +22,6 @@ Imports:
     stats,
     tibble,
     tools,
-    keras,
     reticulate,
     visage,
     utils,

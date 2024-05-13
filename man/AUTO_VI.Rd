@@ -91,6 +91,7 @@ with S3 class \code{bandicoot_oop}.
 }
 \item N:
 \itemize{
+\item \code{\link[=AUTO_VI$null_method]{AUTO_VI$null_method()}}
 \item \code{\link[=AUTO_VI$null_vss]{AUTO_VI$null_vss()}}
 }
 \item P:
@@ -108,10 +109,6 @@ with S3 class \code{bandicoot_oop}.
 \item \code{\link[=AUTO_VI$save_plot]{AUTO_VI$save_plot()}}
 \item \code{\link[=AUTO_VI$..str..]{AUTO_VI$..str..()}}
 \item \code{\link[=AUTO_VI$summary_plot]{AUTO_VI$summary_plot()}}
-}
-\item U:
-\itemize{
-\item \code{\link[=AUTO_VI$unique_obs_correction]{AUTO_VI$unique_obs_correction()}}
 }
 \item V:
 \itemize{

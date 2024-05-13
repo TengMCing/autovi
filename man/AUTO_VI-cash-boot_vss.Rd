@@ -10,9 +10,6 @@
 
 \item{keras_mod}{Keras model. A trained computer vision model.}
 
-\item{correction}{Boolean. Correction for bootstrapped visual signal
-strength due to the reduction of unique data points in null plots.}
-
 \item{jitter}{Boolean. Whether to use \code{jitter()} to generate bootstrapped
 data instead of sampling from the original data with replacement.}
 
@@ -42,7 +39,6 @@ predicts the visual signal strength of the bootstrapped residual plots.
   draws = 100L,
   fitted_mod = self$fitted_mod,
   keras_mod = self$keras_mod,
-  correction = FALSE,
   jitter = FALSE,
   factor = 1L,
   dat = self$get_dat(),

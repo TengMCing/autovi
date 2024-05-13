@@ -132,7 +132,8 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
   vss_ <- function(p = self$plot_resid(),
                    auxiliary = NULL,
                    keras_mod = self$keras_mod,
-                   node_index = self$node_index) {
+                   node_index = self$node_index,
+                   extract_feature_from_layer = NULL) {
 
     # Check if the keras model have multiple inputs
     mutltiple_inputs_flag <- length(keras_mod$inputs) > 1
@@ -159,7 +160,7 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     }
 
     # Get the input shape from the keras model.
-    input_shape <- keras_mod$layers[[1]]$input_shape[[1]]
+    input_shape <- keras_mod$input_shape[[1]]
     height <- input_shape[[2]]
     width <- input_shape[[3]]
 
@@ -169,6 +170,8 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     # Import necessary Python libraries
     PIL <- reticulate::import("PIL", convert = FALSE)
     np <- reticulate::import("numpy", convert = FALSE)
+    tf <- reticulate::import("tensorflow", convert = TRUE)
+    keras <- tf$keras
 
     # Init a temporary file for storing images.
     temp_path <- tempfile(fileext = ".png")
@@ -186,7 +189,7 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
       input_image <- PIL$Image$open(temp_path)$resize(c(width, height))
 
       # Convert the image to a Numpy array.
-      input_array <- keras::image_to_array(input_image)
+      input_array <- keras$utils$img_to_array(input_image)
 
       # Store the array into the batch
       input_batch[[i]] <- input_array
@@ -203,9 +206,9 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
     # Predict the batch.
     if (mutltiple_inputs_flag) {
-      output <- keras_mod(list(input_batch, auxiliary))$numpy()
+      output <- keras_mod$`__call__`(list(input_batch, auxiliary))$numpy()
     } else {
-      output <- keras_mod(input_batch)$numpy()
+      output <- keras_mod$`__call__`(input_batch)$numpy()
     }
 
     cli::cli_alert_success("Predict visual signal strength for {length(p_list)} image{?s}.")
@@ -216,7 +219,46 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     # Extract the value of a particular output node.
     if (is.vector(output) && is.atomic(output)) return(output)
 
-    return(output[, node_index])
+    # Use the model as a feature extractor
+    if (!is.null(extract_feature_from_layer)) {
+
+      if(!(is.numeric(extract_feature_from_layer) || is.character(extract_feature_from_layer))) {
+        stop("Argument `extract_feature_from_layer` needs to be an integer or a string.")
+      }
+
+      if (is.numeric(extract_feature_from_layer))
+        target_layer <- keras_mod$get_layer(index = as.integer(extract_feature_from_layer) - 1L)
+
+      if (is.character(extract_feature_from_layer))
+        target_layer <- keras_mod$get_layer(extract_feature_from_layer)
+
+      # Build a feature extraction model
+      feature_mod <- keras$Model(inputs = keras_mod$input, outputs = target_layer$output)
+
+      # Extract feature
+      if (mutltiple_inputs_flag) {
+        feature <- feature_mod$`__call__`(list(input_batch, auxiliary))$numpy()
+      } else {
+        feature <- feature_mod$`__call__`(input_batch)$numpy()
+      }
+
+      # Convert the array into a matrix
+      dim(feature) <- c(dim(feature)[1], prod(dim(feature))/dim(feature)[1])
+      colnames(feature) <- paste0("f_", 1:dim(feature)[2])
+
+      feature <- tibble::as_tibble(feature)
+
+      return(list(output[, node_index], feature))
+    } else {
+      return(output[, node_index])
+    }
+  }
+
+
+# null_method -------------------------------------------------------------
+
+  null_method_ <- function(fitted_mod = self$fitted_mod) {
+    return(self$rotate_resid(fitted_mod))
   }
 
 
@@ -249,10 +291,11 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
   null_vss_ <- function(draws = 100L,
                         fitted_mod = self$fitted_mod,
                         keras_mod = self$keras_mod,
-                        null_method = self$rotate_resid,
+                        null_method = self$null_method,
                         node_index = self$node_index,
                         keep_null_dat = FALSE,
-                        keep_null_plot = FALSE) {
+                        keep_null_plot = FALSE,
+                        extract_feature_from_layer = NULL) {
 
     # Simulate null data.
     dat_list <- lapply(1:draws, function(i) null_method(fitted_mod))
@@ -291,9 +334,17 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     vss <- self$vss(p_list,
                     auxiliary = auxiliary,
                     keras_mod = keras_mod,
-                    node_index = node_index)
+                    node_index = node_index,
+                    extract_feature_from_layer = extract_feature_from_layer)
 
-    result <- tibble::tibble(vss = vss)
+    if (!is.null(extract_feature_from_layer)) {
+      feature <- vss[[2]]
+      vss <- vss[[1]]
+      result <- data.frame(vss = vss)
+      result <- tibble::tibble(cbind(result, feature))
+    } else {
+      result <- tibble::tibble(vss = vss)
+    }
 
     if (keep_null_dat) result$dat <- dat_list
     if (keep_null_plot) result$plot <- p_list
@@ -301,25 +352,18 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     return(result)
   }
 
-
-# unique_obs_correction ---------------------------------------------------
-
-  unique_obs_correction_ <- function(vss, overlap_ratio) {
-    log((exp(vss) - 1) / overlap_ratio + 1)
-  }
-
 # boot_vss ----------------------------------------------------------------
 
   boot_vss_ <- function(draws = 100L,
                         fitted_mod = self$fitted_mod,
                         keras_mod = self$keras_mod,
-                        correction = FALSE,
                         jitter = FALSE,
                         factor = 1L,
                         dat = self$get_dat(),
                         node_index = 1L,
                         keep_boot_dat = FALSE,
-                        keep_boot_plot = FALSE) {
+                        keep_boot_plot = FALSE,
+                        extract_feature_from_layer = NULL) {
 
     # Decide between jitter and sampling with replacement.
     if (jitter) {
@@ -388,15 +432,17 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     vss <- self$vss(p_list,
                     auxiliary = auxiliary,
                     keras_mod = keras_mod,
-                    node_index = node_index)
+                    node_index = node_index,
+                    extract_feature_from_layer = extract_feature_from_layer)
 
-    # Apply unique ratio correction.
-    if (correction && !jitter) {
-      overlap_ratio <- unlist(lapply(dat_list, function(this_dat) this_dat$.overlap_ratio))
-      vss <- self$unique_obs_correction(vss, overlap_ratio)
+    if (!is.null(extract_feature_from_layer)) {
+      feature <- vss[[2]]
+      vss <- vss[[1]]
+      result <- data.frame(vss = vss)
+      result <- tibble::tibble(cbind(result, feature))
+    } else {
+      result <- tibble::tibble(vss = vss)
     }
-
-    result <- tibble::tibble(vss = vss)
 
     if (keep_boot_dat) result$dat <- dat_list
     if (keep_boot_plot) result$plot <- p_list
@@ -411,14 +457,14 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                      boot_draws = 100L,
                      fitted_mod = self$fitted_mod,
                      keras_mod = self$keras_mod,
-                     null_method = self$rotate_resid,
-                     correction = FALSE,
+                     null_method = self$null_method,
                      jitter = FALSE,
                      factor = 1L,
                      dat = self$get_dat(),
                      node_index = self$node_index,
                      keep_dat = FALSE,
-                     keep_plot = FALSE) {
+                     keep_plot = FALSE,
+                     extract_feature_from_layer = NULL) {
 
     # Get the null distribution.
     null_dist <- self$null_vss(null_draws,
@@ -427,29 +473,39 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                                null_method = null_method,
                                node_index = node_index,
                                keep_null_dat = keep_dat,
-                               keep_null_plot = keep_plot)
+                               keep_null_plot = keep_plot,
+                               extract_feature_from_layer = extract_feature_from_layer)
 
     # Get the bootstrapped distribution.
     boot_dist <- self$boot_vss(boot_draws,
                                fitted_mod = fitted_mod,
                                keras_mod = keras_mod,
-                               correction = correction,
                                jitter = jitter,
                                factor = factor,
                                dat = dat,
                                node_index = node_index,
                                keep_boot_dat = keep_dat,
-                               keep_boot_plot = keep_plot)
+                               keep_boot_plot = keep_plot,
+                               extract_feature_from_layer = extract_feature_from_layer)
 
     # Get the observed visual signal strength.
     fitted_and_resid <- self$get_fitted_and_resid(fitted_mod = fitted_mod)
     p <- self$plot_resid(fitted_and_resid)
-    observed_vss <- self$vss(p, keras_mod = keras_mod, node_index = node_index)
+    observed_vss <- self$vss(p,
+                             keras_mod = keras_mod,
+                             node_index = node_index,
+                             extract_feature_from_layer = extract_feature_from_layer)
 
     # Store the results internally.
     self$check_result$null <- null_dist
     self$check_result$boot <- boot_dist
-    self$check_result$vss <- observed_vss
+
+    if (!is.null(extract_feature_from_layer)) {
+      self$check_result$vss <- observed_vss[[1]]
+      self$check_result$feature <- observed_vss[[2]]
+    } else {
+      self$check_result$vss <- observed_vss
+    }
 
     # Compute the p-values.
     self$check_result$p_value <-  self$p_value(type = "null")
@@ -521,13 +577,6 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     stop("Argument `type` is neither 'null' nor 'boot'!")
   }
 
-# # lr_ratio_status ---------------------------------------------------------
-#
-#   lr_ratio_status_ <- function(ratio = self$lr_ratio()) {
-#     if (is.nan(ratio)) return("The bootstrapped distribution does not capture the observed value!")
-#     if (is.infinite(ratio)) return("It is very unlikely the observed value is from the null VSS distribution!")
-#   }
-
 # summary_plot ------------------------------------------------------------
 
   summary_plot_ <- function() {
@@ -553,6 +602,58 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                                          format(self$check_result$p_value, digits = 4),
                                          ", Likelihood ratio = ",
                                          format(self$check_result$lr_ratio, digits = 4)))
+  }
+
+
+# feature_plot ------------------------------------------------------------
+
+
+  feature_plot_ <- function() {
+
+    boot_result <- self$check_result$boot
+    null_result <- self$check_result$null
+
+    boot_feature <- boot_result[, grep("f_", names(boot_result))]
+    boot_feature$type <- "boot"
+
+    null_feature <- null_result[, grep("f_", names(null_result))]
+    null_feature$type <- "null"
+
+    observed_feature <- self$check_result$feature
+    observed_feature$type <- "observed"
+
+    feature <- rbind(boot_feature, null_feature, observed_feature)
+
+    raw_feature <- feature[, !(colnames(feature) %in% c("type"))]
+
+    # Drop columns with no variance
+    for (i in 1:ncol(raw_feature)) {
+      x <- raw_feature[[i]]
+      if (sd(x) == 0) {
+        raw_feature[[i]] <- x
+      } else {
+        raw_feature[[i]] <- c(scale(x))
+      }
+    }
+
+    pca <- stats::prcomp(raw_feature, center = FALSE, scale. = FALSE)
+
+    feature$pc1 <- pca$x[, 1]
+    feature$pc2 <- pca$x[, 2]
+
+    ggplot(feature) +
+      geom_point(aes(pc1, pc2, col = type))
+  }
+
+
+# get_raw_gradient --------------------------------------------------------
+
+  get_raw_gradient <- function(p = self$plot_resid(),
+                               auxiliary = NULL,
+                               keras_mod = self$keras_mod
+                               ) {
+
+
   }
 
 
@@ -584,13 +685,13 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     if (is.null(self$keras_mod)) {
       keras_mod_status <- "UNKNOWN"
     } else {
-      input_shape <- paste(unlist(self$keras_mod$layers[[1]]$input_shape[[1]]), collapse = ", ")
+      input_shape <- paste(unlist(self$keras_mod$input_shape[[1]]), collapse = ", ")
       output_shape <- paste(unlist(self$keras_mod$output_shape), collapse = ", ")
 
       if (length(self$keras_mod$inputs) == 1) {
         keras_mod_status <- paste0("(None, ", input_shape, ") -> ", "(None, ", output_shape, ")")
       } else {
-        second_input_shape <- self$keras_mod$inputs[[2]]$shape[[2]]
+        second_input_shape <- unlist(self$keras_mod$input_shape[[2]])
         keras_mod_status <- paste0("(None, ", input_shape, ") + (None, ", second_input_shape, ") -> ", "(None, ", output_shape, ")")
       }
 
@@ -670,14 +771,15 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                              save_plot = save_plot_,
                              remove_plot = remove_plot_,
                              vss = vss_,
+                             null_method = null_method_,
                              rotate_resid = rotate_resid_,
                              null_vss = null_vss_,
-                             unique_obs_correction = unique_obs_correction_,
                              boot_vss = boot_vss_,
                              check = check_,
                              lr_ratio = lr_ratio_,
                              p_value = p_value_,
                              summary_plot = summary_plot_,
+                             feature_plot = feature_plot_,
                              ..str.. = str_)
 }
 

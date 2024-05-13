@@ -15,5 +15,5 @@ A keras model.
 \description{
 This functions download the keras model from the \code{TengMCing/autovi_data}
 Github repo using \code{\link[=download.file]{download.file()}} and load the model using
-\code{keras::keras$models$load_model}.
+\code{reticulate::import("tensorflow")$keras$models$load_model}.
 }

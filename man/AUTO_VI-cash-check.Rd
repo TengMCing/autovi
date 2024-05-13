@@ -18,9 +18,6 @@
 hypothesis distribution. For \code{lm}, the recommended method is residual
 rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
 
-\item{correction}{Boolean. Correction for bootstrapped visual signal
-strength due to the reduction of unique data points in null plots.}
-
 \item{jitter}{Boolean. Whether to use \code{jitter()} to generate bootstrapped
 data instead of sampling from the original data with replacement.}
 
@@ -52,7 +49,6 @@ check with a computer vision model. The result will be stored in
   fitted_mod = self$fitted_mod,
   keras_mod = self$keras_mod,
   null_method = self$rotate_resid,
-  correction = FALSE,
   jitter = FALSE,
   factor = 1L,
   dat = self$get_dat(),
