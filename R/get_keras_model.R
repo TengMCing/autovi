@@ -23,7 +23,7 @@ list_keras_models <- function() {
 #'
 #' This functions download the keras model from the `TengMCing/autovi_data`
 #' Github repo using [download.file()] and load the model using
-#' `keras::keras$models$load_model`.
+#' `reticulate::import("tensorflow")$keras$models$load_model`.
 #'
 #' @param model_name String. The model name. See also [list_keras_models()].
 #' @return A keras model.
@@ -41,7 +41,9 @@ get_keras_model <- function(model_name) {
   temp_folder <- tempdir()
   utils::unzip(temp, exdir = temp_folder)
 
-  mod <- keras::keras$models$load_model(file.path(temp_folder, paste0(model_name, ".keras")))
+  tf <- reticulate::import("tensorflow", convert = TRUE)
+  keras <- tf$keras
+  mod <- keras$models$load_model(file.path(temp_folder, paste0(model_name, ".keras")))
 
   return(mod)
 }
