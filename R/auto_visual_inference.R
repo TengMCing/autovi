@@ -817,6 +817,7 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
                              lr_ratio = lr_ratio_,
                              p_value = p_value_,
                              summary_plot = summary_plot_,
+                             feature_pc = feature_pc_,
                              feature_plot = feature_plot_,
                              ..str.. = str_)
 }
