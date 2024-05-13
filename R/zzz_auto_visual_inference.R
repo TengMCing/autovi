@@ -46,6 +46,7 @@ AUTO_VI <- new.env()
 #' * L:
 #'    * [AUTO_VI$lr_ratio()]
 #' * N:
+#'    * [AUTO_VI$null_method()]
 #'    * [AUTO_VI$null_vss()]
 #' * P:
 #'    * [AUTO_VI$p_value]
@@ -57,8 +58,6 @@ AUTO_VI <- new.env()
 #'    * [AUTO_VI$save_plot()]
 #'    * [AUTO_VI$..str..()]
 #'    * [AUTO_VI$summary_plot()]
-#' * U:
-#'    * [AUTO_VI$unique_obs_correction()]
 #' * V:
 #'    * [AUTO_VI$vss()]
 #'
@@ -330,6 +329,28 @@ AUTO_VI$remove_plot
 #' @return A numeric vector.
 AUTO_VI$vss
 
+#' Get null residuals from a fitted model
+#'
+#' @name AUTO_VI$null_method
+#'
+#' @description This default method gets rotated residuals from a fitted linear
+#' model using [AUTO_VI$rotate_resid]. User needs to override this method if
+#' the fitted model is not a linear regression model.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$null_method(fitted_mod = self$fitted_mod)
+#' ```
+#'
+#' @param fitted_mod `lm`. A linear model object.
+#' @return A tibble with two columns `.fitted` and `.resid`.
+#' @examples
+#'
+#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' null_resid <- my_vi$null_method()
+#' my_vi$plot_resid(null_resid)
+AUTO_VI$null_method
+
 #' Get rotated residuals from a fitted linear model
 #'
 #' @name AUTO_VI$rotate_resid
@@ -390,33 +411,6 @@ AUTO_VI$rotate_resid
 #' `keep_null_dat` and `keep_null_plot`.
 AUTO_VI$null_vss
 
-#' Compute the adjustment factor for the reduction of the number of
-#' unique observations
-#'
-#' @name AUTO_VI$unique_obs_correction
-#'
-#' @description This function computes the adjustment factor for the reduction
-#' of the number of unique observations. Once we bootstrap the data and refit
-#' the model, the residual plot will usually have less observations due to
-#' sampling with replacement. The visual signal strength of this plot will
-#' also decrease. To correct this effect, we can scale the visual signal
-#' strength based on the unique number of observations in the
-#' bootstrapped data.
-#'
-#' ## Usage
-#' ```
-#' AUTO_VI$unique_obs_correction(vss, overlap_ratio)
-#' ```
-#'
-#' @param vss Numeric. Visual signal strength.
-#' @param overlap_ratio. Numeric. A value between 0 and 1 indicating the
-#' percentage of original observations presenting in the bootstrapped data.
-#' @return A numeric value representing the adjusted visual signal strength.
-#'
-#' @examples
-#' AUTO_VI$unique_obs_correction(1, 2/3)
-AUTO_VI$unique_obs_correction
-
 #' Predict visual signal strength for bootstrapped residual plots
 #'
 #' @name AUTO_VI$boot_vss
@@ -430,7 +424,6 @@ AUTO_VI$unique_obs_correction
 #'   draws = 100L,
 #'   fitted_mod = self$fitted_mod,
 #'   keras_mod = self$keras_mod,
-#'   correction = FALSE,
 #'   jitter = FALSE,
 #'   factor = 1L,
 #'   dat = self$get_dat(),
@@ -443,8 +436,6 @@ AUTO_VI$unique_obs_correction
 #' @param draws Integer. Number of simulation draws.
 #' @param fitted_mod Model. A model object, e.g. `lm`.
 #' @param keras_mod Keras model. A trained computer vision model.
-#' @param correction Boolean. Correction for bootstrapped visual signal
-#' strength due to the reduction of unique data points in null plots.
 #' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
 #' data instead of sampling from the original data with replacement.
 #' @param factor Numeric. See also [jitter()].
@@ -475,7 +466,6 @@ AUTO_VI$boot_vss
 #'   fitted_mod = self$fitted_mod,
 #'   keras_mod = self$keras_mod,
 #'   null_method = self$rotate_resid,
-#'   correction = FALSE,
 #'   jitter = FALSE,
 #'   factor = 1L,
 #'   dat = self$get_dat(),
@@ -494,8 +484,6 @@ AUTO_VI$boot_vss
 #' @param null_method Function. A method to simulate residuals from the null
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid()].
-#' @param correction Boolean. Correction for bootstrapped visual signal
-#' strength due to the reduction of unique data points in null plots.
 #' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
 #' data instead of sampling from the original data with replacement.
 #' @param factor Numeric. See also [jitter()].
