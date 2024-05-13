@@ -605,6 +605,44 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
   }
 
 
+
+# feature_pc --------------------------------------------------------------
+
+  feature_pc_ <- function() {
+    boot_result <- self$check_result$boot
+    null_result <- self$check_result$null
+
+    boot_feature <- boot_result[, grep("f_", names(boot_result))]
+    boot_feature$type <- "boot"
+
+    null_feature <- null_result[, grep("f_", names(null_result))]
+    null_feature$type <- "null"
+
+    observed_feature <- self$check_result$feature
+    observed_feature$type <- "observed"
+
+    feature <- rbind(boot_feature, null_feature, observed_feature)
+
+    raw_feature <- feature[, !(colnames(feature) %in% c("type"))]
+
+    # Drop columns with no variance
+    for (i in 1:ncol(raw_feature)) {
+      x <- raw_feature[[i]]
+      if (sd(x) == 0) {
+        raw_feature[[i]] <- x
+      } else {
+        raw_feature[[i]] <- c(scale(x))
+      }
+    }
+
+    pca <- stats::prcomp(raw_feature, center = FALSE, scale. = FALSE)
+
+    feature$pc1 <- pca$x[, 1]
+    feature$pc2 <- pca$x[, 2]
+
+    return(feature)
+  }
+
 # feature_plot ------------------------------------------------------------
 
 
