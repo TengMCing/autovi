@@ -41,6 +41,7 @@ get_keras_model <- function(model_name) {
   temp_folder <- tempdir()
   utils::unzip(temp, exdir = temp_folder)
 
+  check_python_library_available("tensorflow")
   tf <- reticulate::import("tensorflow", convert = TRUE)
   keras <- tf$keras
   mod <- keras$models$load_model(file.path(temp_folder, paste0(model_name, ".keras")))

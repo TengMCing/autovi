@@ -2,5 +2,6 @@
 
 export(AUTO_VI)
 export(auto_vi)
+export(check_python_library_available)
 export(get_keras_model)
 export(list_keras_models)

@@ -1,7 +1,7 @@
 Package: autovi
 Type: Package
 Title: Auto visual inference with computer vision models
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: 
     person(given = "Weihao",
            family = "Li",
@@ -23,7 +23,6 @@ Imports:
     tibble,
     tools,
     reticulate,
-    visage,
     utils,
     cassowaryr,
     cli
