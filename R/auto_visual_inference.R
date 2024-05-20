@@ -227,11 +227,10 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
       dim(feature) <- c(dim(feature)[1], prod(dim(feature))/dim(feature)[1])
       colnames(feature) <- paste0("f_", 1:dim(feature)[2])
 
-      feature <- tibble::as_tibble(feature)
-
-      return(list(output, feature))
+      return(tibble::as_tibble(cbind(tibble::tibble(vss = output),
+                                     tibble::as_tibble(feature))))
     } else {
-      return(output)
+      return(tibble::tibble(vss = output))
     }
   }
 
@@ -536,14 +535,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                     node_index = node_index,
                     extract_feature_from_layer = extract_feature_from_layer)
 
-    if (!is.null(extract_feature_from_layer)) {
-      feature <- vss[[2]]
-      vss <- vss[[1]]
-      result <- data.frame(vss = vss)
-      result <- tibble::tibble(cbind(result, feature))
-    } else {
-      result <- tibble::tibble(vss = vss)
-    }
+    result <- vss
 
     if (keep_null_dat) result$dat <- dat_list
     if (keep_null_plot) result$plot <- p_list
@@ -615,14 +607,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                     node_index = node_index,
                     extract_feature_from_layer = extract_feature_from_layer)
 
-    if (!is.null(extract_feature_from_layer)) {
-      feature <- vss[[2]]
-      vss <- vss[[1]]
-      result <- data.frame(vss = vss)
-      result <- tibble::tibble(cbind(result, feature))
-    } else {
-      result <- tibble::tibble(vss = vss)
-    }
+    result <- vss
 
     if (keep_boot_dat) result$dat <- dat_list
     if (keep_boot_plot) result$plot <- p_list
@@ -676,25 +661,20 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     # Get the observed visual signal strength.
     fitted_and_resid <- self$get_fitted_and_resid(fitted_mod = fitted_mod)
     p <- self$plot_resid(fitted_and_resid)
-    observed_vss <- self$vss(p,
-                             keras_mod = keras_mod,
-                             node_index = node_index,
-                             extract_feature_from_layer = extract_feature_from_layer)
+    observed <- self$vss(p,
+                         keras_mod = keras_mod,
+                         node_index = node_index,
+                         extract_feature_from_layer = extract_feature_from_layer)
 
     # Store the results internally.
     self$check_result$null <- null_dist
     self$check_result$boot <- boot_dist
 
-    if (!is.null(extract_feature_from_layer)) {
-      self$check_result$vss <- observed_vss[[1]]
-      self$check_result$feature <- observed_vss[[2]]
-    } else {
-      self$check_result$vss <- observed_vss
-    }
+    self$check_result$observed <- observed
 
     # Compute the p-values.
     if (null_draws > 0)
-      self$check_result$p_value <- self$p_value(self$check_result$vss , p_value_type = p_value_type)
+      self$check_result$p_value <- self$p_value(observed$vss , p_value_type = p_value_type)
     if (null_draws > 0 && boot_draws > 0)
       self$check_result$boot_p_value <- self$p_value(mean(boot_dist$vss), p_value_type = p_value_type)
 
@@ -741,7 +721,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
 # lr_ratio ----------------------------------------------------------------
 
-  lr_ratio_ <- function(vss = self$check_result$vss,
+  lr_ratio_ <- function(vss = self$check_result$observed$vss,
                         dist_1 = self$check_result$boot$vss,
                         dist_2 = self$check_result$null$vss) {
 
@@ -770,7 +750,9 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
 # p_value -----------------------------------------------------------------
 
-  p_value_ <- function(vss = self$check_result$vss, null_dist = self$check_result$null$vss, p_value_type = "quantile") {
+  p_value_ <- function(vss = self$check_result$observed$vss,
+                       null_dist = self$check_result$null$vss,
+                       p_value_type = "quantile") {
 
     if (is.null(vss)) stop("Missing observed visual signal strength!")
     if (is.null(null_dist)) stop("Missing results for null distribution!")
@@ -790,7 +772,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
 # summary_density_plot ----------------------------------------------------
 
-  summary_density_plot_ <- function(vss = self$check_result$vss,
+  summary_density_plot_ <- function(vss = self$check_result$observed$vss,
                                     null_dist = self$check_result$null$vss,
                                     boot_dist = self$check_result$boot$vss,
                                     p_value = self$check_result$p_value,
@@ -833,7 +815,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
 # summary_rank_plot -------------------------------------------------------
 
-  summary_rank_plot_ <- function(vss = self$check_result$vss,
+  summary_rank_plot_ <- function(vss = self$check_result$observed$vss,
                                  null_dist = self$check_result$null$vss,
                                  p_value = self$check_result$p_value) {
 
@@ -845,13 +827,16 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
     p <- ggplot2::ggplot() +
       ggplot2::geom_col(data = NULL, ggplot2::aes(x, y)) +
-      ggplot2::geom_col(data = NULL, ggplot2::aes(x[1], y[1], fill = "observed", col = "observed")) +
+      ggplot2::geom_col(data = NULL, ggplot2::aes(x[1],
+                                                  y[1],
+                                                  fill = "observed",
+                                                  col = "observed")) +
       ggplot2::xlab("Rank") +
       ggplot2::ylab("Visual signal strength") +
       ggplot2::theme_light()
 
     subtitle <- ""
-    if (!is.null(p_value) || identical(p_value, TRUE)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))
+    if (!is.null(p_value)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))
 
     p <- p + ggplot2::ggtitle("Summary of check result (rank)", subtitle = subtitle)
 
@@ -869,7 +854,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
 # feature_pca -------------------------------------------------------------
 
-  feature_pca_ <- function(feature = self$check_result$feature,
+  feature_pca_ <- function(feature = self$check_result$observed[, grep("f_", names(self$check_result$observed))],
                            null_feature = self$check_result$null[, grep("f_", names(self$check_result$null))],
                            boot_feature = self$check_result$boot[, grep("f_", names(self$check_result$boot))],
                            center = TRUE,
@@ -996,7 +981,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
     result <- paste0(result, "\n  - Result:")
     result <- paste0(result, "\n     - Observed visual signal strength: ",
-                     format(self$check_result$vss, digits = 4))
+                     format(self$check_result$observed$vss, digits = 4))
 
     # Get the null p-value.
     p_value <- self$check_result$p_value
