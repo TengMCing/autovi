@@ -494,7 +494,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                         keep_null_plot = FALSE,
                         extract_feature_from_layer = NULL) {
 
-    if (draws == 0) stop("Argument `draws` needs to be positive!")
+    if (draws <= 0) stop("Argument `draws` needs to be positive!")
 
     # Simulate null data.
     dat_list <- lapply(1:draws, function(i) null_method(fitted_mod))
@@ -557,12 +557,12 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                         fitted_mod = self$fitted_mod,
                         keras_mod = self$keras_mod,
                         dat = self$get_dat(),
-                        node_index = 1L,
+                        node_index = self$node_index,
                         keep_boot_dat = FALSE,
                         keep_boot_plot = FALSE,
                         extract_feature_from_layer = NULL) {
 
-    if (draws == 0) stop("Argument `draws` needs to be positive!")
+    if (draws <= 0) stop("Argument `draws` needs to be positive!")
 
     # Bootstrap and refit regression models.
     dat_list <- lapply(1:draws, function(i) {
@@ -694,7 +694,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
     # Compute the p-values.
     if (null_draws > 0)
-      self$check_result$p_value <- self$p_value(observed_vss, p_value_type = p_value_type)
+      self$check_result$p_value <- self$p_value(self$check_result$vss , p_value_type = p_value_type)
     if (null_draws > 0 && boot_draws > 0)
       self$check_result$boot_p_value <- self$p_value(mean(boot_dist$vss), p_value_type = p_value_type)
 
@@ -811,10 +811,10 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                                                 linetype = "Observed vss"))
 
     if (!is.null(null_dist)) p <- p + ggplot2::geom_segment(ggplot2::aes(x = stats::quantile(null_dist, c(0.95)),
-                                                                         xend = stats::quantile(null_dist, c(0.95)),
-                                                                         y = 0,
-                                                                         yend = Inf,
-                                                                         linetype = "95% quantile of the null distribution"))
+                                                                                             xend = stats::quantile(null_dist, c(0.95)),
+                                                                                             y = 0,
+                                                                                             yend = Inf,
+                                                                                             linetype = "95% quantile of the null distribution"))
 
     p <- p + ggplot2::xlab("Visual signal strength") +
       ggplot2::ylab("Density") +
@@ -851,7 +851,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
       ggplot2::theme_light()
 
     subtitle <- ""
-    if (!is.null(p_value)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))
+    if (!is.null(p_value) || identical(p_value, TRUE)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))
 
     p <- p + ggplot2::ggtitle("Summary of check result (rank)", subtitle = subtitle)
 
@@ -875,14 +875,25 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                            center = TRUE,
                            scale = TRUE) {
 
-    all_feature <- rbind(feature, null_feature, boot_feature)
-    if (is.null(all_feature)) stop("Can not find any feautre!")
-
+    all_feature <- data.frame()
     tags <- c()
-    if (!is.null(feature)) tags <- c(tags, "observed")
-    if (!is.null(null_feature)) tags <- c(tags, rep("null", nrow(null_feature)))
-    if (!is.null(boot_feature)) tags <- c(tags, rep("boot", nrow(boot_feature)))
 
+    if (!is.null(feature)) {
+      all_feature <- rbind(all_feature, feature)
+      tags <- c(tags, "observed")
+    }
+
+    if (!is.null(null_feature)) {
+      all_feature <- rbind(all_feature, null_feature)
+      tags <- c(tags, rep("null", nrow(null_feature)))
+    }
+
+    if (!is.null(boot_feature)) {
+      all_feature <- rbind(all_feature, boot_feature)
+      tags <- c(tags, rep("boot", nrow(boot_feature)))
+    }
+
+    if (nrow(all_feature) == 0) stop("Can not find any feautre!")
 
     combined_feature <- all_feature
     combined_feature$set <- tags
@@ -920,7 +931,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
     if (col_by_set) {
       p <- ggplot2::ggplot(feature_pca) +
-        ggplot2::geom_point(ggplot2::aes(x, y, col = set))
+        ggplot2::geom_point(ggplot2::aes({{x}}, {{y}}, col = set))
     } else {
       p <- ggplot2::ggplot(feature_pca) +
         ggplot2::geom_point(ggplot2::aes({{x}}, {{y}}))

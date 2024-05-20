@@ -13,5 +13,5 @@ check_python_library_available <- function(lib_name) {
   module_spec <- find_spec(lib_name)
 
   if (is.null(reticulate::py_to_r(module_spec)))
-    stop("Library `tensorflow` can not be found in the currently used version of Python! Consider using `reticulate::py_config()` to confirm the version of Python is correct and using `reticulate::use_python()` to select a Python interpreter.")
+    stop(paste0("Library `", lib_name, "` can not be found in the currently used version of Python! Consider using `reticulate::py_config()` to confirm the version of Python is correct and using `reticulate::use_python()` to select a Python interpreter."))
 }
