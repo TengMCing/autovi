@@ -421,6 +421,18 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     # A 3D array
     if (is.array(x)) {
       if (length(dim(x)) == 3) {
+        np <- reticulate::import("numpy", convert = FALSE)
+        return(self$predict_array(np$reshape(x, c(1L, dim(x))),
+                                  auxiliary = auxiliary,
+                                  keras_mod = keras_mod,
+                                  node_index = node_index,
+                                  extract_feature_from_layer = extract_feature_from_layer))
+      }
+    }
+
+    # A 4D array
+    if (is.array(x)) {
+      if (length(dim(x)) == 4) {
         return(self$predict_array(x,
                                   auxiliary = auxiliary,
                                   keras_mod = keras_mod,
@@ -807,11 +819,11 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
       ggplot2::theme_light()
 
     subtitle <- ""
-    if (!is.numeric(p_value) && length(p_value) == 1 && !is.na(p_value)) {
+    if (is.numeric(p_value) && length(p_value) == 1 && !is.na(p_value)) {
       subtitle <- paste0("P-value = ", format(p_value, digits = 4))
     }
 
-    if (!is.numeric(lr_ratio) && length(lr_ratio) == 1 && !is.na(lr_ratio)) {
+    if (is.numeric(lr_ratio) && length(lr_ratio) == 1 && !is.na(lr_ratio)) {
       subtitle <- paste0(subtitle, ", Likelihood ratio = ", format(lr_ratio, digits = 4))
     }
 
@@ -828,8 +840,8 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                                  null_dist = self$check_result$null$vss,
                                  p_value = self$check_result$p_value) {
 
-    if (is.null(vss)) stop("Missing observed visual signal strength!")
-    if (is.null(null_dist)) stop("Missing results for null distribution!")
+    if (!is.numeric(vss) || length(vss) != 1 || is.na(vss)) stop("Argument `vss` needs to be a single numeric value!")
+    if (!is.numeric(null_dist) || length(null_dist) == 0) stop("Argument `null_dist` needs to be a vector of numeric values!")
 
     y <- c(vss, null_dist)
     x <- length(y) - rank(y, ties.method = "first") + 1
@@ -845,7 +857,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
       ggplot2::theme_light()
 
     subtitle <- ""
-    if (!is.null(p_value)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))
+    if (is.numeric(p_value) && length(p_value) == 1 && !is.na(p_value)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))
 
     p <- p + ggplot2::ggtitle("Summary of check result (rank)", subtitle = subtitle)
 
@@ -861,33 +873,46 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
   }
 
 
+# select_feature ----------------------------------------------------------
+
+
+  select_feature_ <- function(dat = self$check_result$observed, pattern = "f_") {
+    if (!is.data.frame(dat)) {
+      return(data.frame())
+    }
+    result <- dat[, grep(pattern, names(dat))]
+    if (ncol(result) == 0) warning("No features found in the provided data frame. Did you forget to specify a layer name or layer index for `extract_feature_from_layer` when estimating the visual signal strength or conducting the check?")
+    return(result)
+  }
+
+
 # feature_pca -------------------------------------------------------------
 
-  feature_pca_ <- function(feature = self$check_result$observed[, grep("f_", names(self$check_result$observed))],
-                           null_feature = self$check_result$null[, grep("f_", names(self$check_result$null))],
-                           boot_feature = self$check_result$boot[, grep("f_", names(self$check_result$boot))],
+  feature_pca_ <- function(feature = self$select_feature(self$check_result$observed),
+                           null_feature = self$select_feature(self$check_result$null),
+                           boot_feature = self$select_feature(self$check_result$boot),
                            center = TRUE,
                            scale = TRUE) {
 
     all_feature <- data.frame()
     tags <- c()
 
-    if (!is.null(feature)) {
+    if (is.data.frame(feature) && nrow(feature) > 0 && ncol(feature) > 0) {
       all_feature <- rbind(all_feature, feature)
       tags <- c(tags, "observed")
     }
 
-    if (!is.null(null_feature)) {
+    if (is.data.frame(null_feature) && nrow(null_feature) > 0 && ncol(null_feature) > 0) {
       all_feature <- rbind(all_feature, null_feature)
       tags <- c(tags, rep("null", nrow(null_feature)))
     }
 
-    if (!is.null(boot_feature)) {
+    if (is.data.frame(boot_feature) && nrow(boot_feature) > 0 && ncol(boot_feature) > 0) {
       all_feature <- rbind(all_feature, boot_feature)
       tags <- c(tags, rep("boot", nrow(boot_feature)))
     }
 
-    if (nrow(all_feature) == 0) stop("Can not find any feautre!")
+    if (nrow(all_feature) == 0) stop("Data frame `feature`, `null_feature` and `boot_feature` are all empty!")
 
     combined_feature <- all_feature
     combined_feature$set <- tags
@@ -901,7 +926,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
       }
     }
 
-    if (length(normal_feature_index) == 0) stop("All features have zero variance!")
+    if (length(normal_feature_index) == 0) stop("All features have zero variance! Can not conduct PCA!")
 
     all_feature <- all_feature[, normal_feature_index]
 
@@ -915,12 +940,12 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     return(combined_feature)
   }
 
-# feature_plot ------------------------------------------------------------
+# feature_pca_plot --------------------------------------------------------
 
-  feature_plot_ <- function(feature_pca = self$feature_pca(),
-                            x = PC1,
-                            y = PC2,
-                            col_by_set = TRUE) {
+  feature_pca_plot_ <- function(feature_pca = self$feature_pca(),
+                                x = PC1,
+                                y = PC2,
+                                col_by_set = TRUE) {
     set <- NULL
 
     if (col_by_set) {
@@ -932,6 +957,18 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     }
 
     return(p)
+  }
+
+
+
+# list_layer_name ---------------------------------------------------------
+
+  list_layer_name_ <- function(keras_mod = self$kears_mod) {
+    all_name <- c()
+    for (layer in myvi$keras_mod$layers) {
+      all_name <- c(all_name, layer$name)
+    }
+    return(all_name)
   }
 
 # str ---------------------------------------------------------------------
@@ -1078,8 +1115,10 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                              summary_density_plot = summary_density_plot_,
                              summary_rank_plot = summary_rank_plot_,
                              summary_plot = summary_plot_,
+                             select_feature = select_feature_,
                              feature_pca = feature_pca_,
-                             feature_plot = feature_plot_,
+                             feature_pca_plot = feature_pca_plot_,
+                             list_layer_name = list_layer_name_,
                              ..str.. = str_)
 }
 
