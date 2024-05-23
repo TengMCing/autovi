@@ -779,12 +779,12 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                                     lr_ratio = self$check_result$lr_ratio,
                                     density_alpha = 0.6) {
 
-    if (is.null(vss)) stop("Missing observed visual signal strength!")
+    if (!is.numeric(vss) || length(vss) != 1 || is.na(vss)) stop("Argument `vss` needs to be a single numeric value!")
 
     p <- ggplot2::ggplot()
 
-    if (!is.null(null_dist)) p <- p + ggplot2::geom_density(ggplot2::aes(null_dist, fill = "Null", col = "Null"), alpha = density_alpha)
-    if (!is.null(boot_dist)) p <- p + ggplot2::geom_density(ggplot2::aes(boot_dist, fill = "Boot", col = "Boot"), alpha = density_alpha)
+    if (is.numeric(null_dist) && length(null_dist) > 0) p <- p + ggplot2::geom_density(ggplot2::aes(null_dist, fill = "Null", col = "Null"), alpha = density_alpha)
+    if (is.numeric(boot_dist) && length(boot_dist) > 0) p <- p + ggplot2::geom_density(ggplot2::aes(boot_dist, fill = "Boot", col = "Boot"), alpha = density_alpha)
 
     p <- p + ggplot2::geom_segment(ggplot2::aes(x = vss,
                                                 xend = vss,
@@ -792,11 +792,14 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                                                 yend = Inf,
                                                 linetype = "Observed vss"))
 
-    if (!is.null(null_dist)) p <- p + ggplot2::geom_segment(ggplot2::aes(x = stats::quantile(null_dist, c(0.95)),
-                                                                                             xend = stats::quantile(null_dist, c(0.95)),
-                                                                                             y = 0,
-                                                                                             yend = Inf,
-                                                                                             linetype = "95% quantile of the null distribution"))
+    if (is.numeric(null_dist) && length(null_dist) > 0) {
+      p <- p + ggplot2::geom_segment(ggplot2::aes(x = stats::quantile(null_dist, c(0.95)),
+                                                  xend = stats::quantile(null_dist, c(0.95)),
+                                                  y = 0,
+                                                  yend = Inf,
+                                                  linetype = "95% quantile of the null distribution"))
+
+    }
 
     p <- p + ggplot2::xlab("Visual signal strength") +
       ggplot2::ylab("Density") +
@@ -804,10 +807,16 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
       ggplot2::theme_light()
 
     subtitle <- ""
-    if (!is.null(p_value)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))
-    if (!is.null(lr_ratio)) subtitle <- paste0(subtitle, ", Likelihood ratio = ", format(lr_ratio, digits = 4))
+    if (!is.numeric(p_value) && length(p_value) == 1 && !is.na(p_value)) {
+      subtitle <- paste0("P-value = ", format(p_value, digits = 4))
+    }
 
-    p <- p + ggplot2::ggtitle("Summary of check result (density)", subtitle = subtitle)
+    if (!is.numeric(lr_ratio) && length(lr_ratio) == 1 && !is.na(lr_ratio)) {
+      subtitle <- paste0(subtitle, ", Likelihood ratio = ", format(lr_ratio, digits = 4))
+    }
+
+    p <- p + ggplot2::ggtitle("Summary of check result (density)",
+                              subtitle = subtitle)
 
     return(p)
   }
