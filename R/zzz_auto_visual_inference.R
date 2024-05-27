@@ -13,7 +13,7 @@ AUTO_VI <- new.env()
 #'
 #' @param fitted_mod Model. A model object, e.g. `lm`.
 #' @param keras_mod Keras model. A trained computer vision model.
-#' @param dat Data frame. The data used to fit the model.
+#' @param data Data frame. The data used to fit the model.
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
@@ -66,15 +66,15 @@ AUTO_VI
 
 #' @describeIn AUTO_VI Class constructor, same as `AUTO_VI$instantiate()`.
 #' @export
-auto_vi <- function(fitted_mod,
-                    keras_mod = NULL,
-                    dat = NULL,
+auto_vi <- function(fitted_model,
+                    keras_model = NULL,
+                    data = NULL,
                     node_index = 1L,
                     env = new.env(parent = parent.frame()),
                     init_call = sys.call()) {
-  AUTO_VI$instantiate(fitted_mod = fitted_mod,
-                      keras_mod = keras_mod,
-                      dat = dat,
+  AUTO_VI$instantiate(fitted_model = fitted_model,
+                      keras_model = keras_model,
+                      data = data,
                       node_index = node_index,
                       env = env,
                       init_call = init_call)
@@ -97,12 +97,12 @@ AUTO_VI$check_result
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$..init..(fitted_mod, keras_mod = NULL, dat = NULL, node_index = 1L)
+#' AUTO_VI$..init..(fitted_mod, keras_mod = NULL, data = NULL, node_index = 1L)
 #' ```
 #'
 #' @param fitted_mod Model. A model object, e.g. `lm`.
 #' @param keras_mod Keras model. A trained computer vision model.
-#' @param dat Data frame. The data used to fit the model.
+#' @param data Data frame. The data used to fit the model.
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
@@ -197,7 +197,7 @@ AUTO_VI$get_dat
 #' AUTO_VI$auxiliary(dat = seflf$get_fitted_and_resid())
 #' ```
 #'
-#' @param dat Data frame. A data frame containing variables `.resid` and
+#' @param data Data frame. A data frame containing variables `.resid` and
 #' `.fitted`. See also [AUTO_VI$get_fitted_and_resid()].
 #' @return A vector of auxiliary values.
 #'
@@ -216,7 +216,7 @@ AUTO_VI$auxiliary
 #' ## Usage
 #' ```
 #' AUTO_VI$plot_resid(
-#'   dat = self$get_fitted_and_resid(),
+#'   data = self$get_fitted_and_resid(),
 #'   theme = ggplot2::theme_light(base_size = 11/5),
 #'   alpha = 1,
 #'   size = 0.5,
@@ -228,7 +228,7 @@ AUTO_VI$auxiliary
 #' )
 #' ```
 #'
-#' @param dat Data frame. A data frame containing variables `.resid` and
+#' @param data Data frame. A data frame containing variables `.resid` and
 #' `.fitted`. See also [AUTO_VI$get_fitted_and_resid()].
 #' @param theme `ggtheme`. A `ggplot` theme object.
 #' See also [ggplot2::theme_light()].
@@ -426,7 +426,7 @@ AUTO_VI$null_vss
 #'   keras_mod = self$keras_mod,
 #'   jitter = FALSE,
 #'   factor = 1L,
-#'   dat = self$get_dat(),
+#'   data = self$get_dat(),
 #'   node_index = 1L,
 #'   keep_boot_dat = FALSE,
 #'   keep_boot_plot = FALSE
@@ -439,7 +439,7 @@ AUTO_VI$null_vss
 #' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
 #' data instead of sampling from the original data with replacement.
 #' @param factor Numeric. See also [jitter()].
-#' @param dat Data frame. The data used to fit the model.
+#' @param data Data frame. The data used to fit the model.
 #' See also [AUTO_VI$get_dat()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
@@ -468,7 +468,7 @@ AUTO_VI$boot_vss
 #'   null_method = self$rotate_resid,
 #'   jitter = FALSE,
 #'   factor = 1L,
-#'   dat = self$get_dat(),
+#'   data = self$get_dat(),
 #'   node_index = self$node_index,
 #'   keep_dat = FALSE,
 #'   keep_plot = FALSE
@@ -487,7 +487,7 @@ AUTO_VI$boot_vss
 #' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
 #' data instead of sampling from the original data with replacement.
 #' @param factor Numeric. See also [jitter()].
-#' @param dat Data frame. The data used to fit the model.
+#' @param data Data frame. The data used to fit the model.
 #' See also [AUTO_VI$get_dat()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
