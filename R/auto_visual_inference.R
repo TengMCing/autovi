@@ -14,12 +14,15 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
 # init --------------------------------------------------------------------
 
-  init_ <- function(fitted_mod, keras_mod = NULL, dat = NULL, node_index = 1L) {
+  init_ <- function(fitted_model, keras_model = NULL, data = NULL, node_index = 1L) {
 
-    self$fitted_mod <- fitted_mod
-    self$keras_mod <- keras_mod
-    self$dat <- dat
+    self$fitted_model <- fitted_model
+    self$keras_model <- keras_model
+    self$data <- data
     self$node_index <- node_index
+
+    self$keras_wrapper <- autovi::keras_wrapper(keras_model = keras_model,
+                                                node_index = node_index)
 
     return(invisible(self))
   }
@@ -27,27 +30,27 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
 
 # get_fitted_and_resid ----------------------------------------------------
 
-  get_fitted_and_resid_ <- function(fitted_mod = self$fitted_mod) {
+  get_fitted_and_resid_ <- function(fitted_model = self$fitted_model) {
 
     # This method fully relies on the S3 methods being defined
-    tibble::tibble(.fitted = stats::fitted(fitted_mod),
-                   .resid = stats::resid(fitted_mod))
+    tibble::tibble(.fitted = stats::fitted(fitted_model),
+                   .resid = stats::resid(fitted_model))
   }
 
-# get_dat -----------------------------------------------------------------
+# get_data ----------------------------------------------------------------
 
-  get_dat_ <- function(fitted_mod = self$fitted_mod) {
-    if (!is.null(self$dat)) return(self$dat)
+  get_data_ <- function(fitted_model = self$fitted_model) {
+    if (!is.null(self$data)) return(self$data)
 
     # Is this a reliable method to extract the data from a fit?
-    return(stats::model.frame(fitted_mod))
+    return(stats::model.frame(fitted_model))
   }
 
 # auxiliary ---------------------------------------------------------------
 
-auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
+auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
-  n <- nrow(dat)
+  n <- nrow(data)
 
   try_or_zero <- function(fn, ...) {
     try_result <- try(fn(...), silent = TRUE)
@@ -66,22 +69,21 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
   # cal_monotonic <- paste0("")
   # system2("Rscript", c("-e", "''"))
 
-  measure_monotonic <- try_or_zero(cassowaryr::sc_monotonic, dat$.fitted, dat$.resid)
-  measure_sparse <- try_or_zero(cassowaryr::sc_sparse2, dat$.fitted, dat$.resid)
-  measure_splines <- try_or_zero(cassowaryr::sc_splines, dat$.fitted, dat$.resid)
-  measure_striped <- try_or_zero(cassowaryr::sc_striped, dat$.fitted, dat$.resid)
+  measure_monotonic <- try_or_zero(cassowaryr::sc_monotonic, data$.fitted, data$.resid)
+  measure_sparse <- try_or_zero(cassowaryr::sc_sparse2, data$.fitted, data$.resid)
+  measure_splines <- try_or_zero(cassowaryr::sc_splines, data$.fitted, data$.resid)
+  measure_striped <- try_or_zero(cassowaryr::sc_striped, data$.fitted, data$.resid)
 
-  return(c(measure_monotonic = measure_monotonic,
-           measure_sparse = measure_sparse,
-           measure_splines = measure_splines,
-           measure_striped = measure_striped,
-           n = n))
+  return(tibble::tibble(measure_monotonic = measure_monotonic,
+                        measure_sparse = measure_sparse,
+                        measure_splines = measure_splines,
+                        measure_striped = measure_striped,
+                        n = n))
 }
 
 # plot_resid --------------------------------------------------------------
 
-
-  plot_resid_ <- function(dat = self$get_fitted_and_resid(),
+  plot_resid_ <- function(data = self$get_fitted_and_resid(),
                           theme = ggplot2::theme_light(base_size = 11/5),
                           alpha = 1,
                           size = 0.5,
@@ -95,7 +97,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
     # The default arguments are what we used for training data preparation.
     if (add_zero_line) {
-      p <- ggplot2::ggplot(dat) +
+      p <- ggplot2::ggplot(data) +
         ggplot2::geom_hline(yintercept = 0, col = "red") +
         ggplot2::geom_point(ggplot2::aes(.fitted, .resid),
                             alpha = alpha,
@@ -103,7 +105,7 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                             stroke = stroke) +
         theme
     } else {
-      p <- ggplot2::ggplot(dat) +
+      p <- ggplot2::ggplot(data) +
         ggplot2::geom_point(ggplot2::aes(.fitted, .resid),
                             alpha = alpha,
                             size = size,
@@ -130,334 +132,108 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     return(p)
   }
 
-# save_plot ---------------------------------------------------------------
-
-  save_plot_ <- function(p,
-                         path = tempfile(fileext = ".png"),
-                         width = 7/5,
-                         height = 7/4,
-                         ...) {
-    ggplot2::ggsave(path, plot = p, width = width, height = height, ...)
-    return(path)
-  }
-
-
-# read_plot ---------------------------------------------------------------
-
-  read_plot_ <- function(path, width, height) {
-    autovi::check_python_library_available("PIL")
-    autovi::check_python_library_available("tensorflow")
-    PIL <- reticulate::import("PIL", convert = FALSE)
-    tf <- reticulate::import("tensorflow", convert = TRUE)
-    keras <- tf$keras
-
-    # Load the image and resize it to the correct size.
-    input_image <- PIL$Image$open(path)$resize(c(width, height))
-
-    # Convert the image to a Numpy array.
-    input_array <- keras$utils$img_to_array(input_image)
-
-    return(input_array)
-  }
-
-# remove_plot -------------------------------------------------------------
-
-  remove_plot_ <- function(path, check_ext = TRUE) {
-    if (!file.exists(path)) return(warning("File doesn't exist!"))
-    if (check_ext && (!tolower(tools::file_ext(path)) %in% c("tif", "tiff", "bmp", "jpg", "jpeg", "gif", "png", "eps")))
-      stop(paste0("File extension `", tools::file_ext(path), "` does not apper to be associated with an image!"))
-
-    file.remove(path)
-    return(invisible(self))
-  }
-
-
-# predict_array -----------------------------------------------------------
-
-
-  predict_array_ <- function(input_array,
-                             auxiliary = NULL,
-                             keras_mod = self$keras_mod,
-                             node_index = self$node_index,
-                             extract_feature_from_layer = NULL) {
-
-    autovi::check_python_library_available("tensorflow")
-    tf <- reticulate::import("tensorflow", convert = TRUE)
-    keras <- tf$keras
-
-    # Check if the keras model have multiple inputs
-    mutltiple_inputs_flag <- length(keras_mod$inputs) > 1
-
-    # Predict the batch.
-    if (mutltiple_inputs_flag) {
-      output <- keras_mod$`__call__`(list(input_array, auxiliary))$numpy()
-    } else {
-      output <- keras_mod$`__call__`(input_array)$numpy()
-    }
-
-    cli::cli_alert_success("Predict visual signal strength for {dim(input_array)[1]} image{?s}.")
-
-    # Extract the value of a particular output node.
-    if (!(is.vector(output) && is.atomic(output))) output <- output[, node_index]
-
-    # Use the model as a feature extractor
-    if (!is.null(extract_feature_from_layer)) {
-
-      if(!(is.numeric(extract_feature_from_layer) || is.character(extract_feature_from_layer))) {
-        stop("Argument `extract_feature_from_layer` needs to be an integer or a string.")
-      }
-
-      if (is.numeric(extract_feature_from_layer))
-        target_layer <- keras_mod$get_layer(index = as.integer(extract_feature_from_layer) - 1L)
-
-      if (is.character(extract_feature_from_layer))
-        target_layer <- keras_mod$get_layer(extract_feature_from_layer)
-
-      # Build a feature extraction model
-      feature_mod <- keras$Model(inputs = keras_mod$input, outputs = target_layer$output)
-
-      # Extract feature
-      if (mutltiple_inputs_flag) {
-        feature <- feature_mod$`__call__`(list(input_array, auxiliary))$numpy()
-      } else {
-        feature <- feature_mod$`__call__`(input_array)$numpy()
-      }
-
-      # Convert the array into a matrix
-      dim(feature) <- c(dim(feature)[1], prod(dim(feature))/dim(feature)[1])
-      colnames(feature) <- paste0("f_", 1:dim(feature)[2])
-
-      return(tibble::as_tibble(cbind(tibble::tibble(vss = output),
-                                     tibble::as_tibble(feature))))
-    } else {
-      return(tibble::tibble(vss = output))
-    }
-  }
-
-
-# predict_image -----------------------------------------------------------
-
-  predict_image_ <- function(path,
-                             auxiliary = NULL,
-                             keras_mod = self$keras_mod,
-                             node_index = self$node_index,
-                             extract_feature_from_layer = NULL) {
-
-    autovi::check_python_library_available("numpy")
-    np <- reticulate::import("numpy", convert = FALSE)
-
-    # Check if the keras model have multiple inputs
-    mutltiple_inputs_flag <- length(keras_mod$inputs) > 1
-
-    # Stop if `auxiliary` does not match the dimension of `path`.
-    if (mutltiple_inputs_flag && nrow(auxiliary) != length(path)) {
-      stop(paste0("The `auxiliary` needs to have ",
-                  length(path),
-                  " rows, but it has ",
-                  nrow(auxiliary),
-                  " rows!"))
-    }
-
-    # Get the input shape from the keras model.
-    input_shape <- keras_mod$input_shape[[1]]
-    height <- input_shape[[2]]
-    width <- input_shape[[3]]
-
-    # Init the input batch.
-    input_batch <- vector(mode = "list", length = length(path))
-
-    i <- 0
-    for (this_path in path) {
-      i <- i + 1
-      input_array <- self$read_plot(path, width = width, height = height)
-
-      # Store the array into the batch
-      input_batch[[i]] <- input_array
-    }
-
-    # Convert a list of Numpy arrays to a batch.
-    input_batch <- np$stack(input_batch)
-
-    self$predict_array(input_batch,
-                       auxiliary = auxiliary,
-                       keras_mod = keras_mod,
-                       node_index = node_index,
-                       extract_feature_from_layer = extract_feature_from_layer)
-
-  }
-
-
-# predict_ggplot ----------------------------------------------------------
-
-  predict_ggplot_ <- function(p,
-                              auxiliary = NULL,
-                              keras_mod = self$keras_mod,
-                              node_index = self$node_index,
-                              extract_feature_from_layer = NULL) {
-
-    # Check if the keras model have multiple inputs
-    mutltiple_inputs_flag <- length(keras_mod$inputs) > 1
-
-    # Decide if the input is a list of plots or a single plot.
-    if (ggplot2::is.ggplot(p)) {
-      p_list <- list(p)
-    } else {
-      p_list <- p
-    }
-
-    # Stop if `auxiliary` does not match the dimension of `p_list`.
-    if (mutltiple_inputs_flag && nrow(auxiliary) != length(p_list)) {
-      stop(paste0("The `auxiliary` needs to have ",
-                  length(p_list),
-                  " rows, but it has ",
-                  nrow(auxiliary),
-                  " rows!"))
-    }
-
-    # Get the input shape from the keras model.
-    input_shape <- keras_mod$input_shape[[1]]
-    height <- input_shape[[2]]
-    width <- input_shape[[3]]
-
-    # Init the input batch.
-    input_batch <- vector(mode = "list", length = length(p_list))
-
-    # Import necessary Python libraries
-    autovi::check_python_library_available("PIL")
-    autovi::check_python_library_available("numpy")
-    autovi::check_python_library_available("tensorflow")
-    PIL <- reticulate::import("PIL", convert = FALSE)
-    np <- reticulate::import("numpy", convert = FALSE)
-    tf <- reticulate::import("tensorflow", convert = TRUE)
-    keras <- tf$keras
-
-    # Init a temporary file for storing images.
-    temp_path <- tempfile(fileext = ".png")
-
-    # Init progress bar
-    cli::cli_progress_bar("Preparing input images", total = length(p_list))
-
-    i <- 0
-    for (x in p_list) {
-      i <- i + 1
-
-      # Save the plot to the temporary file.
-      self$save_plot(x, path = temp_path)
-
-      input_array <- self$read_plot(temp_path, width = width, height = height)
-
-      # Store the array into the batch
-      input_batch[[i]] <- input_array
-
-      # Update progress bar
-      cli::cli_progress_update()
-    }
-
-    # Remove progress bar
-    cli::cli_progress_done()
-
-    # Convert a list of Numpy arrays to a batch.
-    input_batch <- np$stack(input_batch)
-
-    output <- self$predict_array(input_batch,
-                                 auxiliary,
-                                 keras_mod = keras_mod,
-                                 node_index = node_index,
-                                 extract_feature_from_layer = extract_feature_from_layer)
-
-    # Clean up.
-    self$remove_plot(temp_path)
-
-    return(output)
-
-  }
-
 # vss ---------------------------------------------------------------------
 
   vss_ <- function(x = self$plot_resid(),
                    auxiliary = NULL,
-                   keras_mod = self$keras_mod,
+                   keras_model = self$keras_model,
                    node_index = self$node_index,
                    extract_feature_from_layer = NULL) {
 
     # Check if the keras model have multiple inputs
-    mutltiple_inputs_flag <- length(keras_mod$inputs) > 1
+    mutltiple_inputs_flag <- length(keras_model$inputs) > 1
 
     # Decide if `auxiliary` is provided and if it is needed to be computed automatically.
     if (mutltiple_inputs_flag && is.null(auxiliary)) {
-      auxiliary <- data.frame(as.list(self$auxiliary()))
+      if (is.data.frame(x)) {
+        auxiliary <- self$auxiliary(x)
+      } else {
+        auxiliary <- self$auxiliary()
+      }
     }
 
     # Decide the type of the input
     # A single ggplot
     if (ggplot2::is.ggplot(x)) {
-      return(self$predict_ggplot(x,
-                                 auxiliary = auxiliary,
-                                 keras_mod = keras_mod,
-                                 node_index = node_index,
-                                 extract_feature_from_layer = extract_feature_from_layer))
+      path <- autovi::save_plot(x)
+      x <- self$keras_wrapper$image_to_array(path)
+      autovi::remove_plot(path)
+      return(self$keras_wrapper$predict(x,
+                                        auxiliary = auxiliary,
+                                        keras_model = keras_model,
+                                        node_index = node_index,
+                                        extract_feature_from_layer = extract_feature_from_layer))
     }
 
     # A list of ggplot
     if (is.list(x)) {
       if (all(unlist(lapply(x, ggplot2::is.ggplot)))) {
-        return(self$predict_ggplot(x,
-                                   auxiliary = auxiliary,
-                                   keras_mod = keras_mod,
-                                   node_index = node_index,
-                                   extract_feature_from_layer = extract_feature_from_layer))
+        path <- autovi::save_plot(x)
+        x <- self$keras_wrapper$image_to_array(path)
+        autovi::remove_plot(path)
+        return(self$keras_wrapper$predict(x,
+                                          auxiliary = auxiliary,
+                                          keras_model = keras_model,
+                                          node_index = node_index,
+                                          extract_feature_from_layer = extract_feature_from_layer))
       }
     }
 
     # A data.frame
     if (is.data.frame(x)) {
-      return(self$predict_ggplot(self$plot_resid(x),
-                                 auxiliary = auxiliary,
-                                 keras_mod = keras_mod,
-                                 node_index = node_index,
-                                 extract_feature_from_layer = extract_feature_from_layer))
+      p <- self$plot_resid(x)
+      path <- autovi::save_plot(p)
+      x <- self$keras_wrapper$image_to_array(x)
+      autovi::remove_plot(path)
+      return(self$keras_wrapper$predict(x,
+                                        auxiliary = auxiliary,
+                                        keras_model = keras_model,
+                                        node_index = node_index,
+                                        extract_feature_from_layer = extract_feature_from_layer))
     }
 
     # A 3D array
     if (is.array(x)) {
       if (length(dim(x)) == 3) {
         np <- reticulate::import("numpy", convert = FALSE)
-        return(self$predict_array(np$reshape(x, c(1L, dim(x))),
-                                  auxiliary = auxiliary,
-                                  keras_mod = keras_mod,
-                                  node_index = node_index,
-                                  extract_feature_from_layer = extract_feature_from_layer))
+        return(self$keras_wrapper$predict(np$reshape(x, c(1L, dim(x))),
+                                          auxiliary = auxiliary,
+                                          keras_model = keras_model,
+                                          node_index = node_index,
+                                          extract_feature_from_layer = extract_feature_from_layer))
       }
     }
 
     # A 4D array
     if (is.array(x)) {
       if (length(dim(x)) == 4) {
-        return(self$predict_array(x,
-                                  auxiliary = auxiliary,
-                                  keras_mod = keras_mod,
-                                  node_index = node_index,
-                                  extract_feature_from_layer = extract_feature_from_layer))
+        return(self$keras_wrapper$predict(x,
+                                          auxiliary = auxiliary,
+                                          keras_model = keras_model,
+                                          node_index = node_index,
+                                          extract_feature_from_layer = extract_feature_from_layer))
       }
     }
 
     # A path to an image
     if (is.character(x)) {
-      return(self$predict_image(x,
-                                auxiliary = auxiliary,
-                                keras_mod = keras_mod,
-                                node_index = node_index,
-                                extract_feature_from_layer = extract_feature_from_layer))
+      x <- self$keras_wrapper$image_to_array(x)
+      return(self$keras_wrapper$predict(x,
+                                        auxiliary = auxiliary,
+                                        keras_model = keras_model,
+                                        node_index = node_index,
+                                        extract_feature_from_layer = extract_feature_from_layer))
     }
 
-    # A list of paths to images
-    if (is.list(x)) {
+    # A vector or a list of paths to images
+    if (is.atomic(x) || is.list(x)) {
       if (all(unlist(lapply(x, is.character)))) {
-        return(self$predict_image(x,
-                                  auxiliary = auxiliary,
-                                  keras_mod = keras_mod,
-                                  node_index = node_index,
-                                  extract_feature_from_layer = extract_feature_from_layer))
+        x <- self$keras_wrapper$image_to_array(x)
+        return(self$keras_wrapper$predict(x,
+                                          auxiliary = auxiliary,
+                                          keras_model = keras_model,
+                                          node_index = node_index,
+                                          extract_feature_from_layer = extract_feature_from_layer))
       }
     }
   }
@@ -465,31 +241,31 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
 # null_method -------------------------------------------------------------
 
-  null_method_ <- function(fitted_mod = self$fitted_mod) {
-    return(self$rotate_resid(fitted_mod))
+  null_method_ <- function(fitted_model = self$fitted_model) {
+    return(self$rotate_resid(fitted_model))
   }
 
 
 # rotate_resid ------------------------------------------------------------
 
-  rotate_resid_ <- function(fitted_mod = self$fitted_mod) {
-    if (!"lm" %in% class(fitted_mod)) stop("This function only supports `lm` model!")
+  rotate_resid_ <- function(fitted_model = self$fitted_model) {
+    if (!"lm" %in% class(fitted_model)) stop("This function only supports `lm` model!")
 
     # Get the original data.
-    ori_dat <- stats::model.frame(fitted_mod)
+    ori_dat <- stats::model.frame(fitted_model)
 
     # Replace the response variable with some values simulated from the
     # standard normal distribution.
-    ori_dat[[1]] <- stats::rnorm(length(fitted_mod$residuals))
+    ori_dat[[1]] <- stats::rnorm(length(fitted_model$residuals))
 
     # Refit the model.
-    new_mod <- stats::update(fitted_mod, data = ori_dat)
+    new_mod <- stats::update(fitted_model, data = ori_dat)
 
     # Calculate the RSS ratio.
-    rss_ratio <- sqrt(sum(fitted_mod$residuals^2)/sum(new_mod$residuals^2))
+    rss_ratio <- sqrt(sum(fitted_model$residuals^2)/sum(new_mod$residuals^2))
 
     # Scale the rotated residuals.
-    return(tibble::tibble(.fitted = fitted_mod$fitted.values,
+    return(tibble::tibble(.fitted = fitted_model$fitted.values,
                           .resid = new_mod$residuals * rss_ratio))
   }
 
@@ -497,18 +273,18 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 # null_vss ----------------------------------------------------------------
 
   null_vss_ <- function(draws = 100L,
-                        fitted_mod = self$fitted_mod,
-                        keras_mod = self$keras_mod,
+                        fitted_model = self$fitted_model,
+                        keras_model = self$keras_model,
                         null_method = self$null_method,
                         node_index = self$node_index,
-                        keep_null_dat = FALSE,
+                        keep_null_data = FALSE,
                         keep_null_plot = FALSE,
                         extract_feature_from_layer = NULL) {
 
     if (draws <= 0) stop("Argument `draws` needs to be positive!")
 
     # Simulate null data.
-    dat_list <- lapply(1:draws, function(i) null_method(fitted_mod))
+    dat_list <- lapply(1:draws, function(i) null_method(fitted_model))
 
     cli::cli_alert_success("Generate null data.")
 
@@ -519,37 +295,33 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
     # Calculate auxiliary data if needed.
     auxiliary <- NULL
-    if (length(keras_mod$inputs) > 1) {
+    if (length(keras_model$inputs) > 1) {
 
       # Init progress bar
       cli::cli_progress_bar("Computing auxiliary inputs", total = length(dat_list))
 
-      auxiliary <- list()
+      auxiliary <- tibble::tibble()
       for (i in 1:length(dat_list)) {
         this_dat <- dat_list[[i]]
-        auxiliary[[i]] <- self$auxiliary(this_dat)
+        auxiliary <- rbind(auxiliary, self$auxiliary(this_dat))
         cli::cli_progress_update()
       }
 
       # Remove progress bar
       cli::cli_progress_done()
-
-      auxiliary <- as.data.frame(t(as.data.frame(auxiliary)))
-      rownames(auxiliary) <- NULL
-
       cli::cli_alert_success("Compute auxilary inputs.")
     }
 
     # Predict visual signal strength for these plots.
     vss <- self$vss(p_list,
                     auxiliary = auxiliary,
-                    keras_mod = keras_mod,
+                    keras_model = keras_model,
                     node_index = node_index,
                     extract_feature_from_layer = extract_feature_from_layer)
 
     result <- vss
 
-    if (keep_null_dat) result$dat <- dat_list
+    if (keep_null_data) result$data <- dat_list
     if (keep_null_plot) result$plot <- p_list
 
     return(result)
@@ -558,11 +330,11 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 # boot_vss ----------------------------------------------------------------
 
   boot_vss_ <- function(draws = 100L,
-                        fitted_mod = self$fitted_mod,
-                        keras_mod = self$keras_mod,
-                        dat = self$get_dat(),
+                        fitted_model = self$fitted_model,
+                        keras_model = self$keras_model,
+                        data = self$get_data(),
                         node_index = self$node_index,
-                        keep_boot_dat = FALSE,
+                        keep_boot_data = FALSE,
                         keep_boot_plot = FALSE,
                         extract_feature_from_layer = NULL) {
 
@@ -572,10 +344,10 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     dat_list <- lapply(1:draws, function(i) {
 
       # Sampling row ids with replacement.
-      new_row_id <- sample(1:nrow(dat), replace = TRUE)
+      new_row_id <- sample(1:nrow(data), replace = TRUE)
 
       # Refit the model.
-      new_mod <- stats::update(fitted_mod, data = dat[new_row_id, ])
+      new_mod <- stats::update(fitted_model, data = data[new_row_id, ])
 
       tibble::tibble(.fitted = new_mod$fitted.values,
                      .resid = new_mod$residuals)
@@ -591,37 +363,33 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
     # Calculate auxiliary data.
     auxiliary <- NULL
-    if (length(keras_mod$inputs) > 1) {
+    if (length(keras_model$inputs) > 1) {
 
       # Init progress bar
       cli::cli_progress_bar("Computing auxiliary inputs", total = length(dat_list))
 
-      auxiliary <- list()
+      auxiliary <- tibble::tibble()
       for (i in 1:length(dat_list)) {
         this_dat <- dat_list[[i]]
-        auxiliary[[i]] <- self$auxiliary(this_dat)
+        auxiliary <- rbind(auxiliary, self$auxiliary(this_dat))
         cli::cli_progress_update()
       }
 
       # Remove progress bar
       cli::cli_progress_done()
-
-      auxiliary <- as.data.frame(t(as.data.frame(auxiliary)))
-      rownames(auxiliary) <- NULL
-
       cli::cli_alert_success("Compute auxilary inputs.")
     }
 
     # Predict visual signal strength for these plots.
     vss <- self$vss(p_list,
                     auxiliary = auxiliary,
-                    keras_mod = keras_mod,
+                    keras_model = keras_model,
                     node_index = node_index,
                     extract_feature_from_layer = extract_feature_from_layer)
 
     result <- vss
 
-    if (keep_boot_dat) result$dat <- dat_list
+    if (keep_boot_data) result$data <- dat_list
     if (keep_boot_plot) result$plot <- p_list
 
     return(result)
@@ -632,13 +400,13 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 
   check_ <- function(null_draws = 100L,
                      boot_draws = 100L,
-                     fitted_mod = self$fitted_mod,
-                     keras_mod = self$keras_mod,
+                     fitted_model = self$fitted_model,
+                     keras_model = self$keras_model,
                      null_method = self$null_method,
                      p_value_type = "quantile",
-                     dat = self$get_dat(),
+                     data = self$get_data(),
                      node_index = self$node_index,
-                     keep_dat = FALSE,
+                     keep_data = FALSE,
                      keep_plot = FALSE,
                      extract_feature_from_layer = NULL) {
 
@@ -647,11 +415,11 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     } else {
       # Get the null distribution.
       null_dist <- self$null_vss(null_draws,
-                                 fitted_mod = fitted_mod,
-                                 keras_mod = keras_mod,
+                                 fitted_model = fitted_model,
+                                 keras_model = keras_model,
                                  null_method = null_method,
                                  node_index = node_index,
-                                 keep_null_dat = keep_dat,
+                                 keep_null_data = keep_data,
                                  keep_null_plot = keep_plot,
                                  extract_feature_from_layer = extract_feature_from_layer)
     }
@@ -661,20 +429,20 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     } else {
       # Get the bootstrapped distribution.
       boot_dist <- self$boot_vss(boot_draws,
-                                 fitted_mod = fitted_mod,
-                                 keras_mod = keras_mod,
-                                 dat = dat,
+                                 fitted_model = fitted_model,
+                                 keras_model = keras_model,
+                                 data = data,
                                  node_index = node_index,
-                                 keep_boot_dat = keep_dat,
+                                 keep_boot_data = keep_data,
                                  keep_boot_plot = keep_plot,
                                  extract_feature_from_layer = extract_feature_from_layer)
     }
 
     # Get the observed visual signal strength.
-    fitted_and_resid <- self$get_fitted_and_resid(fitted_mod = fitted_mod)
+    fitted_and_resid <- self$get_fitted_and_resid(fitted_model = fitted_model)
     p <- self$plot_resid(fitted_and_resid)
     observed <- self$vss(p,
-                         keras_mod = keras_mod,
+                         keras_model = keras_model,
                          node_index = node_index,
                          extract_feature_from_layer = extract_feature_from_layer)
 
@@ -710,22 +478,22 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 # lineup_check ------------------------------------------------------------
 
   lineup_check_ <- function(lineup_size = 20L,
-                            fitted_mod = self$fitted_mod,
-                            keras_mod = self$keras_mod,
+                            fitted_model = self$fitted_model,
+                            keras_model = self$keras_model,
                             null_method = self$null_method,
-                            dat = self$get_dat(),
+                            data = self$get_data(),
                             node_index = self$node_index,
                             extract_feature_from_layer = NULL) {
 
     self$check(null_draws = lineup_size - 1L,
                boot_draws = 0L,
-               fitted_mod = fitted_mod,
-               keras_mod = keras_mod,
+               fitted_model = fitted_model,
+               keras_model = keras_model,
                null_method = null_method,
                p_value_type = "lineup",
-               dat = dat,
+               data = data,
                node_index = node_index,
-               keep_dat = TRUE,
+               keep_data = TRUE,
                keep_plot = TRUE,
                extract_feature_from_layer = extract_feature_from_layer)
   }
@@ -876,11 +644,11 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
 # select_feature ----------------------------------------------------------
 
 
-  select_feature_ <- function(dat = self$check_result$observed, pattern = "f_") {
-    if (!is.data.frame(dat)) {
+  select_feature_ <- function(data = self$check_result$observed, pattern = "f_") {
+    if (!is.data.frame(data)) {
       return(data.frame())
     }
-    result <- dat[, grep(pattern, names(dat))]
+    result <- data[, grep(pattern, names(data))]
     if (ncol(result) == 0) warning("No features found in the provided data frame. Did you forget to specify a layer name or layer index for `extract_feature_from_layer` when estimating the visual signal strength or conducting the check?")
     return(result)
   }
@@ -959,18 +727,6 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     return(p)
   }
 
-
-
-# list_layer_name ---------------------------------------------------------
-
-  list_layer_name_ <- function(keras_mod = self$kears_mod) {
-    all_name <- c()
-    for (layer in myvi$keras_mod$layers) {
-      all_name <- c(all_name, layer$name)
-    }
-    return(all_name)
-  }
-
 # str ---------------------------------------------------------------------
 
 
@@ -988,29 +744,29 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
     result <- paste0(result, "\n Status:")
 
     # Report the fitted model.
-    if (is.null(self$fitted_mod)) {
-      fitted_mod_status <- "UNKNOWN"
+    if (is.null(self$fitted_model)) {
+      fitted_model_status <- "UNKNOWN"
     } else {
-      fitted_mod_status <- paste(class(self$fitted_mod), collapse = ", ")
+      fitted_model_status <- paste(class(self$fitted_model), collapse = ", ")
     }
-    result <- paste0(result, "\n  - Fitted model: ", fitted_mod_status)
+    result <- paste0(result, "\n  - Fitted model: ", fitted_model_status)
 
     # Report the keras model.
-    if (is.null(self$keras_mod)) {
-      keras_mod_status <- "UNKNOWN"
+    if (is.null(self$keras_model)) {
+      keras_model_status <- "UNKNOWN"
     } else {
-      input_shape <- paste(unlist(self$keras_mod$input_shape[[1]]), collapse = ", ")
-      output_shape <- paste(unlist(self$keras_mod$output_shape), collapse = ", ")
+      input_shape <- paste(unlist(self$keras_model$input_shape[[1]]), collapse = ", ")
+      output_shape <- paste(unlist(self$keras_model$output_shape), collapse = ", ")
 
-      if (length(self$keras_mod$inputs) == 1) {
-        keras_mod_status <- paste0("(None, ", input_shape, ") -> ", "(None, ", output_shape, ")")
+      if (length(self$keras_model$inputs) == 1) {
+        keras_model_status <- paste0("(None, ", input_shape, ") -> ", "(None, ", output_shape, ")")
       } else {
-        second_input_shape <- unlist(self$keras_mod$input_shape[[2]])
-        keras_mod_status <- paste0("(None, ", input_shape, ") + (None, ", second_input_shape, ") -> ", "(None, ", output_shape, ")")
+        second_input_shape <- unlist(self$keras_model$input_shape[[2]])
+        keras_model_status <- paste0("(None, ", input_shape, ") + (None, ", second_input_shape, ") -> ", "(None, ", output_shape, ")")
       }
 
     }
-    result <- paste0(result, "\n  - Keras model: ", keras_mod_status)
+    result <- paste0(result, "\n  - Keras model: ", keras_model_status)
 
     # Report the output node of the keras model.
     if (!is.null(self$node_index)) {
@@ -1094,15 +850,9 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
   bandicoot::register_method(env,
                              ..init.. = init_,
                              get_fitted_and_resid = get_fitted_and_resid_,
-                             get_dat = get_dat_,
+                             get_data = get_data_,
                              auxiliary = auxiliary_,
                              plot_resid = plot_resid_,
-                             save_plot = save_plot_,
-                             read_plot = read_plot_,
-                             remove_plot = remove_plot_,
-                             predict_array = predict_array_,
-                             predict_image = predict_image_,
-                             predict_ggplot = predict_ggplot_,
                              vss = vss_,
                              null_method = null_method_,
                              rotate_resid = rotate_resid_,
@@ -1118,7 +868,6 @@ auxiliary_ <- function(dat = self$get_fitted_and_resid()) {
                              select_feature = select_feature_,
                              feature_pca = feature_pca_,
                              feature_pca_plot = feature_pca_plot_,
-                             list_layer_name = list_layer_name_,
                              ..str.. = str_)
 }
 

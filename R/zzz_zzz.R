@@ -4,4 +4,5 @@
   # Build them at load-time to ensure dependencies (e.g. bandicoot::BASE) are latest
 
   class_AUTO_VI(AUTO_VI)
+  class_KERAS_WRAPPER(KERAS_WRAPPER)
 }
