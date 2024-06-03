@@ -21,9 +21,6 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
     self$data <- data
     self$node_index <- node_index
 
-    self$keras_wrapper <- autovi::keras_wrapper(keras_model = keras_model,
-                                                node_index = node_index)
-
     return(invisible(self))
   }
 
@@ -140,6 +137,10 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                    node_index = self$node_index,
                    extract_feature_from_layer = NULL) {
 
+    # Init a keras wrapper
+    keras_wrapper <- autovi::keras_wrapper(keras_model = keras_model,
+                                           node_index = node_index)
+
     # Check if the keras model have multiple inputs
     mutltiple_inputs_flag <- length(keras_model$inputs) > 1
 
@@ -156,26 +157,26 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     # A single ggplot
     if (ggplot2::is.ggplot(x)) {
       path <- autovi::save_plot(x)
-      x <- self$keras_wrapper$image_to_array(path, keras_model = keras_model)
+      x <- keras_wrapper$image_to_array(path, keras_model = keras_model)
       autovi::remove_plot(path)
-      return(self$keras_wrapper$predict(x,
-                                        auxiliary = auxiliary,
-                                        keras_model = keras_model,
-                                        node_index = node_index,
-                                        extract_feature_from_layer = extract_feature_from_layer))
+      return(keras_wrapper$predict(x,
+                                   auxiliary = auxiliary,
+                                   keras_model = keras_model,
+                                   node_index = node_index,
+                                   extract_feature_from_layer = extract_feature_from_layer))
     }
 
     # A list of ggplot
     if (is.list(x)) {
       if (all(unlist(lapply(x, ggplot2::is.ggplot)))) {
         path <- autovi::save_plot(x)
-        x <- self$keras_wrapper$image_to_array(path, keras_model = keras_model)
+        x <- keras_wrapper$image_to_array(path, keras_model = keras_model)
         autovi::remove_plot(path)
-        return(self$keras_wrapper$predict(x,
-                                          auxiliary = auxiliary,
-                                          keras_model = keras_model,
-                                          node_index = node_index,
-                                          extract_feature_from_layer = extract_feature_from_layer))
+        return(keras_wrapper$predict(x,
+                                     auxiliary = auxiliary,
+                                     keras_model = keras_model,
+                                     node_index = node_index,
+                                     extract_feature_from_layer = extract_feature_from_layer))
       }
     }
 
@@ -183,57 +184,57 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     if (is.data.frame(x)) {
       p <- self$plot_resid(x)
       path <- autovi::save_plot(p)
-      x <- self$keras_wrapper$image_to_array(x, keras_model = keras_model)
+      x <- keras_wrapper$image_to_array(x, keras_model = keras_model)
       autovi::remove_plot(path)
-      return(self$keras_wrapper$predict(x,
-                                        auxiliary = auxiliary,
-                                        keras_model = keras_model,
-                                        node_index = node_index,
-                                        extract_feature_from_layer = extract_feature_from_layer))
+      return(keras_wrapper$predict(x,
+                                   auxiliary = auxiliary,
+                                   keras_model = keras_model,
+                                   node_index = node_index,
+                                   extract_feature_from_layer = extract_feature_from_layer))
     }
 
     # A 3D array
     if (is.array(x)) {
       if (length(dim(x)) == 3) {
         np <- reticulate::import("numpy", convert = FALSE)
-        return(self$keras_wrapper$predict(np$reshape(x, c(1L, dim(x))),
-                                          auxiliary = auxiliary,
-                                          keras_model = keras_model,
-                                          node_index = node_index,
-                                          extract_feature_from_layer = extract_feature_from_layer))
+        return(keras_wrapper$predict(np$reshape(x, c(1L, dim(x))),
+                                     auxiliary = auxiliary,
+                                     keras_model = keras_model,
+                                     node_index = node_index,
+                                     extract_feature_from_layer = extract_feature_from_layer))
       }
     }
 
     # A 4D array
     if (is.array(x)) {
       if (length(dim(x)) == 4) {
-        return(self$keras_wrapper$predict(x,
-                                          auxiliary = auxiliary,
-                                          keras_model = keras_model,
-                                          node_index = node_index,
-                                          extract_feature_from_layer = extract_feature_from_layer))
+        return(keras_wrapper$predict(x,
+                                     auxiliary = auxiliary,
+                                     keras_model = keras_model,
+                                     node_index = node_index,
+                                     extract_feature_from_layer = extract_feature_from_layer))
       }
     }
 
     # A path to an image
     if (is.character(x)) {
-      x <- self$keras_wrapper$image_to_array(x, keras_model = keras_model)
-      return(self$keras_wrapper$predict(x,
-                                        auxiliary = auxiliary,
-                                        keras_model = keras_model,
-                                        node_index = node_index,
-                                        extract_feature_from_layer = extract_feature_from_layer))
+      x <- keras_wrapper$image_to_array(x, keras_model = keras_model)
+      return(keras_wrapper$predict(x,
+                                   auxiliary = auxiliary,
+                                   keras_model = keras_model,
+                                   node_index = node_index,
+                                   extract_feature_from_layer = extract_feature_from_layer))
     }
 
     # A vector or a list of paths to images
     if (is.atomic(x) || is.list(x)) {
       if (all(unlist(lapply(x, is.character)))) {
-        x <- self$keras_wrapper$image_to_array(x, keras_model = keras_model)
-        return(self$keras_wrapper$predict(x,
-                                          auxiliary = auxiliary,
-                                          keras_model = keras_model,
-                                          node_index = node_index,
-                                          extract_feature_from_layer = extract_feature_from_layer))
+        x <- keras_wrapper$image_to_array(x, keras_model = keras_model)
+        return(keras_wrapper$predict(x,
+                                     auxiliary = auxiliary,
+                                     keras_model = keras_model,
+                                     node_index = node_index,
+                                     extract_feature_from_layer = extract_feature_from_layer))
       }
     }
   }
