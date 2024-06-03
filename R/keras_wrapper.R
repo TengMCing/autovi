@@ -29,6 +29,15 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
     # Check if the keras model have multiple inputs
     mutltiple_inputs_flag <- length(keras_model$inputs) > 1
 
+    # Convert auxiliary input
+    if (is.data.frame(auxiliary)) {
+      auxiliary <- reticulate::np_array(as.matrix(auxiliary))
+    }
+
+    if (is.matrix(auxiliary)) {
+      auxiliary <- reticulate::np_array(auxiliary)
+    }
+
     # Predict the batch.
     if (mutltiple_inputs_flag) {
       output <- keras_model$`__call__`(list(input_array, auxiliary))$numpy()
