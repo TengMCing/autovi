@@ -55,5 +55,5 @@ remove_plot <- function(path, check_ext = TRUE) {
     file.remove(this_path)
   }
 
-  return(invisible(self))
+  return(invisible(NULL))
 }
