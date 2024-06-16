@@ -43,6 +43,16 @@ get_keras_model <- function(model_name) {
 
   check_python_library_available("tensorflow")
   tf <- reticulate::import("tensorflow", convert = TRUE)
+
+  if (as.integer(strsplit(tf$`__version__`, "\\.")[[1]][2]) >= 16) {
+    warning(paste0(
+      "The Keras model was originally trained on Monash M3 HPC with TensorFlow 2.12 and is tested to work up to TensorFlow 2.15. ",
+      "Your current TensorFlow version is ", tf$`__version__`, ", which is not supported. ",
+      "Please downgrade your TensorFlow version or install TensorFlow <2.15 in a virtual environment. ",
+      "You can use `reticulate::use_python` to select the appropriate virtual environment."
+    ))
+  }
+
   keras <- tf$keras
   mod <- keras$models$load_model(file.path(temp_folder, paste0(model_name, ".keras")))
 
