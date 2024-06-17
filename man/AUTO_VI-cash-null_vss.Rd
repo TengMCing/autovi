@@ -6,9 +6,9 @@
 \arguments{
 \item{draws}{Integer. Number of simulation draws.}
 
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
+\item{fitted_model}{Model. A model object, e.g. \code{lm}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model.}
+\item{keras_model}{Keras model. A trained computer vision model.}
 
 \item{null_method}{Function. A method to simulate residuals from the null
 hypothesis distribution. For \code{lm}, the recommended method is residual
@@ -18,13 +18,15 @@ rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
 contains the visual signal strength. This is particularly useful
 when the keras model has more than one output nodes.}
 
-\item{keep_null_dat}{Boolean. Whether to keep the simulated null data.}
+\item{keep_null_data}{Boolean. Whether to keep the simulated null data.}
 
 \item{keep_null_plot}{Boolean. Whether to keep the simulated null plots.}
+
+\item{extract_feature_from_layer}{Character/Integer. A layer name or an
+integer layer index for extracting features from a layer.}
 }
 \value{
-A tibble with 1 to 3 columns depending on the argument
-\code{keep_null_dat} and \code{keep_null_plot}.
+A tibble.
 }
 \description{
 This function simulates null plots from the null hypothesis
@@ -33,13 +35,21 @@ distribution, and predicts the visual signal strength.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$null_vss(
   draws = 100L,
-  fitted_mod = self$fitted_mod,
-  keras_mod = self$keras_mod,
-  null_method = self$rotate_resid,
+  fitted_model = self$fitted_model,
+  keras_model = self$keras_model,
+  null_method = self$null_method,
   node_index = self$node_index,
-  keep_null_dat = FALSE,
-  keep_null_plot = FALSE
+  keep_null_data = FALSE,
+  keep_null_plot = FALSE,
+  extract_feature_from_layer = NULL
 )
 }\if{html}{\out{</div>}}
+}
+}
+\examples{
+if (interactive()) {
+  keras_model <- get_keras_model("vss_phn_32")
+  myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+  myvi$null_vss(20L)
 }
 }

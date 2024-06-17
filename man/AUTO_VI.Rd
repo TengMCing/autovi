@@ -15,6 +15,10 @@ auto_vi(
 )
 }
 \arguments{
+\item{fitted_model}{Model. A model object, e.g. \code{lm}.}
+
+\item{keras_model}{Keras model. A trained computer vision model.}
+
 \item{data}{Data frame. The data used to fit the model.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
@@ -25,10 +29,6 @@ when the keras model has more than one output nodes.}
 
 \item{init_call}{Call. Contents of the \code{..init_call...} It is recommended to leave it
 as default.}
-
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
-
-\item{keras_mod}{Keras model. A trained computer vision model.}
 }
 \value{
 An instance environment.
@@ -76,9 +76,14 @@ with S3 class \code{bandicoot_oop}.
 \itemize{
 \item \code{\link[=AUTO_VI$check]{AUTO_VI$check()}}
 }
+\item F:
+\itemize{
+\item \code{\link[=AUTO_VI$feature_pca]{AUTO_VI$feature_pca()}}
+\item \code{\link[=AUTO_VI$feature_pca_plot]{AUTO_VI$feature_pca_plot()}}
+}
 \item G:
 \itemize{
-\item \code{\link[=AUTO_VI$get_dat]{AUTO_VI$get_dat()}}
+\item \code{\link[=AUTO_VI$get_data]{AUTO_VI$get_data()}}
 \item \code{\link[=AUTO_VI$get_fitted_and_resid]{AUTO_VI$get_fitted_and_resid()}}
 }
 \item I:
@@ -87,6 +92,7 @@ with S3 class \code{bandicoot_oop}.
 }
 \item L:
 \itemize{
+\item \code{\link[=AUTO_VI$lineup_check]{AUTO_VI$lineup_check()}}
 \item \code{\link[=AUTO_VI$lr_ratio]{AUTO_VI$lr_ratio()}}
 }
 \item N:
@@ -96,19 +102,20 @@ with S3 class \code{bandicoot_oop}.
 }
 \item P:
 \itemize{
-\item \link{AUTO_VI$p_value}
+\item \code{\link[=AUTO_VI$p_value]{AUTO_VI$p_value()}}
 \item \code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}}
 }
 \item R:
 \itemize{
-\item \code{\link[=AUTO_VI$remove_plot]{AUTO_VI$remove_plot()}}
 \item \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}
 }
 \item S:
 \itemize{
-\item \code{\link[=AUTO_VI$save_plot]{AUTO_VI$save_plot()}}
+\item \code{\link[=AUTO_VI$select_feature]{AUTO_VI$select_feature()}}
 \item \code{\link[=AUTO_VI$..str..]{AUTO_VI$..str..()}}
+\item \code{\link[=AUTO_VI$summary_density_plot]{AUTO_VI$summary_density_plot()}}
 \item \code{\link[=AUTO_VI$summary_plot]{AUTO_VI$summary_plot()}}
+\item \code{\link[=AUTO_VI$summary_rank_plot]{AUTO_VI$summary_rank_plot()}}
 }
 \item V:
 \itemize{

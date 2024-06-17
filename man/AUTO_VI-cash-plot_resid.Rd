@@ -47,9 +47,6 @@ This function draws a standard residual plot.
 }
 \examples{
 
-my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 my_vi$plot_resid()
-}
-\seealso{
-\link[visage:VI_MODEL]{visage::VI_MODEL}
 }

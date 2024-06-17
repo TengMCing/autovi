@@ -18,6 +18,6 @@ This function returns a string representation of the object.
 
 AUTO_VI$..str..()
 
-my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 my_vi$..str..()
 }

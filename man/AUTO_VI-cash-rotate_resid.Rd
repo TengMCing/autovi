@@ -17,7 +17,7 @@ original RSS divided by the current RSS. The results are the rotated
 residuals.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$rotate_resid(fitted_mod = self$fitted_mod)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$rotate_resid(fitted_model = self$fitted_mod)
 }\if{html}{\out{</div>}}
 }
 }

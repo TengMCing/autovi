@@ -45,7 +45,13 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
       output <- keras_model$`__call__`(input_array)$numpy()
     }
 
-    cli::cli_alert_success("Predict visual signal strength for {dim(input_array)[1]} image{?s}.")
+    if ("python.builtin.object" %in% class(input_array)) {
+      n_image <- reticulate::py_to_r(input_array$shape)[[1]]
+    } else {
+      n_image <- dim(input_array)[1]
+    }
+
+    cli::cli_alert_success("Predict visual signal strength for {n_image} image{?s}.")
 
     if ("python.builtin.object" %in% class(output)) {
       output <- reticulate::py_to_r(output)

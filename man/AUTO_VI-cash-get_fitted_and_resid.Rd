@@ -4,7 +4,7 @@
 \alias{AUTO_VI$get_fitted_and_resid}
 \title{Get fitted values and residuals out of a model object}
 \arguments{
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
+\item{fitted_model}{Model. A model object, e.g. \code{lm}.}
 }
 \value{
 A tibble.
@@ -14,12 +14,12 @@ This function gets fitted values and residuals
 out of a model object by using \code{\link[stats:fitted.values]{stats::fitted()}} and \code{\link[stats:residuals]{stats::resid()}}.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$get_fitted_and_resid(fitted_mod = self$fitted_mod)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$get_fitted_and_resid(fitted_model = self$fitted_model)
 }\if{html}{\out{</div>}}
 }
 }
 \examples{
 
-my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 my_vi$get_fitted_and_resid()
 }

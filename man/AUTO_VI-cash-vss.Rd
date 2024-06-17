@@ -4,22 +4,37 @@
 \alias{AUTO_VI$vss}
 \title{Predict the visual signal strength}
 \arguments{
-\item{p}{\code{ggplot}/List. A \code{ggplot} or a list of \code{ggplot}.
-See also \code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}}.}
+\item{p}{\code{ggplot}/List/Data.frame/Array/Numpy array/String. The input can be
+\enumerate{
+\item a \code{ggplot},
+\item a list of \code{ggplot},
+\item a data.frame containing
+\code{.resid} (residuals) and \code{.fitted} (fitted values) that can be passed to
+\code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}},
+\item an 3D array representing an image,
+\item an 4D array representing one or more images,
+\item a path to an image,
+\item a vector or a list of paths to images,
+\item a numpy array.
+}}
 
-\item{auxiliary}{Numeric. A vector of auxiliary values. This is only used
+\item{auxiliary}{Dataframe. A dataframe of auxiliary values. This is only used
 when the keras model has multiple inputs. If it is not provided, the
 values will be automatically computed based on the residual plot of the
 fitted model. See also \code{\link[=AUTO_VI$auxiliary]{AUTO_VI$auxiliary()}}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model.}
+\item{keras_model}{Keras model. A trained computer vision model.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
 contains the visual signal strength. This is particularly useful
 when the keras model has more than one output nodes.}
+
+\item{extract_feature_from_layer}{Character/Integer. A layer name or an
+integer layer index for extracting features from a layer.}
 }
 \value{
-A numeric vector.
+A tibble. The first column is \code{vss} which is the prediction, the
+rest of the columns are features extracted from a layer.
 }
 \description{
 This function predicts the visual signal strength.
@@ -28,9 +43,20 @@ This function predicts the visual signal strength.
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$vss(
   p = self$plot_resid(),
   auxiliary = NULL,
-  keras_mod = self$keras_mod,
-  node_index = self$node_index
+  keras_model = self$keras_model,
+  node_index = self$node_index,
+  extract_feature_from_layer = NULL
 )
 }\if{html}{\out{</div>}}
 }
+}
+\examples{
+if (interactive()) {
+  keras_model <- get_keras_model("vss_phn_32")
+  myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+
+  myvi$vss()
+  myvi$vss(extract_feature_from_layer = "global_max_pooling2d")
+}
+
 }

@@ -4,7 +4,7 @@
 \alias{AUTO_VI$null_method}
 \title{Get null residuals from a fitted model}
 \arguments{
-\item{fitted_mod}{\code{lm}. A linear model object.}
+\item{fitted_model}{\code{lm}. A linear model object.}
 }
 \value{
 A tibble with two columns \code{.fitted} and \code{.resid}.
@@ -15,13 +15,13 @@ model using \link{AUTO_VI$rotate_resid}. User needs to override this method if
 the fitted model is not a linear regression model.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$null_method(fitted_mod = self$fitted_mod)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$null_method(fitted_model = self$fitted_model)
 }\if{html}{\out{</div>}}
 }
 }
 \examples{
 
-my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 null_resid <- my_vi$null_method()
 my_vi$plot_resid(null_resid)
 }

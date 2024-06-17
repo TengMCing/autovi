@@ -7,7 +7,7 @@
 save_plot(p, path = NULL, width = 7/5, height = 7/4, ...)
 }
 \arguments{
-\item{p}{GGplot. A plot.}
+\item{p}{\code{ggplot}. A plot.}
 
 \item{path}{Character. Path to save the image.}
 

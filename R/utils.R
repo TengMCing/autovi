@@ -32,7 +32,7 @@ check_python_library_available <- function(lib_name) {
 #'
 #' This function save a plot to a provided path.
 #'
-#' @param p GGplot. A plot.
+#' @param p `ggplot`. A plot.
 #' @param path Character. Path to save the image.
 #' @param width Numeric. Width of the image.
 #' @param height Numeric. Height of the image.

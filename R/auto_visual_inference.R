@@ -154,10 +154,20 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     }
 
     # Decide the type of the input
+    # A python object
+    if ("python.builtin.object" %in% class(x)) {
+      return(keras_wrapper$predict(x,
+                                   auxiliary = auxiliary,
+                                   keras_model = keras_model,
+                                   node_index = node_index,
+                                   extract_feature_from_layer = extract_feature_from_layer))
+    }
+
+
     # A single ggplot
     if (ggplot2::is.ggplot(x)) {
       path <- autovi::save_plot(x)
-      x <- keras_wrapper$image_to_array(path, keras_model = keras_model)
+      x <- keras_wrapper$image_to_array(path)
       autovi::remove_plot(path)
       return(keras_wrapper$predict(x,
                                    auxiliary = auxiliary,
@@ -170,7 +180,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     if (is.list(x)) {
       if (all(unlist(lapply(x, ggplot2::is.ggplot)))) {
         path <- autovi::save_plot(x)
-        x <- keras_wrapper$image_to_array(path, keras_model = keras_model)
+        x <- keras_wrapper$image_to_array(path)
         autovi::remove_plot(path)
         return(keras_wrapper$predict(x,
                                      auxiliary = auxiliary,
@@ -218,7 +228,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
     # A path to an image
     if (is.character(x)) {
-      x <- keras_wrapper$image_to_array(x, keras_model = keras_model)
+      x <- keras_wrapper$image_to_array(x)
       return(keras_wrapper$predict(x,
                                    auxiliary = auxiliary,
                                    keras_model = keras_model,
@@ -229,7 +239,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     # A vector or a list of paths to images
     if (is.atomic(x) || is.list(x)) {
       if (all(unlist(lapply(x, is.character)))) {
-        x <- keras_wrapper$image_to_array(x, keras_model = keras_model)
+        x <- keras_wrapper$image_to_array(x)
         return(keras_wrapper$predict(x,
                                      auxiliary = auxiliary,
                                      keras_model = keras_model,
@@ -411,6 +421,8 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                      keep_plot = FALSE,
                      extract_feature_from_layer = NULL) {
 
+    self$check_result <- NULL
+
     if (null_draws <= 0) {
       null_dist <- NULL
     } else {
@@ -471,6 +483,8 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
       self$check_result$lr_ratio <- NULL
     }
 
+    self$check_result$lineup_check <- FALSE
+
     return(invisible(self))
   }
 
@@ -497,6 +511,8 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                keep_data = TRUE,
                keep_plot = TRUE,
                extract_feature_from_layer = extract_feature_from_layer)
+
+    self$check_result$lineup_check <- TRUE
   }
 
 
@@ -635,9 +651,18 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
 # summary_plot ------------------------------------------------------------
 
-  summary_plot_ <- function(type = "density") {
+  summary_plot_ <- function(type = "auto") {
     if (type == "density") return(self$summary_density_plot())
     if (type == "rank") return(self$summary_rank_plot())
+
+    if (type == "auto") {
+      if (self$check_result$lineup_check) {
+        return(self$summary_rank_plot())
+      } else {
+        return(self$summary_density_plot())
+      }
+    }
+
     stop("Argument `type` is neither 'density' nor 'rank'!")
   }
 

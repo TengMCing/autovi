@@ -11,8 +11,8 @@ AUTO_VI <- new.env()
 #' inherited from [bandicoot::BASE]. It is an environment
 #' with S3 class `bandicoot_oop`.
 #'
-#' @param fitted_mod Model. A model object, e.g. `lm`.
-#' @param keras_mod Keras model. A trained computer vision model.
+#' @param fitted_model Model. A model object, e.g. `lm`.
+#' @param keras_model Keras model. A trained computer vision model.
 #' @param data Data frame. The data used to fit the model.
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
@@ -38,26 +38,31 @@ AUTO_VI <- new.env()
 #'    * [AUTO_VI$boot_vss()]
 #' * C:
 #'    * [AUTO_VI$check()]
+#' * F:
+#'    * [AUTO_VI$feature_pca()]
+#'    * [AUTO_VI$feature_pca_plot()]
 #' * G:
-#'    * [AUTO_VI$get_dat()]
+#'    * [AUTO_VI$get_data()]
 #'    * [AUTO_VI$get_fitted_and_resid()]
 #' * I:
 #'    * [AUTO_VI$..init..()]
 #' * L:
+#'    * [AUTO_VI$lineup_check()]
 #'    * [AUTO_VI$lr_ratio()]
 #' * N:
 #'    * [AUTO_VI$null_method()]
 #'    * [AUTO_VI$null_vss()]
 #' * P:
-#'    * [AUTO_VI$p_value]
+#'    * [AUTO_VI$p_value()]
 #'    * [AUTO_VI$plot_resid()]
 #' * R:
-#'    * [AUTO_VI$remove_plot()]
 #'    * [AUTO_VI$rotate_resid()]
 #' * S:
-#'    * [AUTO_VI$save_plot()]
+#'    * [AUTO_VI$select_feature()]
 #'    * [AUTO_VI$..str..()]
+#'    * [AUTO_VI$summary_density_plot()]
 #'    * [AUTO_VI$summary_plot()]
+#'    * [AUTO_VI$summary_rank_plot()]
 #' * V:
 #'    * [AUTO_VI$vss()]
 #'
@@ -97,11 +102,11 @@ AUTO_VI$check_result
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$..init..(fitted_mod, keras_mod = NULL, data = NULL, node_index = 1L)
+#' AUTO_VI$..init..(fitted_model, keras_model = NULL, data = NULL, node_index = 1L)
 #' ```
 #'
-#' @param fitted_mod Model. A model object, e.g. `lm`.
-#' @param keras_mod Keras model. A trained computer vision model.
+#' @param fitted_model Model. A model object, e.g. `lm`.
+#' @param keras_model Keras model. A trained computer vision model.
 #' @param data Data frame. The data used to fit the model.
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
@@ -109,7 +114,7 @@ AUTO_VI$check_result
 #' @return Return the object itself.
 #'
 #' @examples
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi
 AUTO_VI$..init..
 
@@ -129,7 +134,7 @@ AUTO_VI$..init..
 #'
 #' AUTO_VI$..str..()
 #'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi$..str..()
 AUTO_VI$..str..
 
@@ -142,44 +147,44 @@ AUTO_VI$..str..
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$get_fitted_and_resid(fitted_mod = self$fitted_mod)
+#' AUTO_VI$get_fitted_and_resid(fitted_model = self$fitted_model)
 #' ```
 #'
-#' @param fitted_mod Model. A model object, e.g. `lm`.
+#' @param fitted_model Model. A model object, e.g. `lm`.
 #' @return A tibble.
 #'
 #' @examples
 #'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi$get_fitted_and_resid()
 AUTO_VI$get_fitted_and_resid
 
 #' Get data out of a model object
 #'
-#' @name AUTO_VI$get_dat
+#' @name AUTO_VI$get_data
 #'
 #' @description This function gets the data out of a model object
-#' by using [stats::model.frame()] if `self$dat` is `NULL`.
+#' by using [stats::model.frame()] if `self$data` is `NULL`.
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$get_dat(fitted_mod = self$fitted_mod)
+#' AUTO_VI$get_dat(fitted_model = self$fitted_model)
 #' ```
 #'
-#' @param fitted_mod Model. A model object, e.g. `lm`.
+#' @param fitted_model Model. A model object, e.g. `lm`.
 #' @return A tibble.
 #'
 #' @examples
 #'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
-#' my_vi$get_dat()
-AUTO_VI$get_dat
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
+#' my_vi$get_data()
+AUTO_VI$get_data
 
 #' Compute auxiliary variables for the keras model
 #'
 #' @name AUTO_VI$auxiliary
 #'
-#' @description This function computes a vector of auxiliary variables
+#' @description This function computes auxiliary variables
 #' including monotonic measure (`measure_monotonic`),
 #' sparse measure (`measure_sparse`), splines measure (`measure_splines`),
 #' striped measure (`measure_striped`), and the number of observation (`n`).
@@ -190,20 +195,20 @@ AUTO_VI$get_dat
 #' If you wish to calculate additional auxiliary variables for your keras
 #' model, please override this method. Ensure that it accepts a data frame
 #' with columns named `.fitted` and `.resid` as input and returns
-#' a vector of values.
+#' a single row tibble.
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$auxiliary(dat = seflf$get_fitted_and_resid())
+#' AUTO_VI$auxiliary(data = seflf$get_fitted_and_resid())
 #' ```
 #'
 #' @param data Data frame. A data frame containing variables `.resid` and
 #' `.fitted`. See also [AUTO_VI$get_fitted_and_resid()].
-#' @return A vector of auxiliary values.
+#' @return A tibble.
 #'
 #' @examples
 #'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi$auxiliary()
 AUTO_VI$auxiliary
 
@@ -241,64 +246,12 @@ AUTO_VI$auxiliary
 #' @param add_zero_line Boolean. Whether or not to add a zero horizontal line.
 #' @return A `ggplot`.
 #'
-#' @seealso [visage::VI_MODEL]
-#'
 #' @examples
 #'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi$plot_resid()
 AUTO_VI$plot_resid
 
-#' Save a plot
-#'
-#' @name AUTO_VI$save_plot
-#'
-#' @description This function saves a plot with [ggplot2::ggsave()].
-#'
-#' ## Usage
-#' ```
-#' AUTO_VI$save_plot(
-#'   p,
-#'   path = tempfile(fileext = ".png"),
-#'   width = 7/5,
-#'   height = 7/4,
-#'   ...
-#' )
-#' ```
-#' @param p `ggplot`. A plot.
-#' @param path Character. Path to save. See also [tempfile()].
-#' @param width Numeric. Width of the plot.
-#' @param height Numeric. Height of the plot.
-#' @param ... Arguments passed to [ggplot2::ggsave()].
-#' @return A string indicating the path to the file.
-#'
-#' @examples
-#'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
-#' my_vi$save_plot(my_vi$plot_resid())
-AUTO_VI$save_plot
-
-#' Remove a plot
-#'
-#' @name AUTO_VI$remove_plot
-#'
-#' @description This function removes a plot.
-#'
-#' ## Usage
-#' ```
-#' AUTO_VI$remove_plot(path, check_ext = TRUE)
-#' ```
-#' @param path Character. Path to the image file.
-#' @param check_ext Boolean. Whether to check the file extension.
-#' @return Return the object itself.
-#'
-#' @examples
-#'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
-#' temp_path <- my_vi$save_plot(my_vi$plot_resid())
-#' my_vi$remove_plot(temp_path)
-#' file.exists(temp_path)
-AUTO_VI$remove_plot
 
 #' Predict the visual signal strength
 #'
@@ -311,22 +264,46 @@ AUTO_VI$remove_plot
 #' AUTO_VI$vss(
 #'   p = self$plot_resid(),
 #'   auxiliary = NULL,
-#'   keras_mod = self$keras_mod,
-#'   node_index = self$node_index
+#'   keras_model = self$keras_model,
+#'   node_index = self$node_index,
+#'   extract_feature_from_layer = NULL
 #' )
 #' ```
 #'
-#' @param p `ggplot`/List. A `ggplot` or a list of `ggplot`.
-#' See also [AUTO_VI$plot_resid()].
-#' @param auxiliary Numeric. A vector of auxiliary values. This is only used
+#' @param p `ggplot`/List/Data.frame/Array/Numpy array/String. The input can be
+#' 1. a `ggplot`,
+#' 2. a list of `ggplot`,
+#' 3. a data.frame containing
+#' `.resid` (residuals) and `.fitted` (fitted values) that can be passed to
+#' [AUTO_VI$plot_resid()],
+#' 4. an 3D array representing an image,
+#' 5. an 4D array representing one or more images,
+#' 6. a path to an image,
+#' 7. a vector or a list of paths to images,
+#' 8. a numpy array.
+#' @param auxiliary Dataframe. A dataframe of auxiliary values. This is only used
 #' when the keras model has multiple inputs. If it is not provided, the
 #' values will be automatically computed based on the residual plot of the
 #' fitted model. See also [AUTO_VI$auxiliary()].
-#' @param keras_mod Keras model. A trained computer vision model.
+#' @param keras_model Keras model. A trained computer vision model.
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
-#' @return A numeric vector.
+#' @param extract_feature_from_layer Character/Integer. A layer name or an
+#' integer layer index for extracting features from a layer.
+#' @return A tibble. The first column is `vss` which is the prediction, the
+#' rest of the columns are features extracted from a layer.
+#'
+#'
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+#'
+#'   myvi$vss()
+#'   myvi$vss(extract_feature_from_layer = "global_max_pooling2d")
+#' }
+#'
 AUTO_VI$vss
 
 #' Get null residuals from a fitted model
@@ -339,14 +316,14 @@ AUTO_VI$vss
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$null_method(fitted_mod = self$fitted_mod)
+#' AUTO_VI$null_method(fitted_model = self$fitted_model)
 #' ```
 #'
-#' @param fitted_mod `lm`. A linear model object.
+#' @param fitted_model `lm`. A linear model object.
 #' @return A tibble with two columns `.fitted` and `.resid`.
 #' @examples
 #'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' null_resid <- my_vi$null_method()
 #' my_vi$plot_resid(null_resid)
 AUTO_VI$null_method
@@ -363,7 +340,7 @@ AUTO_VI$null_method
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$rotate_resid(fitted_mod = self$fitted_mod)
+#' AUTO_VI$rotate_resid(fitted_model = self$fitted_mod)
 #' ```
 #'
 #' @param fitted_mod `lm`. A linear model object.
@@ -387,28 +364,36 @@ AUTO_VI$rotate_resid
 #' ```
 #' AUTO_VI$null_vss(
 #'   draws = 100L,
-#'   fitted_mod = self$fitted_mod,
-#'   keras_mod = self$keras_mod,
-#'   null_method = self$rotate_resid,
+#'   fitted_model = self$fitted_model,
+#'   keras_model = self$keras_model,
+#'   null_method = self$null_method,
 #'   node_index = self$node_index,
-#'   keep_null_dat = FALSE,
-#'   keep_null_plot = FALSE
+#'   keep_null_data = FALSE,
+#'   keep_null_plot = FALSE,
+#'   extract_feature_from_layer = NULL
 #' )
 #' ```
 #'
 #' @param draws Integer. Number of simulation draws.
-#' @param fitted_mod Model. A model object, e.g. `lm`.
-#' @param keras_mod Keras model. A trained computer vision model.
+#' @param fitted_model Model. A model object, e.g. `lm`.
+#' @param keras_model Keras model. A trained computer vision model.
 #' @param null_method Function. A method to simulate residuals from the null
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
-#' @param keep_null_dat Boolean. Whether to keep the simulated null data.
+#' @param keep_null_data Boolean. Whether to keep the simulated null data.
 #' @param keep_null_plot Boolean. Whether to keep the simulated null plots.
-#' @return A tibble with 1 to 3 columns depending on the argument
-#' `keep_null_dat` and `keep_null_plot`.
+#' @param extract_feature_from_layer Character/Integer. A layer name or an
+#' integer layer index for extracting features from a layer.
+#' @return A tibble.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+#'   myvi$null_vss(20L)
+#' }
 AUTO_VI$null_vss
 
 #' Predict visual signal strength for bootstrapped residual plots
@@ -422,32 +407,35 @@ AUTO_VI$null_vss
 #' ```
 #' AUTO_VI$boot_vss(
 #'   draws = 100L,
-#'   fitted_mod = self$fitted_mod,
-#'   keras_mod = self$keras_mod,
-#'   jitter = FALSE,
-#'   factor = 1L,
-#'   data = self$get_dat(),
+#'   fitted_model = self$fitted_model,
+#'   keras_model = self$keras_model,
+#'   data = self$get_data(),
 #'   node_index = 1L,
-#'   keep_boot_dat = FALSE,
-#'   keep_boot_plot = FALSE
+#'   keep_boot_data = FALSE,
+#'   keep_boot_plot = FALSE,
+#'   extract_feature_from_layer = NULL
 #' )
 #' ```
 #'
 #' @param draws Integer. Number of simulation draws.
-#' @param fitted_mod Model. A model object, e.g. `lm`.
-#' @param keras_mod Keras model. A trained computer vision model.
-#' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
-#' data instead of sampling from the original data with replacement.
-#' @param factor Numeric. See also [jitter()].
+#' @param fitted_model Model. A model object, e.g. `lm`.
+#' @param keras_model Keras model. A trained computer vision model.
 #' @param data Data frame. The data used to fit the model.
 #' See also [AUTO_VI$get_dat()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
-#' @param keep_boot_dat Boolean. Whether to keep the bootstrapped data.
+#' @param keep_boot_data Boolean. Whether to keep the bootstrapped data.
 #' @param keep_boot_plot Boolean. Whether to keep the bootstrapped plots.
-#' @return A tibble with 1 to 3 columns depending on the argument
-#' `keep_boot_dat` and `keep_boot_plot`.
+#' @param extract_feature_from_layer Character/Integer. A layer name or an
+#' integer layer index for extracting features from a layer.
+#' @return A tibble.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+#'   myvi$boot_vss(20L)
+#' }
 AUTO_VI$boot_vss
 
 #' Conduct a auto visual inference check with a computer vision model
@@ -463,15 +451,15 @@ AUTO_VI$boot_vss
 #' AUTO_VI$check(
 #'   null_draws = 100L,
 #'   boot_draws = 100L,
-#'   fitted_mod = self$fitted_mod,
-#'   keras_mod = self$keras_mod,
-#'   null_method = self$rotate_resid,
-#'   jitter = FALSE,
-#'   factor = 1L,
-#'   data = self$get_dat(),
+#'   fitted_model = self$fitted_model,
+#'   keras_model = self$keras_model,
+#'   null_method = self$null_method,
+#'   p_value_type = "quantile",
+#'   data = self$get_data(),
 #'   node_index = self$node_index,
-#'   keep_dat = FALSE,
-#'   keep_plot = FALSE
+#'   keep_data = FALSE,
+#'   keep_plot = FALSE,
+#'   extract_feature_from_layer = NULL
 #' )
 #' ```
 #'
@@ -479,23 +467,76 @@ AUTO_VI$boot_vss
 #' [AUTO_VI$null_vss()].
 #' @param boot_draws Integer. Number of simulation draws for
 #' [AUTO_VI$boot_vss()].
-#' @param fitted_mod Model. A model object, e.g. `lm`.
-#' @param keras_mod Keras model. A trained computer vision model.
+#' @param fitted_model Model. A model object, e.g. `lm`.
+#' @param keras_model Keras model. A trained computer vision model.
 #' @param null_method Function. A method to simulate residuals from the null
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid()].
-#' @param jitter Boolean. Whether to use `jitter()` to generate bootstrapped
-#' data instead of sampling from the original data with replacement.
-#' @param factor Numeric. See also [jitter()].
+#' @param p_value_type Character. Either "quantile" or "lineup". See
+#' also [AUTO_VI$p_value()].
 #' @param data Data frame. The data used to fit the model.
 #' See also [AUTO_VI$get_dat()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
-#' @param keep_dat Boolean. Whether to keep the simulated data.
+#' @param keep_data Boolean. Whether to keep the simulated data.
 #' @param keep_plot Boolean. Whether to keep the simulated plots.
+#' @param extract_feature_from_layer Character/Integer. A layer name or an
+#' integer layer index for extracting features from a layer.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+#'   myvi$check(20L, 20L)
+#'   myvi
+#' }
 #' @return Return the object itself.
 AUTO_VI$check
+
+
+#' Conduct a auto visual inference lineup check with a computer vision model
+#'
+#' @name AUTO_VI$lineup_check
+#'
+#' @description This function conducts a visual inference lineup
+#' check with a computer vision model. The result will be stored in
+#' `self$check_result`.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$lineup_check(
+#'   lineup_size = 20L,
+#'   fitted_model = self$fitted_model,
+#'   keras_model = self$keras_model,
+#'   null_method = self$null_method,
+#'   data = self$get_data(),
+#'   node_index = self$node_index,
+#'   extract_feature_from_layer = NULL
+#' )
+#' ```
+#'
+#' @param lineup_size Integer. Number of plots in a lineup.
+#' @param fitted_model Model. A model object, e.g. `lm`.
+#' @param keras_model Keras model. A trained computer vision model.
+#' @param null_method Function. A method to simulate residuals from the null
+#' hypothesis distribution. For `lm`, the recommended method is residual
+#' rotation [AUTO_VI$rotate_resid()].
+#' @param data Data frame. The data used to fit the model.
+#' See also [AUTO_VI$get_dat()].
+#' @param node_index Integer. An index indicating which node of the output layer
+#' contains the visual signal strength. This is particularly useful
+#' when the keras model has more than one output nodes.
+#' @param extract_feature_from_layer Character/Integer. A layer name or an
+#' integer layer index for extracting features from a layer.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+#'   myvi$lineup_check(20L)
+#'   myvi
+#' }
+#' @return Return the object itself.
+AUTO_VI$lineup_check
 
 #' Compute the likelihood ratio using the simulated result
 #'

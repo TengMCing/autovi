@@ -6,14 +6,9 @@
 \arguments{
 \item{draws}{Integer. Number of simulation draws.}
 
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
+\item{fitted_model}{Model. A model object, e.g. \code{lm}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model.}
-
-\item{jitter}{Boolean. Whether to use \code{jitter()} to generate bootstrapped
-data instead of sampling from the original data with replacement.}
-
-\item{factor}{Numeric. See also \code{\link[=jitter]{jitter()}}.}
+\item{keras_model}{Keras model. A trained computer vision model.}
 
 \item{data}{Data frame. The data used to fit the model.
 See also \code{\link[=AUTO_VI$get_dat]{AUTO_VI$get_dat()}}.}
@@ -22,13 +17,15 @@ See also \code{\link[=AUTO_VI$get_dat]{AUTO_VI$get_dat()}}.}
 contains the visual signal strength. This is particularly useful
 when the keras model has more than one output nodes.}
 
-\item{keep_boot_dat}{Boolean. Whether to keep the bootstrapped data.}
+\item{keep_boot_data}{Boolean. Whether to keep the bootstrapped data.}
 
 \item{keep_boot_plot}{Boolean. Whether to keep the bootstrapped plots.}
+
+\item{extract_feature_from_layer}{Character/Integer. A layer name or an
+integer layer index for extracting features from a layer.}
 }
 \value{
-A tibble with 1 to 3 columns depending on the argument
-\code{keep_boot_dat} and \code{keep_boot_plot}.
+A tibble.
 }
 \description{
 This function bootstrap the data and refits the model, then
@@ -37,15 +34,21 @@ predicts the visual signal strength of the bootstrapped residual plots.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$boot_vss(
   draws = 100L,
-  fitted_mod = self$fitted_mod,
-  keras_mod = self$keras_mod,
-  jitter = FALSE,
-  factor = 1L,
-  data = self$get_dat(),
+  fitted_model = self$fitted_model,
+  keras_model = self$keras_model,
+  data = self$get_data(),
   node_index = 1L,
-  keep_boot_dat = FALSE,
-  keep_boot_plot = FALSE
+  keep_boot_data = FALSE,
+  keep_boot_plot = FALSE,
+  extract_feature_from_layer = NULL
 )
 }\if{html}{\out{</div>}}
+}
+}
+\examples{
+if (interactive()) {
+  keras_model <- get_keras_model("vss_phn_32")
+  myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+  myvi$boot_vss(20L)
 }
 }

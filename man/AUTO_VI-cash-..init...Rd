@@ -4,9 +4,9 @@
 \alias{AUTO_VI$..init..}
 \title{Initialization method}
 \arguments{
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
+\item{fitted_model}{Model. A model object, e.g. \code{lm}.}
 
-\item{keras_mod}{Keras model. A trained computer vision model.}
+\item{keras_model}{Keras model. A trained computer vision model.}
 
 \item{data}{Data frame. The data used to fit the model.}
 
@@ -22,11 +22,11 @@ This function will be called after an instance is built. User
 input will be stored in the environment.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$..init..(fitted_mod, keras_mod = NULL, data = NULL, node_index = 1L)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$..init..(fitted_model, keras_model = NULL, data = NULL, node_index = 1L)
 }\if{html}{\out{</div>}}
 }
 }
 \examples{
-my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 my_vi
 }

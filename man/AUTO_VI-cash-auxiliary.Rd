@@ -8,10 +8,10 @@
 \code{.fitted}. See also \code{\link[=AUTO_VI$get_fitted_and_resid]{AUTO_VI$get_fitted_and_resid()}}.}
 }
 \value{
-A vector of auxiliary values.
+A tibble.
 }
 \description{
-This function computes a vector of auxiliary variables
+This function computes auxiliary variables
 including monotonic measure (\code{measure_monotonic}),
 sparse measure (\code{measure_sparse}), splines measure (\code{measure_splines}),
 striped measure (\code{measure_striped}), and the number of observation (\code{n}).
@@ -22,15 +22,15 @@ and \code{\link[cassowaryr:sc_striped]{cassowaryr::sc_striped()}}.
 If you wish to calculate additional auxiliary variables for your keras
 model, please override this method. Ensure that it accepts a data frame
 with columns named \code{.fitted} and \code{.resid} as input and returns
-a vector of values.
+a single row tibble.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$auxiliary(dat = seflf$get_fitted_and_resid())
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$auxiliary(data = seflf$get_fitted_and_resid())
 }\if{html}{\out{</div>}}
 }
 }
 \examples{
 
-my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 my_vi$auxiliary()
 }
