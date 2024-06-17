@@ -15,7 +15,7 @@ data instead of sampling from the original data with replacement.}
 
 \item{factor}{Numeric. See also \code{\link[=jitter]{jitter()}}.}
 
-\item{dat}{Data frame. The data used to fit the model.
+\item{data}{Data frame. The data used to fit the model.
 See also \code{\link[=AUTO_VI$get_dat]{AUTO_VI$get_dat()}}.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
@@ -41,7 +41,7 @@ predicts the visual signal strength of the bootstrapped residual plots.
   keras_mod = self$keras_mod,
   jitter = FALSE,
   factor = 1L,
-  dat = self$get_dat(),
+  data = self$get_dat(),
   node_index = 1L,
   keep_boot_dat = FALSE,
   keep_boot_plot = FALSE

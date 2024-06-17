@@ -23,7 +23,7 @@ data instead of sampling from the original data with replacement.}
 
 \item{factor}{Numeric. See also \code{\link[=jitter]{jitter()}}.}
 
-\item{dat}{Data frame. The data used to fit the model.
+\item{data}{Data frame. The data used to fit the model.
 See also \code{\link[=AUTO_VI$get_dat]{AUTO_VI$get_dat()}}.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
@@ -51,7 +51,7 @@ check with a computer vision model. The result will be stored in
   null_method = self$rotate_resid,
   jitter = FALSE,
   factor = 1L,
-  dat = self$get_dat(),
+  data = self$get_dat(),
   node_index = self$node_index,
   keep_dat = FALSE,
   keep_plot = FALSE

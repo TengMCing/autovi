@@ -4,7 +4,7 @@
 \alias{AUTO_VI$auxiliary}
 \title{Compute auxiliary variables for the keras model}
 \arguments{
-\item{dat}{Data frame. A data frame containing variables \code{.resid} and
+\item{data}{Data frame. A data frame containing variables \code{.resid} and
 \code{.fitted}. See also \code{\link[=AUTO_VI$get_fitted_and_resid]{AUTO_VI$get_fitted_and_resid()}}.}
 }
 \value{

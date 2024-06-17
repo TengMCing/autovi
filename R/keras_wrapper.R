@@ -47,6 +47,10 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
 
     cli::cli_alert_success("Predict visual signal strength for {dim(input_array)[1]} image{?s}.")
 
+    if ("python.builtin.object" %in% class(output)) {
+      output <- reticulate::py_to_r(output)
+    }
+
     # Extract the value of a particular output node.
     if (!(is.vector(output) && is.atomic(output))) output <- output[, node_index]
 
@@ -73,6 +77,10 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
         feature <- feature_mod$`__call__`(input_array)$numpy()
       }
 
+      if ("python.builtin.object" %in% class(feature)) {
+        feature <- reticulate::py_to_r(feature)
+      }
+
       # Convert the array into a matrix
       dim(feature) <- c(dim(feature)[1], prod(dim(feature))/dim(feature)[1])
       colnames(feature) <- paste0("f_", 1:dim(feature)[2])
@@ -85,9 +93,32 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
   }
 
 
+# get_input_height --------------------------------------------------------
+
+  get_input_height_ <- function(keras_model = self$keras_model) {
+    if (length(keras_model$inputs) > 1) {
+      return(keras_model$input_shape[[1]][[2]])
+    } else {
+      return(keras_model$input_shape[[2]])
+    }
+  }
+
+
+# get_input_width ---------------------------------------------------------
+
+  get_input_width_ <- function(keras_model = self$keras_model) {
+    if (length(keras_model$inputs) > 1) {
+      return(keras_model$input_shape[[1]][[3]])
+    } else {
+      return(keras_model$input_shape[[3]])
+    }
+  }
+
 # image_to_array ----------------------------------------------------------
 
-  image_to_array_ <- function(path, keras_model = self$keras_model) {
+  image_to_array_ <- function(path,
+                              height = self$get_input_height(),
+                              width = self$get_input_width()) {
 
     autovi::check_python_library_available("numpy")
     autovi::check_python_library_available("PIL")
@@ -96,14 +127,6 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
     PIL <- reticulate::import("PIL", convert = FALSE)
     tf <- reticulate::import("tensorflow", convert = TRUE)
     keras <- tf$keras
-
-    # Check if the keras model have multiple inputs
-    mutltiple_inputs_flag <- length(keras_model$inputs) > 1
-
-    # Get the input shape from the keras model.
-    input_shape <- keras_model$input_shape[[1]]
-    height <- input_shape[[2]]
-    width <- input_shape[[3]]
 
     # Init the input batch.
     input_batch <- vector(mode = "list", length = length(path))
@@ -182,6 +205,8 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
   bandicoot::register_method(env,
                              ..init.. = init_,
                              predict = predict_,
+                             get_input_height = get_input_height_,
+                             get_input_width = get_input_width_,
                              image_to_array = image_to_array_,
                              list_layer_name = list_layer_name_,
                              ..str.. = str_)

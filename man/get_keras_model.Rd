@@ -15,5 +15,12 @@ A keras model.
 \description{
 This functions download the keras model from the \code{TengMCing/autovi_data}
 Github repo using \code{\link[=download.file]{download.file()}} and load the model using
-\code{reticulate::import("tensorflow")$keras$models$load_model}.
+\code{reticulate::import("tensorflow")$keras$models$load_model}. Note that
+\code{tensorflow} version greater than 2.15 is not supported.
+}
+\examples{
+if (interactive()) {
+  keras_model <- get_keras_model("vss_phn_32")
+}
+
 }

@@ -756,7 +756,11 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     if (is.null(self$keras_model)) {
       keras_model_status <- "UNKNOWN"
     } else {
-      input_shape <- paste(unlist(self$keras_model$input_shape[[1]]), collapse = ", ")
+      if (length(self$keras_model$inputs) > 1) {
+        input_shape <- paste(unlist(self$keras_model$input_shape[[1]]), collapse = ", ")
+      } else {
+        input_shape <- paste(unlist(self$keras_model$input_shape), collapse = ", ")
+      }
       output_shape <- paste(unlist(self$keras_model$output_shape), collapse = ", ")
 
       if (length(self$keras_model$inputs) == 1) {

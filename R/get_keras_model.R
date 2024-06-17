@@ -23,13 +23,23 @@ list_keras_models <- function() {
 #'
 #' This functions download the keras model from the `TengMCing/autovi_data`
 #' Github repo using [download.file()] and load the model using
-#' `reticulate::import("tensorflow")$keras$models$load_model`.
+#' `reticulate::import("tensorflow")$keras$models$load_model`. Note that
+#' `tensorflow` version greater than 2.15 is not supported.
 #'
 #' @param model_name String. The model name. See also [list_keras_models()].
 #' @return A keras model.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#' }
 #'
 #' @export
 get_keras_model <- function(model_name) {
+
+  if (!("character" %in% class(model_name) && length(model_name) == 1)) {
+    stop("Argument `model_name` needs to be a character vector of length 1.")
+  }
+
   meta <- list_keras_models()
   target <- meta$path[meta$model_name == model_name]
 

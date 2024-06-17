@@ -6,20 +6,16 @@
 \title{AUTO_VI class environment}
 \usage{
 auto_vi(
-  fitted_mod,
-  keras_mod = NULL,
-  dat = NULL,
+  fitted_model,
+  keras_model = NULL,
+  data = NULL,
   node_index = 1L,
   env = new.env(parent = parent.frame()),
   init_call = sys.call()
 )
 }
 \arguments{
-\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
-
-\item{keras_mod}{Keras model. A trained computer vision model.}
-
-\item{dat}{Data frame. The data used to fit the model.}
+\item{data}{Data frame. The data used to fit the model.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
 contains the visual signal strength. This is particularly useful
@@ -29,6 +25,10 @@ when the keras model has more than one output nodes.}
 
 \item{init_call}{Call. Contents of the \code{..init_call...} It is recommended to leave it
 as default.}
+
+\item{fitted_mod}{Model. A model object, e.g. \code{lm}.}
+
+\item{keras_mod}{Keras model. A trained computer vision model.}
 }
 \value{
 An instance environment.
