@@ -2,10 +2,24 @@
 % Please edit documentation in R/utils.R
 \name{check_python_library_available}
 \alias{check_python_library_available}
-\title{Check if a library is available}
+\title{Check python library availability}
 \usage{
 check_python_library_available(lib_name)
 }
+\arguments{
+\item{lib_name}{Character. A library name.}
+}
+\value{
+No return. Called for side-effect.
+}
 \description{
-Check if a library is available
+This function checks if a python library is available. If the library can
+not be found by the \code{importlib.util.find_spec} method, then an
+error will be raised.
+}
+\examples{
+if (interactive()) {
+  check_python_library_available("numpy")
+}
+
 }

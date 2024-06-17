@@ -1,7 +1,19 @@
 
 # check_python_library_available ------------------------------------------
 
-#' Check if a library is available
+#' Check python library availability
+#'
+#' This function checks if a python library is available. If the library can
+#' not be found by the `importlib.util.find_spec` method, then an
+#' error will be raised.
+#'
+#' @param lib_name Character. A library name.
+#' @return No return. Called for side-effect.
+#' @examples
+#' if (interactive()) {
+#'   check_python_library_available("numpy")
+#' }
+#'
 #' @export
 check_python_library_available <- function(lib_name) {
   find_spec <- reticulate::import("importlib.util", convert = FALSE)$find_spec
@@ -9,11 +21,29 @@ check_python_library_available <- function(lib_name) {
 
   if (is.null(reticulate::py_to_r(module_spec)))
     stop(paste0("Library `", lib_name, "` can not be found in the currently used version of Python! Consider using `reticulate::py_config()` to confirm the version of Python is correct and using `reticulate::use_python()` to select a Python interpreter."))
+
+  return(invisible(NULL))
 }
 
 
 # save_plot ---------------------------------------------------------------
 
+#' Save a plot
+#'
+#' This function save a plot to a provided path.
+#'
+#' @param p GGplot. A plot.
+#' @param path Character. Path to save the image.
+#' @param width Numeric. Width of the image.
+#' @param height Numeric. Height of the image.
+#' @param ... Other arguments passed to [ggplot2::ggsave()].
+#' @return The image path.
+#' @examples
+#' if (interactive()) {
+#'   p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
+#'   save_plot(p)
+#' }
+#'
 #' @export
 save_plot <- function(p,
                       path = NULL,
@@ -46,6 +76,19 @@ save_plot <- function(p,
 
 # remove_plot -------------------------------------------------------------
 
+#' Remove a plot
+#'
+#' This function removes a plot from a provided path.
+#'
+#' @param path Character. Path to the image.
+#' @param check_ext Boolean. Whether to check the file extension.
+#' @return No return. Called for side-effect.
+#' @examples
+#' if (interactive()) {
+#'   path <- tempfile(fileext = ".png")
+#'   remove_plot(path)
+#' }
+#'
 #' @export
 remove_plot <- function(path, check_ext = TRUE) {
   for(this_path in path) {
