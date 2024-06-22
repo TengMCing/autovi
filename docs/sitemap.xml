@@ -34,13 +34,31 @@
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-check_result.html</loc>
   </url>
   <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-feature_pca.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-feature_pca_plot.html</loc>
+  </url>
+  <url>
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-get_dat.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-get_data.html</loc>
   </url>
   <url>
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-get_fitted_and_resid.html</loc>
   </url>
   <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-likelihood_ratio.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-lineup_check.html</loc>
+  </url>
+  <url>
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-lr_ratio.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-null_method.html</loc>
   </url>
   <url>
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-null_vss.html</loc>
@@ -61,7 +79,16 @@
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-save_plot.html</loc>
   </url>
   <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-select_feature.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-summary_density_plot.html</loc>
+  </url>
+  <url>
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-summary_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-summary_rank_plot.html</loc>
   </url>
   <url>
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI-cash-unique_obs_correction.html</loc>
@@ -73,15 +100,51 @@
     <loc>https://tengmcing.github.io/autovi/reference/AUTO_VI.html</loc>
   </url>
   <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER-cash-..init...html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER-cash-..str...html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER-cash-get_input_height.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER-cash-get_input_width.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER-cash-image_to_array.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER-cash-list_layer_name.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER-cash-predict.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/KERAS_WRAPPER.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/check_python_library_available.html</loc>
+  </url>
+  <url>
     <loc>https://tengmcing.github.io/autovi/reference/get_keras_model.html</loc>
   </url>
   <url>
     <loc>https://tengmcing.github.io/autovi/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://tengmcing.github.io/autovi/reference/list_keras_model.html</loc>
+  </url>
+  <url>
     <loc>https://tengmcing.github.io/autovi/reference/list_keras_models.html</loc>
   </url>
   <url>
     <loc>https://tengmcing.github.io/autovi/reference/portal.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/remove_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://tengmcing.github.io/autovi/reference/save_plot.html</loc>
   </url>
 </urlset>

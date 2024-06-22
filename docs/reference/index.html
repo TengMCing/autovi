@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
 
       <dl><dt>
           
-          <code><a href="list_keras_models.html">list_keras_models()</a></code> 
+          <code><a href="list_keras_model.html">list_keras_model()</a></code> 
         </dt>
         <dd>List all available pre-trained computer vision models</dd>
       </dl><dl><dt>
@@ -61,6 +61,57 @@
           <code><a href="get_keras_model.html">get_keras_model()</a></code> 
         </dt>
         <dd>Download and load the keras model</dd>
+      </dl></div><div class="section level2">
+      <h2 id="keras-model-wrapper-class">Keras model wrapper class<a class="anchor" aria-label="anchor" href="#keras-model-wrapper-class"></a></h2>
+      
+      <p class="section-desc"></p><p>Keras model wrapper class</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="KERAS_WRAPPER.html">keras_wrapper()</a></code> 
+        </dt>
+        <dd>KERAS_WRAPPER class environment</dd>
+      </dl><dl><dt>
+          
+          <code><a href="KERAS_WRAPPER-cash-..init...html">KERAS_WRAPPER$..init..</a></code> 
+        </dt>
+        <dd>Initialization method</dd>
+      </dl><dl><dt>
+          
+          <code><a href="KERAS_WRAPPER-cash-..str...html">KERAS_WRAPPER$..str..</a></code> 
+        </dt>
+        <dd>String representation of the object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="KERAS_WRAPPER-cash-get_input_height.html">KERAS_WRAPPER$get_input_height</a></code> 
+        </dt>
+        <dd>Get keras model input image height</dd>
+      </dl><dl><dt>
+          
+          <code><a href="KERAS_WRAPPER-cash-get_input_width.html">KERAS_WRAPPER$get_input_width</a></code> 
+        </dt>
+        <dd>Get keras model input image width</dd>
+      </dl><dl><dt>
+          
+          <code><a href="KERAS_WRAPPER-cash-image_to_array.html">KERAS_WRAPPER$image_to_array</a></code> 
+        </dt>
+        <dd>Load an image as numpy array</dd>
+      </dl><dl><dt>
+          
+          <code><a href="KERAS_WRAPPER-cash-list_layer_name.html">KERAS_WRAPPER$list_layer_name</a></code> 
+        </dt>
+        <dd>List all layer names</dd>
+      </dl><dl><dt>
+          
+          <code><a href="KERAS_WRAPPER-cash-predict.html">KERAS_WRAPPER$predict</a></code> 
+        </dt>
+        <dd>Predict visual signal strength</dd>
       </dl></div><div class="section level2">
       <h2 id="auto-visual-inference-class">Auto visual inference class<a class="anchor" aria-label="anchor" href="#auto-visual-inference-class"></a></h2>
       
@@ -94,7 +145,7 @@
         <dd>Get fitted values and residuals out of a model object</dd>
       </dl><dl><dt>
           
-          <code><a href="AUTO_VI-cash-get_dat.html">AUTO_VI$get_dat</a></code> 
+          <code><a href="AUTO_VI-cash-get_data.html">AUTO_VI$get_data</a></code> 
         </dt>
         <dd>Get data out of a model object</dd>
       </dl><dl><dt>
@@ -102,16 +153,6 @@
           <code><a href="AUTO_VI-cash-plot_resid.html">AUTO_VI$plot_resid</a></code> 
         </dt>
         <dd>Draw a standard residual plot</dd>
-      </dl><dl><dt>
-          
-          <code><a href="AUTO_VI-cash-save_plot.html">AUTO_VI$save_plot</a></code> 
-        </dt>
-        <dd>Save a plot</dd>
-      </dl><dl><dt>
-          
-          <code><a href="AUTO_VI-cash-remove_plot.html">AUTO_VI$remove_plot</a></code> 
-        </dt>
-        <dd>Remove a plot</dd>
       </dl><dl><dt>
           
           <code><a href="AUTO_VI-cash-vss.html">AUTO_VI$vss</a></code> 
@@ -122,6 +163,11 @@
           <code><a href="AUTO_VI-cash-rotate_resid.html">AUTO_VI$rotate_resid</a></code> 
         </dt>
         <dd>Get rotated residuals from a fitted linear model</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AUTO_VI-cash-null_method.html">AUTO_VI$null_method</a></code> 
+        </dt>
+        <dd>Get null residuals from a fitted model</dd>
       </dl><dl><dt>
           
           <code><a href="AUTO_VI-cash-null_vss.html">AUTO_VI$null_vss</a></code> 
@@ -139,7 +185,17 @@
         <dd>Conduct a auto visual inference check with a computer vision model</dd>
       </dl><dl><dt>
           
-          <code><a href="AUTO_VI-cash-lr_ratio.html">AUTO_VI$lr_ratio</a></code> 
+          <code><a href="AUTO_VI-cash-lineup_check.html">AUTO_VI$lineup_check</a></code> 
+        </dt>
+        <dd>Conduct a auto visual inference lineup check with a computer vision model</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AUTO_VI-cash-check_result.html">AUTO_VI$check_result</a></code> 
+        </dt>
+        <dd>List of diagnostic results</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AUTO_VI-cash-likelihood_ratio.html">AUTO_VI$likelihood_ratio</a></code> 
         </dt>
         <dd>Compute the likelihood ratio using the simulated result</dd>
       </dl><dl><dt>
@@ -154,20 +210,60 @@
         <dd>Compute the p-value based on the check result</dd>
       </dl><dl><dt>
           
-          <code><a href="AUTO_VI-cash-unique_obs_correction.html">AUTO_VI$unique_obs_correction</a></code> 
-        </dt>
-        <dd>Compute the adjustment factor for the reduction of the number of
-unique observations</dd>
-      </dl><dl><dt>
-          
           <code><a href="AUTO_VI-cash-summary_plot.html">AUTO_VI$summary_plot</a></code> 
         </dt>
         <dd>Draw a summary plot for the result</dd>
       </dl><dl><dt>
           
-          <code><a href="AUTO_VI-cash-check_result.html">AUTO_VI$check_result</a></code> 
+          <code><a href="AUTO_VI-cash-summary_density_plot.html">AUTO_VI$summary_density_plot</a></code> 
         </dt>
-        <dd>List of diagnostic results</dd>
+        <dd>Draw a summary density plot for the result</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AUTO_VI-cash-summary_rank_plot.html">AUTO_VI$summary_rank_plot</a></code> 
+        </dt>
+        <dd>Draw a summary rank plot for the result</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AUTO_VI-cash-select_feature.html">AUTO_VI$select_feature</a></code> 
+        </dt>
+        <dd>Select features from the check result</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AUTO_VI-cash-feature_pca.html">AUTO_VI$feature_pca</a></code> 
+        </dt>
+        <dd>Conduct principal component analysis for features extracted from keras model</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AUTO_VI-cash-feature_pca_plot.html">AUTO_VI$feature_pca_plot</a></code> 
+        </dt>
+        <dd>Draw a summary Plot for principal component analysis conducted on extracted features</dd>
+      </dl></div><div class="section level2">
+      <h2 id="utilties">Utilties<a class="anchor" aria-label="anchor" href="#utilties"></a></h2>
+      
+      <p class="section-desc"></p><p>Utilties</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="check_python_library_available.html">check_python_library_available()</a></code> 
+        </dt>
+        <dd>Check python library availability</dd>
+      </dl><dl><dt>
+          
+          <code><a href="save_plot.html">save_plot()</a></code> 
+        </dt>
+        <dd>Save a plot</dd>
+      </dl><dl><dt>
+          
+          <code><a href="remove_plot.html">remove_plot()</a></code> 
+        </dt>
+        <dd>Remove a plot</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

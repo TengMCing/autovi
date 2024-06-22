@@ -14,7 +14,7 @@ This function gets the data out of a model object
 by using \code{\link[stats:model.frame]{stats::model.frame()}} if \code{self$data} is \code{NULL}.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$get_dat(fitted_model = self$fitted_model)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$get_data(fitted_model = self$fitted_model)
 }\if{html}{\out{</div>}}
 }
 }

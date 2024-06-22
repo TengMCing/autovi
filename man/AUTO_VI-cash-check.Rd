@@ -22,7 +22,7 @@ rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
 also \code{\link[=AUTO_VI$p_value]{AUTO_VI$p_value()}}.}
 
 \item{data}{Data frame. The data used to fit the model.
-See also \code{\link[=AUTO_VI$get_dat]{AUTO_VI$get_dat()}}.}
+See also \code{\link[=AUTO_VI$get_data]{AUTO_VI$get_data()}}.}
 
 \item{node_index}{Integer. An index indicating which node of the output layer
 contains the visual signal strength. This is particularly useful

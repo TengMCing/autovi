@@ -1,5 +1,5 @@
 
-# list_keras_models -------------------------------------------------------
+# list_keras_model --------------------------------------------------------
 
 #' List all available pre-trained computer vision models
 #'
@@ -9,10 +9,10 @@
 #' @return A tibble of available model names and paths.
 #' @examples
 #'
-#' list_keras_models()
+#' list_keras_model()
 #'
 #' @export
-list_keras_models <- function() {
+list_keras_model <- function() {
   meta <- utils::read.csv("https://raw.githubusercontent.com/TengMCing/autovi_data/master/available_models.csv")
   tibble::as_tibble(meta)
 }
@@ -26,7 +26,7 @@ list_keras_models <- function() {
 #' `reticulate::import("tensorflow")$keras$models$load_model`. Note that
 #' `tensorflow` version greater than 2.15 is not supported.
 #'
-#' @param model_name String. The model name. See also [list_keras_models()].
+#' @param model_name String. The model name. See also [list_keras_model()].
 #' @return A keras model.
 #' @examples
 #' if (interactive()) {
@@ -40,7 +40,7 @@ get_keras_model <- function(model_name) {
     stop("Argument `model_name` needs to be a character vector of length 1.")
   }
 
-  meta <- list_keras_models()
+  meta <- list_keras_model()
   target <- meta$path[meta$model_name == model_name]
 
   if (length(target) == 0) stop(paste0("Can not find keras model named '", model_name, "'!"))

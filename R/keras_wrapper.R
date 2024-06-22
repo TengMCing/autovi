@@ -162,7 +162,7 @@ class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
 
   list_layer_name_ <- function(keras_model = self$keras_model) {
     all_name <- c()
-    for (layer in myvi$keras_model$layers) {
+    for (layer in keras_model$layers) {
       all_name <- c(all_name, layer$name)
     }
     return(all_name)

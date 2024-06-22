@@ -3,6 +3,15 @@
 \name{AUTO_VI$summary_plot}
 \alias{AUTO_VI$summary_plot}
 \title{Draw a summary plot for the result}
+\arguments{
+\item{type}{Character. Either "auto", "density" or "rank". Option "auto"
+will use the Boolean flag \code{self$check_result$lineup_check}
+to determine the correct option. See also \code{\link[=AUTO_VI$summary_density_plot]{AUTO_VI$summary_density_plot()}}
+and \code{\link[=AUTO_VI$summary_rank_plot]{AUTO_VI$summary_rank_plot()}}.}
+
+\item{...}{Arguments passed to \code{\link[=AUTO_VI$summary_density_plot]{AUTO_VI$summary_density_plot()}} or
+\code{\link[=AUTO_VI$summary_rank_plot]{AUTO_VI$summary_rank_plot()}}.}
+}
 \value{
 A \code{ggplot}.
 }
@@ -10,7 +19,20 @@ A \code{ggplot}.
 This function draws a summary plot for the result.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$summary_plot()
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$summary_plot(type = "auto", ...)
 }\if{html}{\out{</div>}}
 }
+}
+\examples{
+if (interactive()) {
+  keras_model <- get_keras_model("vss_phn_32")
+  myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+
+  myvi$check()
+  myvi$summary_plot()
+
+  myvi$lineup_check()
+  myvi$summary_plot()
+}
+
 }

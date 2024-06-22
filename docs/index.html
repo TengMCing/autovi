@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,13 +77,13 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tengmcing.github.io/autovi/">autovi</a></span><span class="op">)</span></span></code></pre></div>
-<p>All the available trained Keras models are listed in <code><a href="reference/list_keras_models.html">list_keras_models()</a></code>. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in our draft paper <a href="https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf" class="external-link uri">https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf</a>.</p>
+<p>All the available trained Keras models are listed in <code>list_keras_models()</code>. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in our draft paper <a href="https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf" class="external-link uri">https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/list_keras_models.html">list_keras_models</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">model_name</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">list_keras_models</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">model_name</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "vss_32"      "vss_64"      "vss_128"     "vss_phn_32"  "vss_phn_64" </span></span>
 <span><span class="co">#&gt; [6] "vss_phn_128"</span></span></code></pre></div>
 <p>Different Keras models are trained with residual plots obtained from different linear regression models violating various model assumptions.</p>
-<p><code>vss_32</code>, <code>vss_64</code> and <code>vss_128</code> are trained with residual plots containing visual patterns indicating non-linearity and heteroskedasticity issues. The number in the model name represents the size of the input image. For instance, <code>32</code> means the input image has <span class="math inline">32<em>t</em><em>i</em><em>m</em><em>e</em><em>s</em>32</span> pixels.</p>
+<p><code>vss_32</code>, <code>vss_64</code> and <code>vss_128</code> are trained with residual plots containing visual patterns indicating non-linearity and heteroskedasticity issues. The number in the model name represents the size of the input image. For instance, <code>32</code> means the input image has <span class="math inline">32 × 32</span> pixels.</p>
 <p><code>vss_phn_32</code>, <code>vss_phn_64</code> and <code>vss_phn_128</code> are also trained with residual plots containing visual patterns indicating non-linearity and heteroskedasticity, but the visual patterns are more complex. Additionally, residual plots with visual patterns of non-normality are also used for these models.</p>
 </div>
 <div class="section level2">
@@ -91,40 +91,43 @@
 </h2>
 <p>For this example, we will be using the <code>vss_phn_32</code> Keras model. The model can be obtained by using <code><a href="reference/get_keras_model.html">get_keras_model()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">keras_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_keras_model.html">get_keras_model</a></span><span class="op">(</span><span class="st">"vss_phn_32"</span><span class="op">)</span></span></code></pre></div>
-<p>To illustrate the use of this package, we will use the <code>visage</code> package to define a data generating process and use an incorrectly specified model to fit the 300 simulated observations.</p>
+<code class="sourceCode R"><span><span class="va">keras_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_keras_model.html">get_keras_model</a></span><span class="op">(</span><span class="st">"vss_phn_32"</span><span class="op">)</span></span></code></pre></div>
+<p>To illustrate the use of this package, we will define an incorrectly specified model omitting certain higher-order terms of <span class="math inline"><em>x</em></span>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">10086</span><span class="op">)</span></span>
-<span><span class="va">dgp_mod</span> <span class="op">&lt;-</span> <span class="fu">visage</span><span class="fu">::</span><span class="fu"><a href="https://tengmcing.github.io/visage/reference/portal.html" class="external-link">poly_model</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">visage</span><span class="fu">::</span><span class="fu"><a href="https://tengmcing.github.io/visage/reference/RAND_UNIFORM.html" class="external-link">rand_uniform</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">this_dat</span> <span class="op">&lt;-</span> <span class="va">dgp_mod</span><span class="op">$</span><span class="fu">gen</span><span class="op">(</span><span class="fl">300</span><span class="op">)</span></span>
-<span><span class="va">this_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data <span class="op">=</span> <span class="va">this_dat</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">300</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">300</span>, sd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">this_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p>The residual plot of the fitted model shows a “S” shape indicating a non-linearity issue.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">this_mod</span><span class="op">$</span><span class="va">fitted.values</span>, <span class="va">this_mod</span><span class="op">$</span><span class="va">residuals</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">this_model</span><span class="op">$</span><span class="va">fitted.values</span>, <span class="va">this_model</span><span class="op">$</span><span class="va">residuals</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Fitted values"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Residuals"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 <p>To run diagnostics for this fitted model, we can initialize the checker using <code><a href="reference/AUTO_VI.html">auto_vi()</a></code> and have a look at the input residual plot using the <code>plot_resid()</code> method.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">checker</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/AUTO_VI.html">auto_vi</a></span><span class="op">(</span>fitted_mod <span class="op">=</span> <span class="va">this_mod</span>, keras_mod <span class="op">=</span> <span class="va">keras_mod</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">checker</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/AUTO_VI.html">auto_vi</a></span><span class="op">(</span>fitted_model <span class="op">=</span> <span class="va">this_model</span>, keras_model <span class="op">=</span> <span class="va">keras_model</span><span class="op">)</span></span>
 <span><span class="va">checker</span><span class="op">$</span><span class="fu">plot_resid</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
 <p>To predict the visual signal strength of this residual plot, simply use the <code>vss()</code> method.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">vss</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span>
-<span><span class="co">#&gt; [1] 3.474873</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 1 × 1</span></span>
+<span><span class="co">#&gt;     vss</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  4.46</span></span></code></pre></div>
 <p>Having the visual signal strength of the residual plot is usually insufficient to determine if the model is correctly specified. Thus, we need to evaluate some null residual plots for comparison.</p>
 <p>The checker includes a default method to generate null residuals consistent with the null hypothesis that the fitted model is correctly specified, which is the <code>rotate_resid()</code> method implementing the residual rotation technique. This method is only suitable for CLNRM.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">rotate_resid</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="va">checker</span><span class="op">$</span><span class="fu">plot_resid</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
-<p>To get predictions for null residual plots, one can use the <code>null_vss()</code> method. The <code>keep_null_dat</code> and <code>keep_null_plot</code> tells the method whether to preserve the null residuals and null residuals plots in the result. For models that needs to use a null generating method other than <code>rotate_resid()</code>, the function can be provided via the <code>null_method</code> argument. The only parameter of the provided function should be <code>fitted_mod</code>, which is the fitted model object. And it should return a data frame with two columns <code>.fitted</code> and <code>.resid</code> which are fitted values and null residuals respectively.</p>
+<p>To get predictions for null residual plots, one can use the <code>null_vss()</code> method. The <code>keep_null_data</code> and <code>keep_null_plot</code> tells the method whether to preserve the null residuals and null residuals plots in the result. For models that needs to use a null generating method other than <code>rotate_resid()</code>, the function can be provided via the <code>null_method</code> argument. The only parameter of the provided function should be <code>fitted_model</code>, which is the fitted model object. And it should return a data frame with two columns <code>.fitted</code> and <code>.resid</code> which are fitted values and null residuals respectively.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">null_vss</span><span class="op">(</span><span class="fl">20L</span>, </span>
-<span>                 keep_null_dat <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                 keep_null_data <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                 keep_null_plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Generate null data.</span></span>
 <span><span class="co">#&gt; ✔ Generate null plots.</span></span>
@@ -133,30 +136,30 @@
 <span><span class="co">#&gt; # A tibble: 20 × 1</span></span>
 <span><span class="co">#&gt;      vss</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 1.54 </span></span>
-<span><span class="co">#&gt;  2 2.36 </span></span>
-<span><span class="co">#&gt;  3 1.89 </span></span>
-<span><span class="co">#&gt;  4 1.15 </span></span>
-<span><span class="co">#&gt;  5 1.12 </span></span>
-<span><span class="co">#&gt;  6 0.944</span></span>
-<span><span class="co">#&gt;  7 1.55 </span></span>
-<span><span class="co">#&gt;  8 1.34 </span></span>
-<span><span class="co">#&gt;  9 0.791</span></span>
-<span><span class="co">#&gt; 10 1.02 </span></span>
-<span><span class="co">#&gt; 11 1.06 </span></span>
-<span><span class="co">#&gt; 12 0.943</span></span>
-<span><span class="co">#&gt; 13 1.24 </span></span>
-<span><span class="co">#&gt; 14 0.918</span></span>
-<span><span class="co">#&gt; 15 1.26 </span></span>
-<span><span class="co">#&gt; 16 0.958</span></span>
-<span><span class="co">#&gt; 17 0.744</span></span>
-<span><span class="co">#&gt; 18 1.04 </span></span>
-<span><span class="co">#&gt; 19 0.967</span></span>
-<span><span class="co">#&gt; 20 1.44</span></span></code></pre></div>
-<p>If we want to measure the variation of the visual signal strength of the residual plot, we can use the <code>boot_vss()</code> method to get bootstrapped visual signal strength. This method resamples the observations with replacement and refitt the regression model. Similarly, <code>keep_boot_dat</code> and <code>keep_boot_plot</code> tells the method whether to preserve bootstrapped residuals and plots.</p>
+<span><span class="co">#&gt;  1 1.17 </span></span>
+<span><span class="co">#&gt;  2 1.09 </span></span>
+<span><span class="co">#&gt;  3 1.17 </span></span>
+<span><span class="co">#&gt;  4 0.773</span></span>
+<span><span class="co">#&gt;  5 1.24 </span></span>
+<span><span class="co">#&gt;  6 0.640</span></span>
+<span><span class="co">#&gt;  7 0.873</span></span>
+<span><span class="co">#&gt;  8 1.06 </span></span>
+<span><span class="co">#&gt;  9 1.00 </span></span>
+<span><span class="co">#&gt; 10 1.01 </span></span>
+<span><span class="co">#&gt; 11 3.03 </span></span>
+<span><span class="co">#&gt; 12 1.15 </span></span>
+<span><span class="co">#&gt; 13 1.08 </span></span>
+<span><span class="co">#&gt; 14 0.910</span></span>
+<span><span class="co">#&gt; 15 1.10 </span></span>
+<span><span class="co">#&gt; 16 0.913</span></span>
+<span><span class="co">#&gt; 17 0.848</span></span>
+<span><span class="co">#&gt; 18 1.08 </span></span>
+<span><span class="co">#&gt; 19 0.911</span></span>
+<span><span class="co">#&gt; 20 0.665</span></span></code></pre></div>
+<p>If we want to measure the variation of the visual signal strength of the residual plot, we can use the <code>boot_vss()</code> method to get bootstrapped visual signal strength. This method resamples the observations with replacement and refitt the regression model. Similarly, <code>keep_boot_data</code> and <code>keep_boot_plot</code> tells the method whether to preserve bootstrapped residuals and plots.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">boot_vss</span><span class="op">(</span><span class="fl">20L</span>, </span>
-<span>                 keep_boot_dat <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                 keep_boot_data <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                 keep_boot_plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Generate bootstrapped data.</span></span>
 <span><span class="co">#&gt; ✔ Generate bootstrapped plots.</span></span>
@@ -165,52 +168,190 @@
 <span><span class="co">#&gt; # A tibble: 20 × 1</span></span>
 <span><span class="co">#&gt;      vss</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1  3.01</span></span>
-<span><span class="co">#&gt;  2  3.57</span></span>
-<span><span class="co">#&gt;  3  3.20</span></span>
-<span><span class="co">#&gt;  4  3.67</span></span>
-<span><span class="co">#&gt;  5  3.24</span></span>
-<span><span class="co">#&gt;  6  3.05</span></span>
-<span><span class="co">#&gt;  7  2.90</span></span>
-<span><span class="co">#&gt;  8  3.73</span></span>
-<span><span class="co">#&gt;  9  3.40</span></span>
-<span><span class="co">#&gt; 10  4.07</span></span>
-<span><span class="co">#&gt; 11  3.43</span></span>
-<span><span class="co">#&gt; 12  3.11</span></span>
-<span><span class="co">#&gt; 13  3.24</span></span>
-<span><span class="co">#&gt; 14  3.79</span></span>
-<span><span class="co">#&gt; 15  3.59</span></span>
-<span><span class="co">#&gt; 16  4.01</span></span>
-<span><span class="co">#&gt; 17  3.73</span></span>
-<span><span class="co">#&gt; 18  3.78</span></span>
-<span><span class="co">#&gt; 19  3.68</span></span>
-<span><span class="co">#&gt; 20  3.17</span></span></code></pre></div>
+<span><span class="co">#&gt;  1  4.20</span></span>
+<span><span class="co">#&gt;  2  4.68</span></span>
+<span><span class="co">#&gt;  3  5.56</span></span>
+<span><span class="co">#&gt;  4  4.15</span></span>
+<span><span class="co">#&gt;  5  4.37</span></span>
+<span><span class="co">#&gt;  6  5.28</span></span>
+<span><span class="co">#&gt;  7  4.36</span></span>
+<span><span class="co">#&gt;  8  4.12</span></span>
+<span><span class="co">#&gt;  9  4.70</span></span>
+<span><span class="co">#&gt; 10  4.03</span></span>
+<span><span class="co">#&gt; 11  4.11</span></span>
+<span><span class="co">#&gt; 12  4.16</span></span>
+<span><span class="co">#&gt; 13  5.09</span></span>
+<span><span class="co">#&gt; 14  4.54</span></span>
+<span><span class="co">#&gt; 15  3.83</span></span>
+<span><span class="co">#&gt; 16  4.31</span></span>
+<span><span class="co">#&gt; 17  4.72</span></span>
+<span><span class="co">#&gt; 18  5.33</span></span>
+<span><span class="co">#&gt; 19  4.85</span></span>
+<span><span class="co">#&gt; 20  4.08</span></span></code></pre></div>
 <p>To run a comprehensive check including the analysis of null residuals and bootstrapped residuals, use the <code>check()</code> method.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>null_draws <span class="op">=</span> <span class="fl">200L</span>, boot_draws <span class="op">=</span> <span class="fl">200L</span><span class="op">)</span></span></code></pre></div>
-<p>The check result is stored in the <code>check_result</code> attribute.</p>
+<code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>null_draws <span class="op">=</span> <span class="fl">20L</span>, boot_draws <span class="op">=</span> <span class="fl">20L</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Generate null data.</span></span>
+<span><span class="co">#&gt; ✔ Generate null plots.</span></span>
+<span><span class="co">#&gt; ✔ Compute auxilary inputs.</span></span>
+<span><span class="co">#&gt; ✔ Predict visual signal strength for 20 images.</span></span>
+<span><span class="co">#&gt; ✔ Generate bootstrapped data.</span></span>
+<span><span class="co">#&gt; ✔ Generate bootstrapped plots.</span></span>
+<span><span class="co">#&gt; ✔ Compute auxilary inputs.</span></span>
+<span><span class="co">#&gt; ✔ Predict visual signal strength for 20 images.</span></span>
+<span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span></code></pre></div>
+<p>The check result is stored in the <code>check_result</code> attribute. If you print the <code>checker</code> object, it will show a brief summary of the result.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">checker</span><span class="op">$</span><span class="va">check_result</span><span class="op">)</span></span>
-<span><span class="co">#&gt; List of 8</span></span>
-<span><span class="co">#&gt;  $ null           : tibble [200 × 1] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;   ..$ vss: num [1:200] 0.758 0.971 3.472 0.84 0.812 ...</span></span>
-<span><span class="co">#&gt;  $ boot           : tibble [200 × 1] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;   ..$ vss: num [1:200] 3.55 4.14 3.56 2.93 3.66 ...</span></span>
-<span><span class="co">#&gt;  $ vss            : num 3.47</span></span>
-<span><span class="co">#&gt;  $ p_value        : num 0.005</span></span>
-<span><span class="co">#&gt;  $ boot_p_value   : num 0</span></span>
-<span><span class="co">#&gt;  $ boot_likelihood: Named num 1.22</span></span>
-<span><span class="co">#&gt;   ..- attr(*, "names")= chr "boot_likelihood"</span></span>
-<span><span class="co">#&gt;  $ null_likelihood: Named num 0.0503</span></span>
-<span><span class="co">#&gt;   ..- attr(*, "names")= chr "null_likelihood"</span></span>
-<span><span class="co">#&gt;  $ lr_ratio       : Named num 24.3</span></span>
-<span><span class="co">#&gt;   ..- attr(*, "names")= chr "lr_ratio"</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">checker</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── &lt;AUTO_VI object&gt;</span></span>
+<span><span class="co">#&gt; Status:</span></span>
+<span><span class="co">#&gt;  - Fitted model: lm</span></span>
+<span><span class="co">#&gt;  - Keras model: (None, 32, 32, 3) + (None, 5) -&gt; (None, 1)</span></span>
+<span><span class="co">#&gt;     - Output node index: 1</span></span>
+<span><span class="co">#&gt;  - Result:</span></span>
+<span><span class="co">#&gt;     - Observed visual signal strength: 4.461 (p-value = 0)</span></span>
+<span><span class="co">#&gt;     - Null visual signal strength: [20 draws]</span></span>
+<span><span class="co">#&gt;        - Mean: 1.14</span></span>
+<span><span class="co">#&gt;        - Quantiles: </span></span>
+<span><span class="co">#&gt;           ╔═════════════════════════════════════════════════╗</span></span>
+<span><span class="co">#&gt;           ║   25%    50%    75%    80%    90%    95%    99% ║</span></span>
+<span><span class="co">#&gt;           ║0.8896 1.0072 1.1204 1.2076 1.3012 1.5755 3.3615 ║</span></span>
+<span><span class="co">#&gt;           ╚═════════════════════════════════════════════════╝</span></span>
+<span><span class="co">#&gt;     - Bootstrapped visual signal strength: [20 draws]</span></span>
+<span><span class="co">#&gt;        - Mean: 4.445 (p-value = 0)</span></span>
+<span><span class="co">#&gt;        - Quantiles: </span></span>
+<span><span class="co">#&gt;           ╔══════════════════════════════════════════╗</span></span>
+<span><span class="co">#&gt;           ║  25%   50%   75%   80%   90%   95%   99% ║</span></span>
+<span><span class="co">#&gt;           ║4.162 4.395 4.789 4.905 5.185 5.292 5.293 ║</span></span>
+<span><span class="co">#&gt;           ╚══════════════════════════════════════════╝</span></span>
+<span><span class="co">#&gt;     - Likelihood ratio: 0.7295 (boot) / 5.232e-14 (null) = 1.394e+13</span></span></code></pre></div>
 <p>A summary plot can be drawn with the <code>summary_plot()</code> method. The solid line is the 95% sample quantile of the visual signal strength predicted for null residual plots. The dot line is the visual signal strength predicted for the original residual plot. The blue density curve indicates the distribution of visual signal strength predicted for null residual plots. And the red density curve indicates the distribution of visual signal strength predicted for bootstrapped residual plots.</p>
 <p>The <span class="math inline"><em>p</em></span>-value is obtained by computing the ratio of null visual signal strength greater than or equal to observed visual signal strength. The red area along with the solid line indicates how often the fitted model would be considered incorrectly specified if the data can be repetitively drawn from the same data generating process.</p>
 <p>For this example, the <span class="math inline"><em>H</em><sub>0</sub></span> is rejected because of small <span class="math inline"><em>p</em></span>-value. It can also be observed that almost all the time the refitted models will be considered as incorrectly specified, so this is a clear rejection. Furthermore, since two density curves are very different from each other, it is very unlikely the original residuals are from the same distribution of null residuals.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">summary_plot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-14-1.png" width="100%"></p>
+<div class="section level3">
+<h3 id="feature-extraction">Feature extraction<a class="anchor" aria-label="anchor" href="#feature-extraction"></a>
+</h3>
+<p>This package also enables the extraction of features from keras model for other purposes. To extract features from a specific layer of the keras model, one needs to provide the argument <code>extract_feature_from_layer</code>. The following code chunk extract features from the global pooling layer of the keras model.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">vss</span><span class="op">(</span>extract_feature_from_layer <span class="op">=</span> <span class="st">"global_max_pooling2d"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span>
+<span><span class="co">#&gt;   [1] "vss"   "f_1"   "f_2"   "f_3"   "f_4"   "f_5"   "f_6"   "f_7"   "f_8"  </span></span>
+<span><span class="co">#&gt;  [10] "f_9"   "f_10"  "f_11"  "f_12"  "f_13"  "f_14"  "f_15"  "f_16"  "f_17" </span></span>
+<span><span class="co">#&gt;  [19] "f_18"  "f_19"  "f_20"  "f_21"  "f_22"  "f_23"  "f_24"  "f_25"  "f_26" </span></span>
+<span><span class="co">#&gt;  [28] "f_27"  "f_28"  "f_29"  "f_30"  "f_31"  "f_32"  "f_33"  "f_34"  "f_35" </span></span>
+<span><span class="co">#&gt;  [37] "f_36"  "f_37"  "f_38"  "f_39"  "f_40"  "f_41"  "f_42"  "f_43"  "f_44" </span></span>
+<span><span class="co">#&gt;  [46] "f_45"  "f_46"  "f_47"  "f_48"  "f_49"  "f_50"  "f_51"  "f_52"  "f_53" </span></span>
+<span><span class="co">#&gt;  [55] "f_54"  "f_55"  "f_56"  "f_57"  "f_58"  "f_59"  "f_60"  "f_61"  "f_62" </span></span>
+<span><span class="co">#&gt;  [64] "f_63"  "f_64"  "f_65"  "f_66"  "f_67"  "f_68"  "f_69"  "f_70"  "f_71" </span></span>
+<span><span class="co">#&gt;  [73] "f_72"  "f_73"  "f_74"  "f_75"  "f_76"  "f_77"  "f_78"  "f_79"  "f_80" </span></span>
+<span><span class="co">#&gt;  [82] "f_81"  "f_82"  "f_83"  "f_84"  "f_85"  "f_86"  "f_87"  "f_88"  "f_89" </span></span>
+<span><span class="co">#&gt;  [91] "f_90"  "f_91"  "f_92"  "f_93"  "f_94"  "f_95"  "f_96"  "f_97"  "f_98" </span></span>
+<span><span class="co">#&gt; [100] "f_99"  "f_100" "f_101" "f_102" "f_103" "f_104" "f_105" "f_106" "f_107"</span></span>
+<span><span class="co">#&gt; [109] "f_108" "f_109" "f_110" "f_111" "f_112" "f_113" "f_114" "f_115" "f_116"</span></span>
+<span><span class="co">#&gt; [118] "f_117" "f_118" "f_119" "f_120" "f_121" "f_122" "f_123" "f_124" "f_125"</span></span>
+<span><span class="co">#&gt; [127] "f_126" "f_127" "f_128" "f_129" "f_130" "f_131" "f_132" "f_133" "f_134"</span></span>
+<span><span class="co">#&gt; [136] "f_135" "f_136" "f_137" "f_138" "f_139" "f_140" "f_141" "f_142" "f_143"</span></span>
+<span><span class="co">#&gt; [145] "f_144" "f_145" "f_146" "f_147" "f_148" "f_149" "f_150" "f_151" "f_152"</span></span>
+<span><span class="co">#&gt; [154] "f_153" "f_154" "f_155" "f_156" "f_157" "f_158" "f_159" "f_160" "f_161"</span></span>
+<span><span class="co">#&gt; [163] "f_162" "f_163" "f_164" "f_165" "f_166" "f_167" "f_168" "f_169" "f_170"</span></span>
+<span><span class="co">#&gt; [172] "f_171" "f_172" "f_173" "f_174" "f_175" "f_176" "f_177" "f_178" "f_179"</span></span>
+<span><span class="co">#&gt; [181] "f_180" "f_181" "f_182" "f_183" "f_184" "f_185" "f_186" "f_187" "f_188"</span></span>
+<span><span class="co">#&gt; [190] "f_189" "f_190" "f_191" "f_192" "f_193" "f_194" "f_195" "f_196" "f_197"</span></span>
+<span><span class="co">#&gt; [199] "f_198" "f_199" "f_200" "f_201" "f_202" "f_203" "f_204" "f_205" "f_206"</span></span>
+<span><span class="co">#&gt; [208] "f_207" "f_208" "f_209" "f_210" "f_211" "f_212" "f_213" "f_214" "f_215"</span></span>
+<span><span class="co">#&gt; [217] "f_216" "f_217" "f_218" "f_219" "f_220" "f_221" "f_222" "f_223" "f_224"</span></span>
+<span><span class="co">#&gt; [226] "f_225" "f_226" "f_227" "f_228" "f_229" "f_230" "f_231" "f_232" "f_233"</span></span>
+<span><span class="co">#&gt; [235] "f_234" "f_235" "f_236" "f_237" "f_238" "f_239" "f_240" "f_241" "f_242"</span></span>
+<span><span class="co">#&gt; [244] "f_243" "f_244" "f_245" "f_246" "f_247" "f_248" "f_249" "f_250" "f_251"</span></span>
+<span><span class="co">#&gt; [253] "f_252" "f_253" "f_254" "f_255" "f_256"</span></span></code></pre></div>
+<p>To check all the available layer names, one can list them with the <code>KERAS_WRAPPER</code> class.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">KERAS_WRAPPER</span><span class="op">$</span><span class="fu">list_layer_name</span><span class="op">(</span><span class="va">keras_model</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "input_1"                  "tf.__operators__.getitem"</span></span>
+<span><span class="co">#&gt;  [3] "tf.nn.bias_add"           "grey_scale"              </span></span>
+<span><span class="co">#&gt;  [5] "block1_conv1"             "batch_normalization"     </span></span>
+<span><span class="co">#&gt;  [7] "activation"               "block1_conv2"            </span></span>
+<span><span class="co">#&gt;  [9] "batch_normalization_1"    "activation_1"            </span></span>
+<span><span class="co">#&gt; [11] "block1_pool"              "dropout"                 </span></span>
+<span><span class="co">#&gt; [13] "block2_conv1"             "batch_normalization_2"   </span></span>
+<span><span class="co">#&gt; [15] "activation_2"             "block2_conv2"            </span></span>
+<span><span class="co">#&gt; [17] "batch_normalization_3"    "activation_3"            </span></span>
+<span><span class="co">#&gt; [19] "block2_pool"              "dropout_1"               </span></span>
+<span><span class="co">#&gt; [21] "block3_conv1"             "batch_normalization_4"   </span></span>
+<span><span class="co">#&gt; [23] "activation_4"             "block3_conv2"            </span></span>
+<span><span class="co">#&gt; [25] "batch_normalization_5"    "activation_5"            </span></span>
+<span><span class="co">#&gt; [27] "block3_conv3"             "batch_normalization_6"   </span></span>
+<span><span class="co">#&gt; [29] "activation_6"             "block3_pool"             </span></span>
+<span><span class="co">#&gt; [31] "dropout_2"                "block4_conv1"            </span></span>
+<span><span class="co">#&gt; [33] "batch_normalization_7"    "activation_7"            </span></span>
+<span><span class="co">#&gt; [35] "block4_conv2"             "batch_normalization_8"   </span></span>
+<span><span class="co">#&gt; [37] "activation_8"             "block4_conv3"            </span></span>
+<span><span class="co">#&gt; [39] "batch_normalization_9"    "activation_9"            </span></span>
+<span><span class="co">#&gt; [41] "block4_pool"              "dropout_3"               </span></span>
+<span><span class="co">#&gt; [43] "block5_conv1"             "batch_normalization_10"  </span></span>
+<span><span class="co">#&gt; [45] "activation_10"            "block5_conv2"            </span></span>
+<span><span class="co">#&gt; [47] "batch_normalization_11"   "activation_11"           </span></span>
+<span><span class="co">#&gt; [49] "block5_conv3"             "batch_normalization_12"  </span></span>
+<span><span class="co">#&gt; [51] "activation_12"            "block5_pool"             </span></span>
+<span><span class="co">#&gt; [53] "dropout_4"                "global_max_pooling2d"    </span></span>
+<span><span class="co">#&gt; [55] "additional_input"         "concatenate"             </span></span>
+<span><span class="co">#&gt; [57] "dense"                    "dropout_5"               </span></span>
+<span><span class="co">#&gt; [59] "activation_13"            "dense_1"</span></span></code></pre></div>
+<p>While running the comprehensive check with the <code>check()</code> method, one can provide the <code>extract_feature_from_layer</code> argument to extract features.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>null_draws <span class="op">=</span> <span class="fl">20L</span>, boot_draws <span class="op">=</span> <span class="fl">20L</span>, extract_feature_from_layer <span class="op">=</span> <span class="st">"global_max_pooling2d"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Generate null data.</span></span>
+<span><span class="co">#&gt; ✔ Generate null plots.</span></span>
+<span><span class="co">#&gt; ✔ Compute auxilary inputs.</span></span>
+<span><span class="co">#&gt; ✔ Predict visual signal strength for 20 images.</span></span>
+<span><span class="co">#&gt; ✔ Generate bootstrapped data.</span></span>
+<span><span class="co">#&gt; ✔ Generate bootstrapped plots.</span></span>
+<span><span class="co">#&gt; ✔ Compute auxilary inputs.</span></span>
+<span><span class="co">#&gt; ✔ Predict visual signal strength for 20 images.</span></span>
+<span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span></code></pre></div>
+<p>The features are also stored in the <code>check_result</code> attribute.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="va">check_result</span><span class="op">$</span><span class="va">observed</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 257</span></span>
+<span><span class="co">#&gt;     vss   f_1    f_2   f_3   f_4   f_5     f_6    f_7   f_8    f_9  f_10  f_11</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  4.46 0.167 0.0687     0     0     0 0.00164 0.0695     0 0.0847     0     0</span></span>
+<span><span class="co">#&gt; # ℹ 245 more variables: f_12 &lt;dbl&gt;, f_13 &lt;dbl&gt;, f_14 &lt;dbl&gt;, f_15 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_16 &lt;dbl&gt;, f_17 &lt;dbl&gt;, f_18 &lt;dbl&gt;, f_19 &lt;dbl&gt;, f_20 &lt;dbl&gt;, f_21 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_22 &lt;dbl&gt;, f_23 &lt;dbl&gt;, f_24 &lt;dbl&gt;, f_25 &lt;dbl&gt;, f_26 &lt;dbl&gt;, f_27 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_28 &lt;dbl&gt;, f_29 &lt;dbl&gt;, f_30 &lt;dbl&gt;, f_31 &lt;dbl&gt;, f_32 &lt;dbl&gt;, f_33 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_34 &lt;dbl&gt;, f_35 &lt;dbl&gt;, f_36 &lt;dbl&gt;, f_37 &lt;dbl&gt;, f_38 &lt;dbl&gt;, f_39 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_40 &lt;dbl&gt;, f_41 &lt;dbl&gt;, f_42 &lt;dbl&gt;, f_43 &lt;dbl&gt;, f_44 &lt;dbl&gt;, f_45 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_46 &lt;dbl&gt;, f_47 &lt;dbl&gt;, f_48 &lt;dbl&gt;, f_49 &lt;dbl&gt;, f_50 &lt;dbl&gt;, f_51 &lt;dbl&gt;, …</span></span></code></pre></div>
+<p>This package provide ways to conduct PCA on these features. The <code>feature_pca</code> method will combine the features obtained from the prediction of the observed residual plot, null residual plots, and the bootstrapped residual plots, then conduct PCA on them. The results are the rotated features. The variable <code>set</code> provides the set label of the observation, which can either be “observed”, “null” or “boot”.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">feature_pca</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 41 × 298</span></span>
+<span><span class="co">#&gt;      f_1    f_2   f_3   f_4   f_5     f_6    f_7   f_8    f_9  f_10  f_11  f_12</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 0.167 0.0687  0     0    0     0.00164 0.0695 0     0.0847 0     0     0.149</span></span>
+<span><span class="co">#&gt;  2 1.08  4.14    4.10  5.43 2.35  2.04    3.09   2.39  2.01   1.94  4.32  2.43 </span></span>
+<span><span class="co">#&gt;  3 1.10  2.85    2.90  3.08 1.20  1.21    1.69   1.50  1.59   0.828 2.55  1.75 </span></span>
+<span><span class="co">#&gt;  4 0.827 3.20    2.92  3.45 1.50  1.28    1.89   1.61  1.64   1.28  2.66  1.71 </span></span>
+<span><span class="co">#&gt;  5 0.955 3.85    3.74  5.17 2.24  1.97    2.96   2.25  1.81   1.91  4.04  2.23 </span></span>
+<span><span class="co">#&gt;  6 1.22  3.60    3.70  4.70 2.00  1.72    2.66   2.19  1.77   1.57  3.83  2.18 </span></span>
+<span><span class="co">#&gt;  7 1.21  3.41    3.51  4.22 1.75  1.58    2.37   1.99  1.75   1.33  3.47  2.08 </span></span>
+<span><span class="co">#&gt;  8 1.09  3.00    3.04  3.71 1.53  1.40    2.12   1.76  1.53   1.16  3.01  1.85 </span></span>
+<span><span class="co">#&gt;  9 1.02  2.87    2.84  3.42 1.42  1.28    1.94   1.65  1.45   1.09  2.75  1.70 </span></span>
+<span><span class="co">#&gt; 10 0.570 1.72    1.25  1.36 0.270 0.342   0.419  0.545 0.959  0.267 0.913 0.875</span></span>
+<span><span class="co">#&gt; # ℹ 31 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 286 more variables: f_13 &lt;dbl&gt;, f_14 &lt;dbl&gt;, f_15 &lt;dbl&gt;, f_16 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_17 &lt;dbl&gt;, f_18 &lt;dbl&gt;, f_19 &lt;dbl&gt;, f_20 &lt;dbl&gt;, f_21 &lt;dbl&gt;, f_22 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_23 &lt;dbl&gt;, f_24 &lt;dbl&gt;, f_25 &lt;dbl&gt;, f_26 &lt;dbl&gt;, f_27 &lt;dbl&gt;, f_28 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_29 &lt;dbl&gt;, f_30 &lt;dbl&gt;, f_31 &lt;dbl&gt;, f_32 &lt;dbl&gt;, f_33 &lt;dbl&gt;, f_34 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_35 &lt;dbl&gt;, f_36 &lt;dbl&gt;, f_37 &lt;dbl&gt;, f_38 &lt;dbl&gt;, f_39 &lt;dbl&gt;, f_40 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   f_41 &lt;dbl&gt;, f_42 &lt;dbl&gt;, f_43 &lt;dbl&gt;, f_44 &lt;dbl&gt;, f_45 &lt;dbl&gt;, f_46 &lt;dbl&gt;, …</span></span></code></pre></div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

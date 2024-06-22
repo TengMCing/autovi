@@ -7,7 +7,7 @@
 get_keras_model(model_name)
 }
 \arguments{
-\item{model_name}{String. The model name. See also \code{\link[=list_keras_models]{list_keras_models()}}.}
+\item{model_name}{String. The model name. See also \code{\link[=list_keras_model]{list_keras_model()}}.}
 }
 \value{
 A keras model.

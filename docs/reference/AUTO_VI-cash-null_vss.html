@@ -6,12 +6,13 @@ Usage
 
 AUTO_VI$null_vss(
   draws = 100L,
-  fitted_mod = self$fitted_mod,
-  keras_mod = self$keras_mod,
-  null_method = self$rotate_resid,
+  fitted_model = self$fitted_model,
+  keras_model = self$keras_model,
+  null_method = self$null_method,
   node_index = self$node_index,
-  keep_null_dat = FALSE,
-  keep_null_plot = FALSE
+  keep_null_data = FALSE,
+  keep_null_plot = FALSE,
+  extract_feature_from_layer = NULL
 )
 
 
@@ -22,12 +23,13 @@ Usage
 
 AUTO_VI$null_vss(
   draws = 100L,
-  fitted_mod = self$fitted_mod,
-  keras_mod = self$keras_mod,
-  null_method = self$rotate_resid,
+  fitted_model = self$fitted_model,
+  keras_model = self$keras_model,
+  null_method = self$null_method,
   node_index = self$node_index,
-  keep_null_dat = FALSE,
-  keep_null_plot = FALSE
+  keep_null_data = FALSE,
+  keep_null_plot = FALSE,
+  extract_feature_from_layer = NULL
 )
 
 
@@ -42,7 +44,7 @@ AUTO_VI$null_vss(
     
     <a class="navbar-brand me-2" href="../index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,15 +82,16 @@ distribution, and predicts the visual signal strength.</p><div class="section">
 <h3 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h3>
 
 
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>AUTO_VI<span class="sc">$</span><span class="fu">null_vss</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">draws =</span> 100L,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fitted_mod =</span> self<span class="sc">$</span>fitted_mod,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">keras_mod =</span> self<span class="sc">$</span>keras_mod,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">null_method =</span> self<span class="sc">$</span>rotate_resid,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">node_index =</span> self<span class="sc">$</span>node_index,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_null_dat =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_null_plot =</span> <span class="cn">FALSE</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>AUTO_VI<span class="sc">$</span><span class="fu">null_vss</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">draws =</span> <span class="dv">100</span><span class="dt">L</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">fitted_model =</span> self<span class="sc">$</span>fitted_model,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">keras_model =</span> self<span class="sc">$</span>keras_model,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="at">null_method =</span> self<span class="sc">$</span>null_method,</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="at">node_index =</span> self<span class="sc">$</span>node_index,</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="at">keep_null_data =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="at">keep_null_plot =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="at">extract_feature_from_layer =</span> <span class="cn">NULL</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>)</span></code></pre><p></p></div>
 </div>
 
     </div>
@@ -100,11 +103,11 @@ distribution, and predicts the visual signal strength.</p><div class="section">
 <dd><p>Integer. Number of simulation draws.</p></dd>
 
 
-<dt>fitted_mod</dt>
+<dt>fitted_model</dt>
 <dd><p>Model. A model object, e.g. <code>lm</code>.</p></dd>
 
 
-<dt>keras_mod</dt>
+<dt>keras_model</dt>
 <dd><p>Keras model. A trained computer vision model.</p></dd>
 
 
@@ -120,22 +123,35 @@ contains the visual signal strength. This is particularly useful
 when the keras model has more than one output nodes.</p></dd>
 
 
-<dt>keep_null_dat</dt>
+<dt>keep_null_data</dt>
 <dd><p>Boolean. Whether to keep the simulated null data.</p></dd>
 
 
 <dt>keep_null_plot</dt>
 <dd><p>Boolean. Whether to keep the simulated null plots.</p></dd>
 
+
+<dt>extract_feature_from_layer</dt>
+<dd><p>Character/Integer. A layer name or an
+integer layer index for extracting features from a layer.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A tibble with 1 to 3 columns depending on the argument
-<code>keep_null_dat</code> and <code>keep_null_plot</code>.</p>
+<p>A tibble.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">keras_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_keras_model.html">get_keras_model</a></span><span class="op">(</span><span class="st">"vss_phn_32"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">myvi</span> <span class="op">&lt;-</span> <span class="fu"><a href="AUTO_VI.html">auto_vi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">speed</span> <span class="op">~</span> <span class="va">dist</span>, data <span class="op">=</span> <span class="va">cars</span><span class="op">)</span>, <span class="va">keras_model</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">myvi</span><span class="op">$</span><span class="fu">null_vss</span><span class="op">(</span><span class="fl">20L</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -10,8 +10,20 @@ reference:
   desc: >
     Pre-trained computer vision models for visual signal strength prediction
   contents:
-  - list_keras_models
+  - list_keras_model
   - get_keras_model
+- title: "Keras model wrapper class"
+  desc: >
+    Keras model wrapper class
+  contents:
+  - KERAS_WRAPPER
+  - KERAS_WRAPPER$..init..
+  - KERAS_WRAPPER$..str..
+  - KERAS_WRAPPER$get_input_height
+  - KERAS_WRAPPER$get_input_width
+  - KERAS_WRAPPER$image_to_array
+  - KERAS_WRAPPER$list_layer_name
+  - KERAS_WRAPPER$predict
 - title: "Auto visual inference class"
   desc: >
     Auto visual inference class
@@ -20,18 +32,30 @@ reference:
   - AUTO_VI$..init..
   - AUTO_VI$..str..
   - AUTO_VI$get_fitted_and_resid
-  - AUTO_VI$get_dat
+  - AUTO_VI$get_data
   - AUTO_VI$plot_resid
-  - AUTO_VI$save_plot
-  - AUTO_VI$remove_plot
   - AUTO_VI$vss
   - AUTO_VI$rotate_resid
+  - AUTO_VI$null_method
   - AUTO_VI$null_vss
   - AUTO_VI$boot_vss
   - AUTO_VI$check
-  - AUTO_VI$lr_ratio
+  - AUTO_VI$lineup_check
+  - AUTO_VI$check_result
+  - AUTO_VI$likelihood_ratio
   - AUTO_VI$auxiliary
   - AUTO_VI$p_value
-  - AUTO_VI$unique_obs_correction
   - AUTO_VI$summary_plot
-  - AUTO_VI$check_result
+  - AUTO_VI$summary_density_plot
+  - AUTO_VI$summary_rank_plot
+  - AUTO_VI$select_feature
+  - AUTO_VI$feature_pca
+  - AUTO_VI$feature_pca_plot
+- title: "Utilties"
+  desc: >
+    Utilties
+  contents:
+  - check_python_library_available
+  - save_plot
+  - remove_plot
+

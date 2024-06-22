@@ -14,7 +14,7 @@ with S3 class bandicoot_oop."><!-- mathjax --><script src="https://cdnjs.cloudfl
     
     <a class="navbar-brand me-2" href="../index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,9 +55,9 @@ with S3 class <code>bandicoot_oop</code>.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">auto_vi</span><span class="op">(</span></span>
-<span>  <span class="va">fitted_mod</span>,</span>
-<span>  keras_mod <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  dat <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">fitted_model</span>,</span>
+<span>  keras_model <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  node_index <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">new.env</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  init_call <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">sys.call</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -66,15 +66,15 @@ with S3 class <code>bandicoot_oop</code>.</p>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>fitted_mod</dt>
+    <dl><dt>fitted_model</dt>
 <dd><p>Model. A model object, e.g. <code>lm</code>.</p></dd>
 
 
-<dt>keras_mod</dt>
+<dt>keras_model</dt>
 <dd><p>Keras model. A trained computer vision model.</p></dd>
 
 
-<dt>dat</dt>
+<dt>data</dt>
 <dd><p>Data frame. The data used to fit the model.</p></dd>
 
 
@@ -130,26 +130,30 @@ as default.</p></dd>
 </ul></li>
 <li><p>C:</p><ul><li><p><code><a href="AUTO_VI-cash-check.html">AUTO_VI$check()</a></code></p></li>
 </ul></li>
-<li><p>G:</p><ul><li><p><code><a href="AUTO_VI-cash-get_dat.html">AUTO_VI$get_dat()</a></code></p></li>
+<li><p>F:</p><ul><li><p><code><a href="AUTO_VI-cash-feature_pca.html">AUTO_VI$feature_pca()</a></code></p></li>
+<li><p><code><a href="AUTO_VI-cash-feature_pca_plot.html">AUTO_VI$feature_pca_plot()</a></code></p></li>
+</ul></li>
+<li><p>G:</p><ul><li><p><code><a href="AUTO_VI-cash-get_data.html">AUTO_VI$get_data()</a></code></p></li>
 <li><p><code><a href="AUTO_VI-cash-get_fitted_and_resid.html">AUTO_VI$get_fitted_and_resid()</a></code></p></li>
 </ul></li>
 <li><p>I:</p><ul><li><p><code><a href="AUTO_VI-cash-..init...html">AUTO_VI$..init..()</a></code></p></li>
 </ul></li>
-<li><p>L:</p><ul><li><p><code><a href="AUTO_VI-cash-lr_ratio.html">AUTO_VI$lr_ratio()</a></code></p></li>
+<li><p>L:</p><ul><li><p><code><a href="AUTO_VI-cash-lineup_check.html">AUTO_VI$lineup_check()</a></code></p></li>
+<li><p><code><a href="AUTO_VI-cash-likelihood_ratio.html">AUTO_VI$likelihood_ratio()</a></code></p></li>
 </ul></li>
-<li><p>N:</p><ul><li><p><code><a href="AUTO_VI-cash-null_vss.html">AUTO_VI$null_vss()</a></code></p></li>
+<li><p>N:</p><ul><li><p><code><a href="AUTO_VI-cash-null_method.html">AUTO_VI$null_method()</a></code></p></li>
+<li><p><code><a href="AUTO_VI-cash-null_vss.html">AUTO_VI$null_vss()</a></code></p></li>
 </ul></li>
-<li><p>P:</p><ul><li><p><a href="AUTO_VI-cash-p_value.html">AUTO_VI$p_value</a></p></li>
+<li><p>P:</p><ul><li><p><code><a href="AUTO_VI-cash-p_value.html">AUTO_VI$p_value()</a></code></p></li>
 <li><p><code><a href="AUTO_VI-cash-plot_resid.html">AUTO_VI$plot_resid()</a></code></p></li>
 </ul></li>
-<li><p>R:</p><ul><li><p><code><a href="AUTO_VI-cash-remove_plot.html">AUTO_VI$remove_plot()</a></code></p></li>
-<li><p><code><a href="AUTO_VI-cash-rotate_resid.html">AUTO_VI$rotate_resid()</a></code></p></li>
+<li><p>R:</p><ul><li><p><code><a href="AUTO_VI-cash-rotate_resid.html">AUTO_VI$rotate_resid()</a></code></p></li>
 </ul></li>
-<li><p>S:</p><ul><li><p><code><a href="AUTO_VI-cash-save_plot.html">AUTO_VI$save_plot()</a></code></p></li>
+<li><p>S:</p><ul><li><p><code><a href="AUTO_VI-cash-select_feature.html">AUTO_VI$select_feature()</a></code></p></li>
 <li><p><code><a href="AUTO_VI-cash-..str...html">AUTO_VI$..str..()</a></code></p></li>
+<li><p><code><a href="AUTO_VI-cash-summary_density_plot.html">AUTO_VI$summary_density_plot()</a></code></p></li>
 <li><p><code><a href="AUTO_VI-cash-summary_plot.html">AUTO_VI$summary_plot()</a></code></p></li>
-</ul></li>
-<li><p>U:</p><ul><li><p><code><a href="AUTO_VI-cash-unique_obs_correction.html">AUTO_VI$unique_obs_correction()</a></code></p></li>
+<li><p><code><a href="AUTO_VI-cash-summary_rank_plot.html">AUTO_VI$summary_rank_plot()</a></code></p></li>
 </ul></li>
 <li><p>V:</p><ul><li><p><code><a href="AUTO_VI-cash-vss.html">AUTO_VI$vss()</a></code></p></li>
 </ul></li>

@@ -4,7 +4,7 @@
 \alias{AUTO_VI$rotate_resid}
 \title{Get rotated residuals from a fitted linear model}
 \arguments{
-\item{fitted_mod}{\code{lm}. A linear model object.}
+\item{fitted_model}{\code{lm}. A linear model object.}
 }
 \value{
 A tibble with two columns \code{.fitted} and \code{.resid}.
@@ -23,7 +23,7 @@ residuals.
 }
 \examples{
 
-my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 rotated_resid <- my_vi$rotate_resid()
 my_vi$plot_resid(rotated_resid)
 }

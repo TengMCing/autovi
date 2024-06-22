@@ -4,7 +4,9 @@
 \alias{AUTO_VI$p_value}
 \title{Compute the p-value based on the check result}
 \arguments{
-\item{type}{Character. Either "null" or "boot".}
+\item{type}{Character. Either  "auto", "quantile" or "lineup". Option
+"auto" will use the Boolean flag \code{self$check_result$lineup_check}
+to determine the correct option.}
 }
 \value{
 A numeric value representing the desired p-value.
@@ -12,11 +14,29 @@ A numeric value representing the desired p-value.
 \description{
 This function computes the p-value of observing the
 visual signal strength of the original residual plot based on the null
-distribution, and computes the p-value of observing the mean of the
-bootstrapped distribution based on the null distribution.
+distribution.
+}
+\details{
+There are two types of p-value calculation. Option "quantile"
+calculates the percentage of null visual signal strength greater than or
+equal to the observed visual signal strength. Option "lineup" combines
+the null visual signal strength and the observed visual signal strength
+in one vector, and calculates the percentage of entries in this vector
+greater than or equal to the observed visual signal strength. The "lineup"
+option ensures the p-value will not be smaller than 1 over the size of the
+lineup.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$p_value(type = "null")
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$p_value(
+  vss = self$check_result$observed$vss,
+  null_dist = self$check_result$null$vss,
+  type = "auto"
+)
 }\if{html}{\out{</div>}}
 }
+}
+\examples{
+vss <- 1
+null_dist <- rnorm(100, 0, 1)
+AUTO_VI$p_value(vss, null_dist)
 }

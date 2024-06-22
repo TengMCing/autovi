@@ -467,20 +467,20 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
     # Compute the p-values.
     if (null_draws > 0)
-      self$check_result$p_value <- self$p_value(observed$vss , p_value_type = p_value_type)
+      self$check_result$p_value <- self$p_value(observed$vss, type = p_value_type)
     if (null_draws > 0 && boot_draws > 0)
-      self$check_result$boot_p_value <- self$p_value(mean(boot_dist$vss), p_value_type = p_value_type)
+      self$check_result$boot_p_value <- self$p_value(mean(boot_dist$vss), type = p_value_type)
 
     # Compute the likelihoods and ratio.
     if (null_draws > 0 && boot_draws > 0) {
-      lr_ratio <- self$lr_ratio()
-      self$check_result$boot_likelihood <- lr_ratio["likelihood_1"]
-      self$check_result$null_likelihood <- lr_ratio["likelihood_2"]
-      self$check_result$lr_ratio <- lr_ratio["lr_ratio"]
+      likelihood_ratio <- self$likelihood_ratio()
+      self$check_result$boot_likelihood <- likelihood_ratio["likelihood_1"]
+      self$check_result$null_likelihood <- likelihood_ratio["likelihood_2"]
+      self$check_result$likelihood_ratio <- likelihood_ratio["likelihood_ratio"]
     } else {
       self$check_result$boot_likelihood <- NULL
       self$check_result$null_likelihood <- NULL
-      self$check_result$lr_ratio <- NULL
+      self$check_result$likelihood_ratio <- NULL
     }
 
     self$check_result$lineup_check <- FALSE
@@ -513,12 +513,14 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                extract_feature_from_layer = extract_feature_from_layer)
 
     self$check_result$lineup_check <- TRUE
+
+    return(invisible(self))
   }
 
 
-# lr_ratio ----------------------------------------------------------------
+# likelihood_ratio ----------------------------------------------------------------
 
-  lr_ratio_ <- function(vss = self$check_result$observed$vss,
+  likelihood_ratio_ <- function(vss = self$check_result$observed$vss,
                         dist_1 = self$check_result$boot$vss,
                         dist_2 = self$check_result$null$vss) {
 
@@ -541,7 +543,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
     return(c(likelihood_1 = approx_1,
              likelihood_2 = approx_2,
-             lr_ratio = approx_1/approx_2))
+             likelihood_ratio = approx_1/approx_2))
   }
 
 
@@ -549,21 +551,30 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
   p_value_ <- function(vss = self$check_result$observed$vss,
                        null_dist = self$check_result$null$vss,
-                       p_value_type = "quantile") {
+                       type = "auto") {
 
     if (is.null(vss)) stop("Missing observed visual signal strength!")
     if (is.null(null_dist)) stop("Missing results for null distribution!")
 
-    if (p_value_type == "quantile") {
+    if (type == "auto") {
+      if (!is.null(self$check_result$lineup_check) && self$check_result$lineup_check) {
+        total <- length(null_dist) + 1
+        return(1/total + sum(null_dist > vss)/total)
+      } else {
+        return(mean(null_dist >= vss))
+      }
+    }
+
+    if (type == "quantile") {
       return(mean(null_dist >= vss))
     }
 
-    if (p_value_type == "lineup") {
+    if (type == "lineup") {
       total <- length(null_dist) + 1
       return(1/total + sum(null_dist > vss)/total)
     }
 
-    stop("Argument `p_value_type` is neither 'quantile' nor 'lineup'!")
+    stop("Argument `type` is neither 'quantile' nor 'lineup'!")
   }
 
 
@@ -573,7 +584,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                                     null_dist = self$check_result$null$vss,
                                     boot_dist = self$check_result$boot$vss,
                                     p_value = self$check_result$p_value,
-                                    lr_ratio = self$check_result$lr_ratio,
+                                    likelihood_ratio = self$check_result$likelihood_ratio,
                                     density_alpha = 0.6) {
 
     if (!is.numeric(vss) || length(vss) != 1 || is.na(vss)) stop("Argument `vss` needs to be a single numeric value!")
@@ -608,8 +619,8 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
       subtitle <- paste0("P-value = ", format(p_value, digits = 4))
     }
 
-    if (is.numeric(lr_ratio) && length(lr_ratio) == 1 && !is.na(lr_ratio)) {
-      subtitle <- paste0(subtitle, ", Likelihood ratio = ", format(lr_ratio, digits = 4))
+    if (is.numeric(likelihood_ratio) && length(likelihood_ratio) == 1 && !is.na(likelihood_ratio)) {
+      subtitle <- paste0(subtitle, ", Likelihood ratio = ", format(likelihood_ratio, digits = 4))
     }
 
     p <- p + ggplot2::ggtitle("Summary of check result (density)",
@@ -651,15 +662,15 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
 # summary_plot ------------------------------------------------------------
 
-  summary_plot_ <- function(type = "auto") {
-    if (type == "density") return(self$summary_density_plot())
-    if (type == "rank") return(self$summary_rank_plot())
+  summary_plot_ <- function(type = "auto", ...) {
+    if (type == "density") return(self$summary_density_plot(...))
+    if (type == "rank") return(self$summary_rank_plot(...))
 
     if (type == "auto") {
-      if (self$check_result$lineup_check) {
-        return(self$summary_rank_plot())
+      if (!is.null(self$check_result$lineup_check) && self$check_result$lineup_check) {
+        return(self$summary_rank_plot(...))
       } else {
-        return(self$summary_density_plot())
+        return(self$summary_density_plot(...))
       }
     }
 
@@ -856,14 +867,14 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
 
     # Report the likelihood ratio.
-    lr_ratio <- self$check_result$lr_ratio
+    likelihood_ratio <- self$check_result$likelihood_ratio
 
-    if (!is.null(lr_ratio)) {
+    if (!is.null(likelihood_ratio)) {
       # Apply special treatments.
-      if (is.infinite(lr_ratio)) {
-        lr_ratio <- "Extremely large"
-      } else if (lr_ratio == 0) {
-        lr_ratio <- "Extremely small"
+      if (is.infinite(likelihood_ratio)) {
+        likelihood_ratio <- "Extremely large"
+      } else if (likelihood_ratio == 0) {
+        likelihood_ratio <- "Extremely small"
       }
 
       result <- paste0(result, "\n     - Likelihood ratio: ",
@@ -871,7 +882,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                        " (boot) / ",
                        format(self$check_result$null_likelihood, digits = 4),
                        " (null) = ",
-                       format(lr_ratio, digits = 4))
+                       format(likelihood_ratio, digits = 4))
     }
 
     return(result)
@@ -890,7 +901,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                              boot_vss = boot_vss_,
                              check = check_,
                              lineup_check = lineup_check_,
-                             lr_ratio = lr_ratio_,
+                             likelihood_ratio = likelihood_ratio_,
                              p_value = p_value_,
                              summary_density_plot = summary_density_plot_,
                              summary_rank_plot = summary_rank_plot_,

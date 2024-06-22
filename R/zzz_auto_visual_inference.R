@@ -48,7 +48,7 @@ AUTO_VI <- new.env()
 #'    * [AUTO_VI$..init..()]
 #' * L:
 #'    * [AUTO_VI$lineup_check()]
-#'    * [AUTO_VI$lr_ratio()]
+#'    * [AUTO_VI$likelihood_ratio()]
 #' * N:
 #'    * [AUTO_VI$null_method()]
 #'    * [AUTO_VI$null_vss()]
@@ -168,7 +168,7 @@ AUTO_VI$get_fitted_and_resid
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$get_dat(fitted_model = self$fitted_model)
+#' AUTO_VI$get_data(fitted_model = self$fitted_model)
 #' ```
 #'
 #' @param fitted_model Model. A model object, e.g. `lm`.
@@ -343,11 +343,11 @@ AUTO_VI$null_method
 #' AUTO_VI$rotate_resid(fitted_model = self$fitted_mod)
 #' ```
 #'
-#' @param fitted_mod `lm`. A linear model object.
+#' @param fitted_model `lm`. A linear model object.
 #' @return A tibble with two columns `.fitted` and `.resid`.
 #' @examples
 #'
-#' my_vi <- auto_vi(fitted_mod = lm(speed ~ dist, data = cars))
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' rotated_resid <- my_vi$rotate_resid()
 #' my_vi$plot_resid(rotated_resid)
 AUTO_VI$rotate_resid
@@ -421,7 +421,7 @@ AUTO_VI$null_vss
 #' @param fitted_model Model. A model object, e.g. `lm`.
 #' @param keras_model Keras model. A trained computer vision model.
 #' @param data Data frame. The data used to fit the model.
-#' See also [AUTO_VI$get_dat()].
+#' See also [AUTO_VI$get_data()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
@@ -475,7 +475,7 @@ AUTO_VI$boot_vss
 #' @param p_value_type Character. Either "quantile" or "lineup". See
 #' also [AUTO_VI$p_value()].
 #' @param data Data frame. The data used to fit the model.
-#' See also [AUTO_VI$get_dat()].
+#' See also [AUTO_VI$get_data()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
@@ -522,7 +522,7 @@ AUTO_VI$check
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid()].
 #' @param data Data frame. The data used to fit the model.
-#' See also [AUTO_VI$get_dat()].
+#' See also [AUTO_VI$get_data()].
 #' @param node_index Integer. An index indicating which node of the output layer
 #' contains the visual signal strength. This is particularly useful
 #' when the keras model has more than one output nodes.
@@ -540,7 +540,7 @@ AUTO_VI$lineup_check
 
 #' Compute the likelihood ratio using the simulated result
 #'
-#' @name AUTO_VI$lr_ratio
+#' @name AUTO_VI$likelihood_ratio
 #'
 #' @description This function estimates the likelihood
 #' of observing the visual signal strength in terms of the bootstrapped
@@ -549,12 +549,26 @@ AUTO_VI$lineup_check
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$lr_ratio()
+#' AUTO_VI$likelihood_ratio(
+#'   vss = self$check_result$observed$vss,
+#'   dist_1 = self$check_result$boot$vss,
+#'   dist_2 = self$check_result$null$vss
+#' )
 #' ```
 #'
-#' @return A named vector with three elements `boot_likelihood`,
-#' `null_likelihood` and `lr_ratio`.
-AUTO_VI$lr_ratio
+#' @param vss Numeric. The observed visual signal strength.
+#' @param dist_1 Numeric. A vector of visual signal strength for plots following
+#' the first distribution (bootstrap distribution by default).
+#' @param dist_2 Numeric. A vector of visual signal strength for plots following
+#' the second distribution (null distribution by default).
+#' @return A named vector with three elements `likelihood_1`,
+#' `likelihood_2` and `likelihood_ratio`.
+#' @examples
+#'
+#' dist_1 <- rnorm(100, 0, 1)
+#' dist_2 <- rnorm(100, 1, 1)
+#' AUTO_VI$likelihood_ratio(0, dist_1, dist_2)
+AUTO_VI$likelihood_ratio
 
 #' Compute the p-value based on the check result
 #'
@@ -562,18 +576,36 @@ AUTO_VI$lr_ratio
 #'
 #' @description This function computes the p-value of observing the
 #' visual signal strength of the original residual plot based on the null
-#' distribution, and computes the p-value of observing the mean of the
-#' bootstrapped distribution based on the null distribution.
+#' distribution.
+#'
+#' @details There are two types of p-value calculation. Option "quantile"
+#' calculates the percentage of null visual signal strength greater than or
+#' equal to the observed visual signal strength. Option "lineup" combines
+#' the null visual signal strength and the observed visual signal strength
+#' in one vector, and calculates the percentage of entries in this vector
+#' greater than or equal to the observed visual signal strength. The "lineup"
+#' option ensures the p-value will not be smaller than 1 over the size of the
+#' lineup.
+#'
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$p_value(type = "null")
+#' AUTO_VI$p_value(
+#'   vss = self$check_result$observed$vss,
+#'   null_dist = self$check_result$null$vss,
+#'   type = "auto"
+#' )
 #' ```
 #'
-#' @param type Character. Either "null" or "boot".
+#' @param type Character. Either  "auto", "quantile" or "lineup". Option
+#' "auto" will use the Boolean flag `self$check_result$lineup_check`
+#' to determine the correct option.
 #' @return A numeric value representing the desired p-value.
+#' @examples
+#' vss <- 1
+#' null_dist <- rnorm(100, 0, 1)
+#' AUTO_VI$p_value(vss, null_dist)
 AUTO_VI$p_value
-
 
 #' Draw a summary plot for the result
 #'
@@ -583,10 +615,211 @@ AUTO_VI$p_value
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$summary_plot()
+#' AUTO_VI$summary_plot(type = "auto", ...)
 #' ```
 #'
+#' @param type Character. Either "auto", "density" or "rank". Option "auto"
+#' will use the Boolean flag `self$check_result$lineup_check`
+#' to determine the correct option. See also [AUTO_VI$summary_density_plot()]
+#' and [AUTO_VI$summary_rank_plot()].
+#' @param ... Arguments passed to [AUTO_VI$summary_density_plot()] or
+#' [AUTO_VI$summary_rank_plot()].
 #' @return A `ggplot`.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$check()
+#'   myvi$summary_plot()
+#'
+#'   myvi$lineup_check()
+#'   myvi$summary_plot()
+#' }
+#'
 AUTO_VI$summary_plot
 
+#' Draw a summary density plot for the result
+#'
+#' @name AUTO_VI$summary_density_plot
+#'
+#' @description This function draws a summary density plot for the result.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$summary_plot(
+#'   vss = self$check_result$observed$vss,
+#'   null_dist = self$check_result$null$vss,
+#'   boot_dist = self$check_result$boot$vss,
+#'   p_value = self$check_result$p_value,
+#'   likelihood_ratio = self$check_result$likelihood_ratio,
+#'   density_alpha = 0.6
+#' )
+#' ```
+#'
+#' @param vss Numeric. Observed visual signal strength.
+#' @param null_dist Numeric. Null visual signal strength.
+#' @param boot_dist Numeric. Bootstrapped visual signal strength.
+#' @param p_value Numeric. P-value of the visual test. See also
+#' [AUTO_VI$p_value()].
+#' @param likelihood_ratio Numeric. Likelihood ratio of the visual test. See
+#' also [AUTO_VI$likelihood_ratio()].
+#' @param density_alpha Numeric. Alpha value for the density.
+#' @return A `ggplot`.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$check()
+#'   myvi$summary_density_plot()
+#' }
+#'
+AUTO_VI$summary_density_plot
 
+#' Draw a summary rank plot for the result
+#'
+#' @name AUTO_VI$summary_rank_plot
+#'
+#' @description This function draws a summary rank plot for the result.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$summary_plot(
+#'   vss = self$check_result$observed$vss,
+#'   null_dist = self$check_result$null$vss,
+#'   p_value = self$check_result$p_value
+#' )
+#' ```
+#'
+#' @param vss Numeric. Observed visual signal strength.
+#' @param null_dist Numeric. Null visual signal strength.
+#' @param p_value Numeric. P-value of the visual test. See also
+#' [AUTO_VI$p_value()].
+#' @return A `ggplot`.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$lineup_check()
+#'   myvi$summary_rank_plot()
+#' }
+#'
+AUTO_VI$summary_rank_plot
+
+#' Conduct principal component analysis for features extracted from keras model
+#'
+#' @name AUTO_VI$feature_pca
+#'
+#' @description This function conducts principal component analysis for
+#' features extracted from keras model.
+#'
+#' @details Features need to be extracted while running the method
+#' [AUTO_VI$check()] and [AUTO_VI$lineup_check()] by providing the argument
+#' `extract_feature_from_layer`. Features with zero variance will be ignored
+#' from the analysis. See also [stats::prcomp()].
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$feature_pca(
+#'   feature = self$select_feature(self$check_result$observed),
+#'   null_feature = self$select_feature(self$check_result$null),
+#'   boot_feature = self$select_feature(self$check_result$boot),
+#'   center = TRUE,
+#'   scale = TRUE
+#' )
+#' ```
+#'
+#' @param feature Dataframe. A data frame where columns represent
+#' features and rows represent observations. It should have only one row.
+#' @param null_feature Dataframe. A data frame where columns represent
+#' features and rows represent observations. These features are extracted
+#' during the evaluation of null plots.
+#' @param boot_feature Dataframe. A data frame where columns represent
+#' features and rows represent observations. These features are extracted
+#' during the evaluation of bootstrapped plots.
+#' @param center Boolean. Whether to subtract the mean from the feature.
+#' @param scale Boolean. Whether to divide the feature by its standard
+#' deviation.
+#' @return A tibble of the raw features and the rotated features with
+#' attributes `sdev` and `rotation` representing the
+#' standard deviation of the principal
+#' components and the rotation matrix respectively.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")
+#'   myvi$feature_pca()
+#' }
+#'
+AUTO_VI$feature_pca
+
+#' Select features from the check result
+#'
+#' @name AUTO_VI$select_feature
+#'
+#' @description This function select features from the check result.
+#'
+#' @details By default, features are assumed to follow the naming convention
+#' "f_{index}", where index is from one to the number of features.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$feature_pca(data = self$check_result$observed, pattern = "f_")
+#' ```
+#'
+#' @param data Dataframe. A data frame where some columns represent
+#' features and rows represent observations.
+#' @param pattern Character. A regrex pattern to search for features.
+#' See also [grep()].
+#' @return A tibble where columns represent
+#' features and rows represent observations.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")
+#'   myvi$select_feature()
+#' }
+#'
+AUTO_VI$select_feature
+
+#' Draw a summary Plot for principal component analysis conducted on extracted features
+#'
+#' @name AUTO_VI$feature_pca_plot
+#'
+#' @description This function draws a summary Plot for principal component
+#' analysis conducted on extracted features
+#'
+#' @details By default, it will visualize PC2 vs PC1. User can choose to
+#' visualize other principal components.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$feature_pca_plot(
+#'   feature_pca = self$feature_pca(),
+#'   x = PC1,
+#'   y = PC2,
+#'   col_by_set = TRUE)
+#' ```
+#'
+#' @param feature_pca Dataframe. A data frame containing the rotated features.
+#' @param x Symbol. The x variable. See also [ggplot2::tidyeval].
+#' @param y Symbol. The y variable. See also [ggplot2::tidyeval].
+#' @param col_by_set Boolena. Whether to color points by sets (observed, null,
+#' and boot).
+#' @return A `ggplot`.
+#' @examples
+#' if (interactive()) {
+#'   keras_model <- get_keras_model("vss_phn_32")
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")
+#'   myvi$feature_pca_plot()
+#' }
+#'
+AUTO_VI$feature_pca_plot

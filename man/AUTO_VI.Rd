@@ -93,7 +93,7 @@ with S3 class \code{bandicoot_oop}.
 \item L:
 \itemize{
 \item \code{\link[=AUTO_VI$lineup_check]{AUTO_VI$lineup_check()}}
-\item \code{\link[=AUTO_VI$lr_ratio]{AUTO_VI$lr_ratio()}}
+\item \code{\link[=AUTO_VI$likelihood_ratio]{AUTO_VI$likelihood_ratio()}}
 }
 \item N:
 \itemize{
