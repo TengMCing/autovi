@@ -1,14 +1,14 @@
 Package: autovi
 Type: Package
-Title: Auto visual inference with computer vision models
-Version: 0.3.0
+Title: Auto Visual Inference with Computer Vision Models
+Version: 0.4.0
 Authors@R: 
     person(given = "Weihao",
            family = "Li",
-           role = c("aut", "cre"),
-           email = "patrick.li@monash.edu",
+           role = c("aut", "cre", "cph"),
+           email = "llreczx@gmail.com",
            comment = c(ORCID = "0000-0003-4959-106X"))
-Description: More about what it does (maybe more than one line).
+Description: Tools for automated visual inference of residual plots with computer vision models, facilitating diagnostic checks for classical normal linear regression models. 
 License: MIT + file LICENSE
 URL: https://tengmcing.github.io/autovi/, https://github.com/TengMCing/autovi/
 BugReports: https://github.com/TengMCing/autovi/issues
@@ -33,9 +33,6 @@ Suggests:
     covr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-Remotes: 
-    TengMCing/bandicoot,
-    TengMCing/visage
 Depends: 
     R (>= 2.10)
 

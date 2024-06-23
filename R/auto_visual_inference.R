@@ -650,7 +650,9 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                                                   col = "observed")) +
       ggplot2::xlab("Rank") +
       ggplot2::ylab("Visual signal strength") +
-      ggplot2::theme_light()
+      ggplot2::theme_light() +
+      ggplot2::guides(col = "none") +
+      ggplot2::labs(fill = "")
 
     subtitle <- ""
     if (is.numeric(p_value) && length(p_value) == 1 && !is.na(p_value)) subtitle <- paste0("P-value = ", format(p_value, digits = 4))

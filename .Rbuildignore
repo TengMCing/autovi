@@ -7,3 +7,4 @@
 ^keras_model$
 ^pkgdown$
 ^README\.Rmd$
+^cran-comments\.md$

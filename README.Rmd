@@ -25,9 +25,16 @@ The `autovi` package aims to offer tools for automated visual inference of resid
 
 ## Installation
 
-You can install the development version of autovi like so:
+Install the released version from CRAN with
 
-``` r
+```r
+install.packages("autovi")
+```
+
+Install the development version from GitHub with:
+
+```r
+# install.packages("remotes")
 remotes::install_github("TengMCing/autovi")
 ```
 
@@ -38,10 +45,10 @@ library(tidyverse)
 library(autovi)
 ```
 
-All the available trained Keras models are listed in `list_keras_models()`. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in our draft paper https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf.
+All the available trained Keras models are listed in `list_keras_model()`. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in our draft paper https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf.
 
 ```{r}
-list_keras_models() %>% pull(model_name)
+list_keras_model() %>% pull(model_name)
 ```
 
 Different Keras models are trained with residual plots obtained from different linear regression models violating various model assumptions. 
