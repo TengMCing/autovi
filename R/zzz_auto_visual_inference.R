@@ -578,15 +578,6 @@ AUTO_VI$likelihood_ratio
 #' visual signal strength of the original residual plot based on the null
 #' distribution.
 #'
-#' @details There are two types of p-value calculation. Option "quantile"
-#' calculates the percentage of null visual signal strength greater than or
-#' equal to the observed visual signal strength. Option "lineup" combines
-#' the null visual signal strength and the observed visual signal strength
-#' in one vector, and calculates the percentage of entries in this vector
-#' greater than or equal to the observed visual signal strength. The "lineup"
-#' option ensures the p-value will not be smaller than 1 over the size of the
-#' lineup.
-#'
 #'
 #' ## Usage
 #' ```
@@ -596,6 +587,15 @@ AUTO_VI$likelihood_ratio
 #'   type = "auto"
 #' )
 #' ```
+#'
+#' @details There are two types of p-value calculation. Option "quantile"
+#' calculates the percentage of null visual signal strength greater than or
+#' equal to the observed visual signal strength. Option "lineup" combines
+#' the null visual signal strength and the observed visual signal strength
+#' in one vector, and calculates the percentage of entries in this vector
+#' greater than or equal to the observed visual signal strength. The "lineup"
+#' option ensures the p-value will not be smaller than 1 over the size of the
+#' lineup.
 #'
 #' @param type Character. Either  "auto", "quantile" or "lineup". Option
 #' "auto" will use the Boolean flag `self$check_result$lineup_check`
@@ -715,11 +715,6 @@ AUTO_VI$summary_rank_plot
 #' @description This function conducts principal component analysis for
 #' features extracted from keras model.
 #'
-#' @details Features need to be extracted while running the method
-#' [AUTO_VI$check()] and [AUTO_VI$lineup_check()] by providing the argument
-#' `extract_feature_from_layer`. Features with zero variance will be ignored
-#' from the analysis. See also [stats::prcomp()].
-#'
 #' ## Usage
 #' ```
 #' AUTO_VI$feature_pca(
@@ -730,6 +725,12 @@ AUTO_VI$summary_rank_plot
 #'   scale = TRUE
 #' )
 #' ```
+#'
+#' @details Features need to be extracted while running the method
+#' [AUTO_VI$check()] and [AUTO_VI$lineup_check()] by providing the argument
+#' `extract_feature_from_layer`. Features with zero variance will be ignored
+#' from the analysis. See also [stats::prcomp()].
+#'
 #'
 #' @param feature Dataframe. A data frame where columns represent
 #' features and rows represent observations. It should have only one row.
@@ -763,13 +764,13 @@ AUTO_VI$feature_pca
 #'
 #' @description This function select features from the check result.
 #'
-#' @details By default, features are assumed to follow the naming convention
-#' "f_{index}", where index is from one to the number of features.
-#'
 #' ## Usage
 #' ```
 #' AUTO_VI$feature_pca(data = self$check_result$observed, pattern = "f_")
 #' ```
+#'
+#' @details By default, features are assumed to follow the naming convention
+#' "f_(index)", where index is from one to the number of features.
 #'
 #' @param data Dataframe. A data frame where some columns represent
 #' features and rows represent observations.
@@ -795,9 +796,6 @@ AUTO_VI$select_feature
 #' @description This function draws a summary Plot for principal component
 #' analysis conducted on extracted features
 #'
-#' @details By default, it will visualize PC2 vs PC1. User can choose to
-#' visualize other principal components.
-#'
 #' ## Usage
 #' ```
 #' AUTO_VI$feature_pca_plot(
@@ -806,6 +804,9 @@ AUTO_VI$select_feature
 #'   y = PC2,
 #'   col_by_set = TRUE)
 #' ```
+#'
+#' @details By default, it will visualize PC2 vs PC1. User can choose to
+#' visualize other principal components.
 #'
 #' @param feature_pca Dataframe. A data frame containing the rotated features.
 #' @param x Symbol. The x variable. See also [ggplot2::tidyeval].

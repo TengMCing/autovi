@@ -19,10 +19,6 @@ A \code{ggplot}.
 \description{
 This function draws a summary Plot for principal component
 analysis conducted on extracted features
-}
-\details{
-By default, it will visualize PC2 vs PC1. User can choose to
-visualize other principal components.
 \subsection{Usage}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$feature_pca_plot(
@@ -32,6 +28,10 @@ visualize other principal components.
   col_by_set = TRUE)
 }\if{html}{\out{</div>}}
 }
+}
+\details{
+By default, it will visualize PC2 vs PC1. User can choose to
+visualize other principal components.
 }
 \examples{
 if (interactive()) {

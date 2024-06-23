@@ -15,6 +15,15 @@ A numeric value representing the desired p-value.
 This function computes the p-value of observing the
 visual signal strength of the original residual plot based on the null
 distribution.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$p_value(
+  vss = self$check_result$observed$vss,
+  null_dist = self$check_result$null$vss,
+  type = "auto"
+)
+}\if{html}{\out{</div>}}
+}
 }
 \details{
 There are two types of p-value calculation. Option "quantile"
@@ -25,15 +34,6 @@ in one vector, and calculates the percentage of entries in this vector
 greater than or equal to the observed visual signal strength. The "lineup"
 option ensures the p-value will not be smaller than 1 over the size of the
 lineup.
-\subsection{Usage}{
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$p_value(
-  vss = self$check_result$observed$vss,
-  null_dist = self$check_result$null$vss,
-  type = "auto"
-)
-}\if{html}{\out{</div>}}
-}
 }
 \examples{
 vss <- 1

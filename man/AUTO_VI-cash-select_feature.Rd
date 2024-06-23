@@ -16,15 +16,15 @@ features and rows represent observations.
 }
 \description{
 This function select features from the check result.
-}
-\details{
-By default, features are assumed to follow the naming convention
-"f_{index}", where index is from one to the number of features.
 \subsection{Usage}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$feature_pca(data = self$check_result$observed, pattern = "f_")
 }\if{html}{\out{</div>}}
 }
+}
+\details{
+By default, features are assumed to follow the naming convention
+"f_(index)", where index is from one to the number of features.
 }
 \examples{
 if (interactive()) {

@@ -29,12 +29,6 @@ components and the rotation matrix respectively.
 \description{
 This function conducts principal component analysis for
 features extracted from keras model.
-}
-\details{
-Features need to be extracted while running the method
-\code{\link[=AUTO_VI$check]{AUTO_VI$check()}} and \code{\link[=AUTO_VI$lineup_check]{AUTO_VI$lineup_check()}} by providing the argument
-\code{extract_feature_from_layer}. Features with zero variance will be ignored
-from the analysis. See also \code{\link[stats:prcomp]{stats::prcomp()}}.
 \subsection{Usage}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$feature_pca(
@@ -46,6 +40,12 @@ from the analysis. See also \code{\link[stats:prcomp]{stats::prcomp()}}.
 )
 }\if{html}{\out{</div>}}
 }
+}
+\details{
+Features need to be extracted while running the method
+\code{\link[=AUTO_VI$check]{AUTO_VI$check()}} and \code{\link[=AUTO_VI$lineup_check]{AUTO_VI$lineup_check()}} by providing the argument
+\code{extract_feature_from_layer}. Features with zero variance will be ignored
+from the analysis. See also \code{\link[stats:prcomp]{stats::prcomp()}}.
 }
 \examples{
 if (interactive()) {
