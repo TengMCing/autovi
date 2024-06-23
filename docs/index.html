@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="More about what it does (maybe more than one line).">
-<title>Auto visual inference with computer vision models • autovi</title>
+<meta name="description" content="Tools for automated visual inference of residual plots with computer vision models, facilitating diagnostic checks for classical normal linear regression models. ">
+<title>Auto Visual Inference with Computer Vision Models • autovi</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Auto visual inference with computer vision models">
-<meta property="og:description" content="More about what it does (maybe more than one line).">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Auto Visual Inference with Computer Vision Models">
+<meta property="og:description" content="Tools for automated visual inference of residual plots with computer vision models, facilitating diagnostic checks for classical normal linear regression models. ">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,19 +67,23 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of autovi like so:</p>
+<p>Install the released version from CRAN with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"TengMCing/autovi"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"autovi"</span><span class="op">)</span></span></code></pre></div>
+<p>Install the development version from GitHub with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"TengMCing/autovi"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="trained-keras-models">Trained Keras Models<a class="anchor" aria-label="anchor" href="#trained-keras-models"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tengmcing.github.io/autovi/">autovi</a></span><span class="op">)</span></span></code></pre></div>
-<p>All the available trained Keras models are listed in <code>list_keras_models()</code>. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in our draft paper <a href="https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf" class="external-link uri">https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf</a>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">list_keras_models</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">model_name</span><span class="op">)</span></span>
+<p>All the available trained Keras models are listed in <code><a href="reference/list_keras_model.html">list_keras_model()</a></code>. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in our draft paper <a href="https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf" class="external-link uri">https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf</a>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/list_keras_model.html">list_keras_model</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">model_name</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "vss_32"      "vss_64"      "vss_128"     "vss_phn_32"  "vss_phn_64" </span></span>
 <span><span class="co">#&gt; [6] "vss_phn_128"</span></span></code></pre></div>
 <p>Different Keras models are trained with residual plots obtained from different linear regression models violating various model assumptions.</p>
@@ -90,28 +94,28 @@
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
 <p>For this example, we will be using the <code>vss_phn_32</code> Keras model. The model can be obtained by using <code><a href="reference/get_keras_model.html">get_keras_model()</a></code>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">keras_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_keras_model.html">get_keras_model</a></span><span class="op">(</span><span class="st">"vss_phn_32"</span><span class="op">)</span></span></code></pre></div>
 <p>To illustrate the use of this package, we will define an incorrectly specified model omitting certain higher-order terms of <span class="math inline"><em>x</em></span>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">300</span>, sd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">this_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p>The residual plot of the fitted model shows a “S” shape indicating a non-linearity issue.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">this_model</span><span class="op">$</span><span class="va">fitted.values</span>, <span class="va">this_model</span><span class="op">$</span><span class="va">residuals</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Fitted values"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Residuals"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 <p>To run diagnostics for this fitted model, we can initialize the checker using <code><a href="reference/AUTO_VI.html">auto_vi()</a></code> and have a look at the input residual plot using the <code>plot_resid()</code> method.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/AUTO_VI.html">auto_vi</a></span><span class="op">(</span>fitted_model <span class="op">=</span> <span class="va">this_model</span>, keras_model <span class="op">=</span> <span class="va">keras_model</span><span class="op">)</span></span>
 <span><span class="va">checker</span><span class="op">$</span><span class="fu">plot_resid</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
 <p>To predict the visual signal strength of this residual plot, simply use the <code>vss()</code> method.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">vss</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 1</span></span>
@@ -120,12 +124,12 @@
 <span><span class="co">#&gt; 1  4.46</span></span></code></pre></div>
 <p>Having the visual signal strength of the residual plot is usually insufficient to determine if the model is correctly specified. Thus, we need to evaluate some null residual plots for comparison.</p>
 <p>The checker includes a default method to generate null residuals consistent with the null hypothesis that the fitted model is correctly specified, which is the <code>rotate_resid()</code> method implementing the residual rotation technique. This method is only suitable for CLNRM.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">rotate_resid</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="va">checker</span><span class="op">$</span><span class="fu">plot_resid</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
 <p>To get predictions for null residual plots, one can use the <code>null_vss()</code> method. The <code>keep_null_data</code> and <code>keep_null_plot</code> tells the method whether to preserve the null residuals and null residuals plots in the result. For models that needs to use a null generating method other than <code>rotate_resid()</code>, the function can be provided via the <code>null_method</code> argument. The only parameter of the provided function should be <code>fitted_model</code>, which is the fitted model object. And it should return a data frame with two columns <code>.fitted</code> and <code>.resid</code> which are fitted values and null residuals respectively.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">null_vss</span><span class="op">(</span><span class="fl">20L</span>, </span>
 <span>                 keep_null_data <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                 keep_null_plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -157,7 +161,7 @@
 <span><span class="co">#&gt; 19 0.911</span></span>
 <span><span class="co">#&gt; 20 0.665</span></span></code></pre></div>
 <p>If we want to measure the variation of the visual signal strength of the residual plot, we can use the <code>boot_vss()</code> method to get bootstrapped visual signal strength. This method resamples the observations with replacement and refitt the regression model. Similarly, <code>keep_boot_data</code> and <code>keep_boot_plot</code> tells the method whether to preserve bootstrapped residuals and plots.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">boot_vss</span><span class="op">(</span><span class="fl">20L</span>, </span>
 <span>                 keep_boot_data <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                 keep_boot_plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -189,7 +193,7 @@
 <span><span class="co">#&gt; 19  4.85</span></span>
 <span><span class="co">#&gt; 20  4.08</span></span></code></pre></div>
 <p>To run a comprehensive check including the analysis of null residuals and bootstrapped residuals, use the <code>check()</code> method.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>null_draws <span class="op">=</span> <span class="fl">20L</span>, boot_draws <span class="op">=</span> <span class="fl">20L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Generate null data.</span></span>
 <span><span class="co">#&gt; ✔ Generate null plots.</span></span>
@@ -201,7 +205,7 @@
 <span><span class="co">#&gt; ✔ Predict visual signal strength for 20 images.</span></span>
 <span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span></code></pre></div>
 <p>The check result is stored in the <code>check_result</code> attribute. If you print the <code>checker</code> object, it will show a brief summary of the result.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── &lt;AUTO_VI object&gt;</span></span>
@@ -229,14 +233,14 @@
 <p>A summary plot can be drawn with the <code>summary_plot()</code> method. The solid line is the 95% sample quantile of the visual signal strength predicted for null residual plots. The dot line is the visual signal strength predicted for the original residual plot. The blue density curve indicates the distribution of visual signal strength predicted for null residual plots. And the red density curve indicates the distribution of visual signal strength predicted for bootstrapped residual plots.</p>
 <p>The <span class="math inline"><em>p</em></span>-value is obtained by computing the ratio of null visual signal strength greater than or equal to observed visual signal strength. The red area along with the solid line indicates how often the fitted model would be considered incorrectly specified if the data can be repetitively drawn from the same data generating process.</p>
 <p>For this example, the <span class="math inline"><em>H</em><sub>0</sub></span> is rejected because of small <span class="math inline"><em>p</em></span>-value. It can also be observed that almost all the time the refitted models will be considered as incorrectly specified, so this is a clear rejection. Furthermore, since two density curves are very different from each other, it is very unlikely the original residuals are from the same distribution of null residuals.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">summary_plot</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-14-1.png" width="100%"></p>
 <div class="section level3">
 <h3 id="feature-extraction">Feature extraction<a class="anchor" aria-label="anchor" href="#feature-extraction"></a>
 </h3>
 <p>This package also enables the extraction of features from keras model for other purposes. To extract features from a specific layer of the keras model, one needs to provide the argument <code>extract_feature_from_layer</code>. The following code chunk extract features from the global pooling layer of the keras model.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">vss</span><span class="op">(</span>extract_feature_from_layer <span class="op">=</span> <span class="st">"global_max_pooling2d"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span>
@@ -270,7 +274,7 @@
 <span><span class="co">#&gt; [244] "f_243" "f_244" "f_245" "f_246" "f_247" "f_248" "f_249" "f_250" "f_251"</span></span>
 <span><span class="co">#&gt; [253] "f_252" "f_253" "f_254" "f_255" "f_256"</span></span></code></pre></div>
 <p>To check all the available layer names, one can list them with the <code>KERAS_WRAPPER</code> class.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">KERAS_WRAPPER</span><span class="op">$</span><span class="fu">list_layer_name</span><span class="op">(</span><span class="va">keras_model</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "input_1"                  "tf.__operators__.getitem"</span></span>
 <span><span class="co">#&gt;  [3] "tf.nn.bias_add"           "grey_scale"              </span></span>
@@ -303,7 +307,7 @@
 <span><span class="co">#&gt; [57] "dense"                    "dropout_5"               </span></span>
 <span><span class="co">#&gt; [59] "activation_13"            "dense_1"</span></span></code></pre></div>
 <p>While running the comprehensive check with the <code>check()</code> method, one can provide the <code>extract_feature_from_layer</code> argument to extract features.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span>null_draws <span class="op">=</span> <span class="fl">20L</span>, boot_draws <span class="op">=</span> <span class="fl">20L</span>, extract_feature_from_layer <span class="op">=</span> <span class="st">"global_max_pooling2d"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Generate null data.</span></span>
 <span><span class="co">#&gt; ✔ Generate null plots.</span></span>
@@ -315,7 +319,7 @@
 <span><span class="co">#&gt; ✔ Predict visual signal strength for 20 images.</span></span>
 <span><span class="co">#&gt; ✔ Predict visual signal strength for 1 image.</span></span></code></pre></div>
 <p>The features are also stored in the <code>check_result</code> attribute.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="va">check_result</span><span class="op">$</span><span class="va">observed</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 257</span></span>
 <span><span class="co">#&gt;     vss   f_1    f_2   f_3   f_4   f_5     f_6    f_7   f_8    f_9  f_10  f_11</span></span>
@@ -329,7 +333,7 @@
 <span><span class="co">#&gt; #   f_40 &lt;dbl&gt;, f_41 &lt;dbl&gt;, f_42 &lt;dbl&gt;, f_43 &lt;dbl&gt;, f_44 &lt;dbl&gt;, f_45 &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   f_46 &lt;dbl&gt;, f_47 &lt;dbl&gt;, f_48 &lt;dbl&gt;, f_49 &lt;dbl&gt;, f_50 &lt;dbl&gt;, f_51 &lt;dbl&gt;, …</span></span></code></pre></div>
 <p>This package provide ways to conduct PCA on these features. The <code>feature_pca</code> method will combine the features obtained from the prediction of the observed residual plot, null residual plots, and the bootstrapped residual plots, then conduct PCA on them. The results are the rotated features. The variable <code>set</code> provides the set label of the observation, which can either be “observed”, “null” or “boot”.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checker</span><span class="op">$</span><span class="fu">feature_pca</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 41 × 298</span></span>
 <span><span class="co">#&gt;      f_1    f_2   f_3   f_4   f_5     f_6    f_7   f_8    f_9  f_10  f_11  f_12</span></span>
@@ -381,7 +385,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Weihao Li <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-4959-106X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Weihao Li <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0003-4959-106X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 

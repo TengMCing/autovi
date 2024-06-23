@@ -25,9 +25,16 @@ appropriate method for generating null residuals through the
 
 ## Installation
 
-You can install the development version of autovi like so:
+Install the released version from CRAN with
 
 ``` r
+install.packages("autovi")
+```
+
+Install the development version from GitHub with:
+
+``` r
+# install.packages("remotes")
 remotes::install_github("TengMCing/autovi")
 ```
 
@@ -39,7 +46,7 @@ library(autovi)
 ```
 
 All the available trained Keras models are listed in
-`list_keras_models()`. All the trained Keras models listed below will
+`list_keras_model()`. All the trained Keras models listed below will
 predict a visual signal strength for the visual patterns of the input
 residual plot. This visual signal strength is essentially an
 approximation of a Kullback–Leibler divergence based distance metric
@@ -50,7 +57,7 @@ paper
 <https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf>.
 
 ``` r
-list_keras_models() %>% pull(model_name)
+list_keras_model() %>% pull(model_name)
 #> [1] "vss_32"      "vss_64"      "vss_128"     "vss_phn_32"  "vss_phn_64" 
 #> [6] "vss_phn_128"
 ```
