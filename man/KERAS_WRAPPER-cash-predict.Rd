@@ -40,11 +40,11 @@ provided keras model, input array and optional auxiliary input array.
 }
 }
 \examples{
-if (interactive()) {
-  keras_model <- get_keras_model("vss_phn_32")
+keras_model <- try(get_keras_model("vss_phn_32"))
+if (!inherits(keras_model, "try-error")) {
   wrapper <- keras_wrapper(keras_model)
 
-  # Provide one 32 * 32 RGB image and one vector of length 5
+  # Provide one 32 * 32 RGB image and one vector of length 5 as input
   wrapper$predict(input_array = array(255, dim = c(1, 32, 32, 3)),
                   auxiliary = matrix(1, ncol = 5))
 }

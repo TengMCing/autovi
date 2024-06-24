@@ -10,6 +10,8 @@ There were no ERRORs or WARNINGs.
 
 ## Note
 
-* This is a new release.
+* This is a resubmission of the package
+* For this resubmission, I have followed the reviewer's comment to avoid starting the description field with words such as "This package" and "Tools for", and have updated the field accordingly.
+* Additionally, I have removed all instances of "if(interactive())"" from the examples as suggested by the reviewer. The "try()" function is now used to handle dependency errors in the examples.
 * Unfortunately, there is no published paper yet describing the methods implemented in this package. However, there is a draft paper available on https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf which will later be included as a chapter of my PhD thesis. The paper is planned for completion towards the end of this year, coinciding with the conclusion of my PhD program.
 

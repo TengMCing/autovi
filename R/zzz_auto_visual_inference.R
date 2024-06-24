@@ -276,8 +276,8 @@ AUTO_VI$plot_resid
 #' 3. a data.frame containing
 #' `.resid` (residuals) and `.fitted` (fitted values) that can be passed to
 #' [AUTO_VI$plot_resid()],
-#' 4. an 3D array representing an image,
-#' 5. an 4D array representing one or more images,
+#' 4. a 3D array representing an image,
+#' 5. a 4D array representing one or more images,
 #' 6. a path to an image,
 #' 7. a vector or a list of paths to images,
 #' 8. a numpy array.
@@ -296,12 +296,11 @@ AUTO_VI$plot_resid
 #'
 #'
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 #'
 #'   myvi$vss()
-#'   myvi$vss(extract_feature_from_layer = "global_max_pooling2d")
 #' }
 #'
 AUTO_VI$vss
@@ -389,10 +388,11 @@ AUTO_VI$rotate_resid
 #' integer layer index for extracting features from a layer.
 #' @return A tibble.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
-#'   myvi$null_vss(20L)
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$null_vss()
 #' }
 AUTO_VI$null_vss
 
@@ -431,10 +431,11 @@ AUTO_VI$null_vss
 #' integer layer index for extracting features from a layer.
 #' @return A tibble.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
-#'   myvi$boot_vss(20L)
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$boot_vss()
 #' }
 AUTO_VI$boot_vss
 
@@ -484,10 +485,11 @@ AUTO_VI$boot_vss
 #' @param extract_feature_from_layer Character/Integer. A layer name or an
 #' integer layer index for extracting features from a layer.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
-#'   myvi$check(20L, 20L)
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$check()
 #'   myvi
 #' }
 #' @return Return the object itself.
@@ -529,12 +531,14 @@ AUTO_VI$check
 #' @param extract_feature_from_layer Character/Integer. A layer name or an
 #' integer layer index for extracting features from a layer.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#'   myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
-#'   myvi$lineup_check(20L)
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$lineup_check()
 #'   myvi
 #' }
+#'
 #' @return Return the object itself.
 AUTO_VI$lineup_check
 
@@ -626,12 +630,9 @@ AUTO_VI$p_value
 #' [AUTO_VI$summary_rank_plot()].
 #' @return A `ggplot`.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
-#'
-#'   myvi$check()
-#'   myvi$summary_plot()
 #'
 #'   myvi$lineup_check()
 #'   myvi$summary_plot()
@@ -667,8 +668,8 @@ AUTO_VI$summary_plot
 #' @param density_alpha Numeric. Alpha value for the density.
 #' @return A `ggplot`.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 #'
 #'   myvi$check()
@@ -698,8 +699,8 @@ AUTO_VI$summary_density_plot
 #' [AUTO_VI$p_value()].
 #' @return A `ggplot`.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 #'
 #'   myvi$lineup_check()
@@ -748,8 +749,8 @@ AUTO_VI$summary_rank_plot
 #' standard deviation of the principal
 #' components and the rotation matrix respectively.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 #'
 #'   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")
@@ -779,8 +780,8 @@ AUTO_VI$feature_pca
 #' @return A tibble where columns represent
 #' features and rows represent observations.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 #'
 #'   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")
@@ -815,8 +816,8 @@ AUTO_VI$select_feature
 #' and boot).
 #' @return A `ggplot`.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 #'
 #'   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")

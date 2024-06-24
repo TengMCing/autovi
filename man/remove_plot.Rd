@@ -18,9 +18,8 @@ No return. Called for side-effect.
 This function removes a plot from a provided path.
 }
 \examples{
-if (interactive()) {
-  path <- tempfile(fileext = ".png")
-  remove_plot(path)
-}
+p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
+path <- save_plot(p)
+remove_plot(path)
 
 }

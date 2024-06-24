@@ -173,12 +173,64 @@ integer layer index for extracting features from a layer.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="va">keras_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_keras_model.html">get_keras_model</a></span><span class="op">(</span><span class="st">"vss_phn_32"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">myvi</span> <span class="op">&lt;-</span> <span class="fu"><a href="AUTO_VI.html">auto_vi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">speed</span> <span class="op">~</span> <span class="va">dist</span>, data <span class="op">=</span> <span class="va">cars</span><span class="op">)</span>, <span class="va">keras_model</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">myvi</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span><span class="fl">20L</span>, <span class="fl">20L</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">keras_model</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="get_keras_model.html">get_keras_model</a></span><span class="op">(</span><span class="st">"vss_phn_32"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">keras_model</span>, <span class="st">"try-error"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">myvi</span> <span class="op">&lt;-</span> <span class="fu"><a href="AUTO_VI.html">auto_vi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">dist</span> <span class="op">~</span> <span class="va">speed</span>, data <span class="op">=</span> <span class="va">cars</span><span class="op">)</span>, <span class="va">keras_model</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">myvi</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">myvi</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate null data.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate null plots.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  34% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■                  </span>  43% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Compute auxilary inputs.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■                    </span>  36% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Predict visual signal strength for 100 images.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate bootstrapped data.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate bootstrapped plots.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>shull: complete hull invisible, data scaling error, will retry with some jitter</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>triangle collapsed!</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>three points coincide or are collinear!</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Problem in area computation (Returns NA)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■                  </span>  42% | ETA:  1s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>triangle collapsed!</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>three points coincide or are collinear!</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Problem in area computation (Returns NA)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>shull: complete hull invisible, data scaling error, will retry with some jitter</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>shull: complete hull invisible, data scaling error, will retry with some jitter</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Problem in area computation (Returns NA)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Compute auxilary inputs.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■                      </span>  31% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Predict visual signal strength for 100 images.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Predict visual signal strength for 1 image.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── &lt;AUTO_VI object&gt;</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Status:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - Fitted model: lm</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - Keras model: (None, 32, 32, 3) + (None, 5) -&gt; (None, 1)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     - Output node index: 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - Result:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     - Observed visual signal strength: 3.162 (p-value = 0)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     - Null visual signal strength: [100 draws]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Mean: 1.4</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Quantiles: </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ╔══════════════════════════════════════════╗</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║  25%   50%   75%   80%   90%   95%   99% ║</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║1.006 1.331 1.794 1.843 2.115 2.223 2.611 ║</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ╚══════════════════════════════════════════╝</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     - Bootstrapped visual signal strength: [100 draws]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Mean: 2.638 (p-value = 0.01)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Quantiles: </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ╔══════════════════════════════════════════╗</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║  25%   50%   75%   80%   90%   95%   99% ║</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║2.201 2.753 3.183 3.249 3.371 3.485 3.586 ║</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ╚══════════════════════════════════════════╝</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     - Likelihood ratio: 0.603 (boot) / 0.008473 (null) = 71.16 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

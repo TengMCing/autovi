@@ -46,10 +46,12 @@ check with a computer vision model. The result will be stored in
 }
 }
 \examples{
-if (interactive()) {
-  keras_model <- get_keras_model("vss_phn_32")
-  myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
-  myvi$lineup_check(20L)
+keras_model <- try(get_keras_model("vss_phn_32"))
+if (!inherits(keras_model, "try-error")) {
+  myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+
+  myvi$lineup_check()
   myvi
 }
+
 }

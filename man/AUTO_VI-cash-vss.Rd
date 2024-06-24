@@ -11,8 +11,8 @@
 \item a data.frame containing
 \code{.resid} (residuals) and \code{.fitted} (fitted values) that can be passed to
 \code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}},
-\item an 3D array representing an image,
-\item an 4D array representing one or more images,
+\item a 3D array representing an image,
+\item a 4D array representing one or more images,
 \item a path to an image,
 \item a vector or a list of paths to images,
 \item a numpy array.
@@ -51,12 +51,11 @@ This function predicts the visual signal strength.
 }
 }
 \examples{
-if (interactive()) {
-  keras_model <- get_keras_model("vss_phn_32")
-  myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
+keras_model <- try(get_keras_model("vss_phn_32"))
+if (!inherits(keras_model, "try-error")) {
+  myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 
   myvi$vss()
-  myvi$vss(extract_feature_from_layer = "global_max_pooling2d")
 }
 
 }

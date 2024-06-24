@@ -19,8 +19,7 @@ Github repo using \code{\link[=download.file]{download.file()}} and load the mod
 \code{tensorflow} version greater than 2.15 is not supported.
 }
 \examples{
-if (interactive()) {
-  keras_model <- get_keras_model("vss_phn_32")
-}
+keras_model <- try(get_keras_model("vss_phn_32"))
+if (!inherits(keras_model, "try-error")) keras_model$summary()
 
 }

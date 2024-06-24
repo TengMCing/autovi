@@ -132,11 +132,11 @@ KERAS_WRAPPER$..str..
 #' rest of the columns are features extracted from a layer.
 #'
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   wrapper <- keras_wrapper(keras_model)
 #'
-#'   # Provide one 32 * 32 RGB image and one vector of length 5
+#'   # Provide one 32 * 32 RGB image and one vector of length 5 as input
 #'   wrapper$predict(input_array = array(255, dim = c(1, 32, 32, 3)),
 #'                   auxiliary = matrix(1, ncol = 5))
 #' }
@@ -160,9 +160,9 @@ KERAS_WRAPPER$predict
 #' @return An integer.
 #'
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#'   keras_model$get_input_height()
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   keras_wrapper(keras_model)$get_input_height()
 #' }
 #'
 KERAS_WRAPPER$get_input_height
@@ -183,9 +183,9 @@ KERAS_WRAPPER$get_input_height
 #' @return An integer.
 #'
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#'   keras_model$get_input_width()
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   keras_wrapper(keras_model)$get_input_width()
 #' }
 #'
 KERAS_WRAPPER$get_input_width
@@ -212,10 +212,11 @@ KERAS_WRAPPER$get_input_width
 #' @return A numpy array.
 #'
 #' @examples
-#' if (interactive()) {
-#'   p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
-#'   path <- save_plot(p)
-#'   KERAS_WRAPPER$image_to_array(path, 32L, 32L)
+#' p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
+#' path <- save_plot(p)
+#' result <- try(KERAS_WRAPPER$image_to_array(path, 32L, 32L))
+#' if (!inherits(result, "try-error")) {
+#'   result
 #' }
 #'
 KERAS_WRAPPER$image_to_array
@@ -235,8 +236,8 @@ KERAS_WRAPPER$image_to_array
 #' @return A vector of strings.
 #'
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
 #'   keras_wrapper(keras_model)$list_layer_name()
 #' }
 #'

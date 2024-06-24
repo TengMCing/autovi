@@ -5,17 +5,15 @@
 #'
 #' This function checks if a python library is available. If the library can
 #' not be found by the `importlib.util.find_spec` method, then an
-#' error will be raised.
+#' error will be throw.
 #'
 #' @param lib_name Character. A library name.
 #' @return No return. Called for side-effect.
 #' @examples
-#' if (interactive()) {
-#'   check_python_library_available("numpy")
-#' }
-#'
+#' try(check_python_library_available("numpy"))
 #' @export
 check_python_library_available <- function(lib_name) {
+  if (!reticulate::py_available(initialize = TRUE)) stop("Python is not available on this system!")
   find_spec <- reticulate::import("importlib.util", convert = FALSE)$find_spec
   module_spec <- find_spec(lib_name)
 
@@ -39,10 +37,8 @@ check_python_library_available <- function(lib_name) {
 #' @param ... Other arguments passed to [ggplot2::ggsave()].
 #' @return The image path.
 #' @examples
-#' if (interactive()) {
-#'   p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
-#'   save_plot(p)
-#' }
+#' p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
+#' save_plot(p)
 #'
 #' @export
 save_plot <- function(p,
@@ -84,10 +80,9 @@ save_plot <- function(p,
 #' @param check_ext Boolean. Whether to check the file extension.
 #' @return No return. Called for side-effect.
 #' @examples
-#' if (interactive()) {
-#'   path <- tempfile(fileext = ".png")
-#'   remove_plot(path)
-#' }
+#' p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
+#' path <- save_plot(p)
+#' remove_plot(path)
 #'
 #' @export
 remove_plot <- function(path, check_ext = TRUE) {

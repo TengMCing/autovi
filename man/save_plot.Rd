@@ -24,9 +24,7 @@ The image path.
 This function save a plot to a provided path.
 }
 \examples{
-if (interactive()) {
-  p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
-  save_plot(p)
-}
+p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
+save_plot(p)
 
 }

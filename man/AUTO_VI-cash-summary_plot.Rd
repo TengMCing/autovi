@@ -24,12 +24,9 @@ This function draws a summary plot for the result.
 }
 }
 \examples{
-if (interactive()) {
-  keras_model <- get_keras_model("vss_phn_32")
+keras_model <- try(get_keras_model("vss_phn_32"))
+if (!inherits(keras_model, "try-error")) {
   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
-
-  myvi$check()
-  myvi$summary_plot()
 
   myvi$lineup_check()
   myvi$summary_plot()

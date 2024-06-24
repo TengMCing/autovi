@@ -34,8 +34,8 @@ By default, it will visualize PC2 vs PC1. User can choose to
 visualize other principal components.
 }
 \examples{
-if (interactive()) {
-  keras_model <- get_keras_model("vss_phn_32")
+keras_model <- try(get_keras_model("vss_phn_32"))
+if (!inherits(keras_model, "try-error")) {
   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
 
   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")

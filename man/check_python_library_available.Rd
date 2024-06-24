@@ -15,11 +15,8 @@ No return. Called for side-effect.
 \description{
 This function checks if a python library is available. If the library can
 not be found by the \code{importlib.util.find_spec} method, then an
-error will be raised.
+error will be throw.
 }
 \examples{
-if (interactive()) {
-  check_python_library_available("numpy")
-}
-
+try(check_python_library_available("numpy"))
 }

@@ -8,7 +8,7 @@ Authors@R:
            role = c("aut", "cre", "cph"),
            email = "llreczx@gmail.com",
            comment = c(ORCID = "0000-0003-4959-106X"))
-Description: Tools for automated visual inference of residual plots with computer vision models, facilitating diagnostic checks for classical normal linear regression models. 
+Description: Provides automated visual inference of residual plots using computer vision models, facilitating diagnostic checks for classical normal linear regression models.
 License: MIT + file LICENSE
 URL: https://tengmcing.github.io/autovi/, https://github.com/TengMCing/autovi/
 BugReports: https://github.com/TengMCing/autovi/issues

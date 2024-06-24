@@ -138,7 +138,7 @@ need to evaluate some null residual plots for comparison.
 The checker includes a default method to generate null residuals
 consistent with the null hypothesis that the fitted model is correctly
 specified, which is the `rotate_resid()` method implementing the
-residual rotation technique. This method is only suitable for CLNRM.
+residual rotation technique. This method is only suitable for CNLRM.
 
 ``` r
 checker$rotate_resid() %>%
@@ -193,7 +193,7 @@ checker$null_vss(20L,
 If we want to measure the variation of the visual signal strength of the
 residual plot, we can use the `boot_vss()` method to get bootstrapped
 visual signal strength. This method resamples the observations with
-replacement and refitt the regression model. Similarly, `keep_boot_data`
+replacement and refit the regression model. Similarly, `keep_boot_data`
 and `keep_boot_plot` tells the method whether to preserve bootstrapped
 residuals and plots.
 

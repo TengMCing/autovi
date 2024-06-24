@@ -29,12 +29,23 @@ list_keras_model <- function() {
 #' @param model_name String. The model name. See also [list_keras_model()].
 #' @return A keras model.
 #' @examples
-#' if (interactive()) {
-#'   keras_model <- get_keras_model("vss_phn_32")
-#' }
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) keras_model$summary()
 #'
 #' @export
 get_keras_model <- function(model_name) {
+
+  check_python_library_available("tensorflow")
+  tf <- reticulate::import("tensorflow", convert = TRUE)
+
+  if (as.integer(strsplit(tf$`__version__`, "\\.")[[1]][2]) >= 16) {
+    warning(paste0(
+      "The Keras model was originally trained on Monash M3 HPC with TensorFlow 2.12 and is tested to work up to TensorFlow 2.15. ",
+      "Your current TensorFlow version is ", tf$`__version__`, ", which is not supported. ",
+      "Please downgrade your TensorFlow version or install TensorFlow <2.15 in a virtual environment. ",
+      "You can use `reticulate::use_python` to select the appropriate virtual environment."
+    ))
+  }
 
   if (!("character" %in% class(model_name) && length(model_name) == 1)) {
     stop("Argument `model_name` needs to be a character vector of length 1.")
@@ -50,18 +61,6 @@ get_keras_model <- function(model_name) {
                        destfile = temp)
   temp_folder <- tempdir()
   utils::unzip(temp, exdir = temp_folder)
-
-  check_python_library_available("tensorflow")
-  tf <- reticulate::import("tensorflow", convert = TRUE)
-
-  if (as.integer(strsplit(tf$`__version__`, "\\.")[[1]][2]) >= 16) {
-    warning(paste0(
-      "The Keras model was originally trained on Monash M3 HPC with TensorFlow 2.12 and is tested to work up to TensorFlow 2.15. ",
-      "Your current TensorFlow version is ", tf$`__version__`, ", which is not supported. ",
-      "Please downgrade your TensorFlow version or install TensorFlow <2.15 in a virtual environment. ",
-      "You can use `reticulate::use_python` to select the appropriate virtual environment."
-    ))
-  }
 
   keras <- tf$keras
   mod <- keras$models$load_model(file.path(temp_folder, paste0(model_name, ".keras")))

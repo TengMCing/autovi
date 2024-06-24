@@ -27,10 +27,11 @@ numpy array.
 }
 }
 \examples{
-if (interactive()) {
-  p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
-  path <- save_plot(p)
-  KERAS_WRAPPER$image_to_array(path, 32L, 32L)
+p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
+path <- save_plot(p)
+result <- try(KERAS_WRAPPER$image_to_array(path, 32L, 32L))
+if (!inherits(result, "try-error")) {
+  result
 }
 
 }

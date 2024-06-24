@@ -47,9 +47,10 @@ distribution, and predicts the visual signal strength.
 }
 }
 \examples{
-if (interactive()) {
-  keras_model <- get_keras_model("vss_phn_32")
-  myvi <- auto_vi(lm(speed ~ dist, data = cars), keras_model)
-  myvi$null_vss(20L)
+keras_model <- try(get_keras_model("vss_phn_32"))
+if (!inherits(keras_model, "try-error")) {
+  myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+
+  myvi$null_vss()
 }
 }
