@@ -1,0 +1,21 @@
+---
+title: "Linear regression model diagnostics with autovi"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{linear_regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(autovi)
+```
+
+

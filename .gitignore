@@ -6,3 +6,4 @@ temp_model/
 .DS_Store
 
 .Rhistory
+inst/doc
