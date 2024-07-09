@@ -194,7 +194,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     if (is.data.frame(x)) {
       p <- self$plot_resid(x)
       path <- autovi::save_plot(p)
-      x <- keras_wrapper$image_to_array(x)
+      x <- keras_wrapper$image_to_array(path)
       autovi::remove_plot(path)
       return(keras_wrapper$predict(x,
                                    auxiliary = auxiliary,
