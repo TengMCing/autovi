@@ -129,6 +129,13 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     return(p)
   }
 
+
+# save_plot ---------------------------------------------------------------
+
+  save_plot_ <- function(p) {
+    autovi::save_plot(p)
+  }
+
 # vss ---------------------------------------------------------------------
 
   vss_ <- function(x = self$plot_resid(),
@@ -166,7 +173,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
     # A single ggplot
     if (ggplot2::is.ggplot(x)) {
-      path <- autovi::save_plot(x)
+      path <- self$save_plot(x)
       x <- keras_wrapper$image_to_array(path)
       autovi::remove_plot(path)
       return(keras_wrapper$predict(x,
@@ -179,7 +186,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     # A list of ggplot
     if (is.list(x)) {
       if (all(unlist(lapply(x, ggplot2::is.ggplot)))) {
-        path <- autovi::save_plot(x)
+        path <- self$save_plot(x)
         x <- keras_wrapper$image_to_array(path)
         autovi::remove_plot(path)
         return(keras_wrapper$predict(x,
@@ -193,7 +200,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     # A data.frame
     if (is.data.frame(x)) {
       p <- self$plot_resid(x)
-      path <- autovi::save_plot(p)
+      path <- self$save_plot(p)
       x <- keras_wrapper$image_to_array(path)
       autovi::remove_plot(path)
       return(keras_wrapper$predict(x,
@@ -896,6 +903,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                              get_data = get_data_,
                              auxiliary = auxiliary_,
                              plot_resid = plot_resid_,
+                             save_plot = save_plot_,
                              vss = vss_,
                              null_method = null_method_,
                              rotate_resid = rotate_resid_,

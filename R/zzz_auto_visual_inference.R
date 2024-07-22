@@ -58,6 +58,7 @@ AUTO_VI <- new.env()
 #' * R:
 #'    * [AUTO_VI$rotate_resid()]
 #' * S:
+#'    * [AUTO_VI$save_plot()]
 #'    * [AUTO_VI$select_feature()]
 #'    * [AUTO_VI$..str..()]
 #'    * [AUTO_VI$summary_density_plot()]
@@ -251,6 +252,30 @@ AUTO_VI$auxiliary
 #' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi$plot_resid()
 AUTO_VI$plot_resid
+
+#' Save a plot
+#'
+#' @name AUTO_VI$save_plot
+#'
+#' @description This is the default method of saving a plot. It will use
+#' [save_plot()] to save the ggplot to a 420 (width) * 525 (height) PNG
+#' file. If the trained images are generated differently, one can override
+#' this method using [bandicoot::register_method()].
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$save_plot(p)
+#' ```
+#'
+#' @param p ggplot. A plot.
+#' @return The image path.
+#'
+#' @examples
+#'
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
+#' p <- my_vi$plot_resid()
+#' my_vi$save_plot(p)
+AUTO_VI$save_plot
 
 
 #' Predict the visual signal strength

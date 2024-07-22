@@ -38,7 +38,7 @@ AUTO_VI$likelihood_ratio(
     
     <a class="navbar-brand me-2" href="../index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,12 +48,6 @@ AUTO_VI$likelihood_ratio(
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/linear_regression.html">Linear regression model diagnostics with `autovi`</a>
-  </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -125,7 +119,7 @@ the second distribution (null distribution by default).</p></dd>
 <span class="r-in"><span><span class="va">dist_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">AUTO_VI</span><span class="op">$</span><span class="fu">likelihood_ratio</span><span class="op">(</span><span class="fl">0</span>, <span class="va">dist_1</span>, <span class="va">dist_2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     likelihood_1     likelihood_2 likelihood_ratio </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        0.3181113        0.2745703        1.1585786 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        0.3492425        0.3025660        1.1542689 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -52,7 +52,7 @@ AUTO_VI$check(
     
     <a class="navbar-brand me-2" href="../index.html">autovi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,12 +62,6 @@ AUTO_VI$check(
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/linear_regression.html">Linear regression model diagnostics with `autovi`</a>
-  </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -98,8 +92,8 @@ check with a computer vision model. The result will be stored in
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>AUTO_VI<span class="sc">$</span><span class="fu">check</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">null_draws =</span> 100L,</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">boot_draws =</span> 100L,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">null_draws =</span> <span class="dv">100</span><span class="dt">L</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">boot_draws =</span> <span class="dv">100</span><span class="dt">L</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">fitted_model =</span> self<span class="sc">$</span>fitted_model,</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="at">keras_model =</span> self<span class="sc">$</span>keras_model,</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="at">null_method =</span> self<span class="sc">$</span>null_method,</span>
@@ -188,20 +182,25 @@ integer layer index for extracting features from a layer.</p></dd>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate null data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate null plots.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■                        </span>  22% | ETA:  4s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  50% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  34% | ETA:  2s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Compute auxilary inputs.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  41% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   </span>  93% | ETA:  0s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Predict visual signal strength for 100 images.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate bootstrapped data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Generate bootstrapped plots.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Problem in area computation (Returns NA)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■                    </span>  36% | ETA:  2s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>shull: complete hull invisible, data scaling error, will retry with some jitter</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>shull: complete hull invisible, data scaling error, will retry with some jitter</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>shull: complete hull invisible, data scaling error, will retry with some jitter</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>shull: complete hull invisible, data scaling error, will retry with some jitter</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to min; returning Inf</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■        </span>  77% | ETA:  1s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to min; returning Inf</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Computing auxiliary inputs <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Compute auxilary inputs.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  32% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■        </span>  77% | ETA:  1s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving images <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Predict visual signal strength for 100 images.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Predict visual signal strength for 1 image.</span>
@@ -214,20 +213,20 @@ integer layer index for extracting features from a layer.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - Result:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     - Observed visual signal strength: 3.162 (p-value = 0.02)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     - Null visual signal strength: [100 draws]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Mean: 1.284</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Mean: 1.325</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>        - Quantiles: </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>           ╔═════════════════════════════════════════════════╗</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>           ║   25%    50%    75%    80%    90%    95%    99% ║</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║0.8687 1.1909 1.5914 1.6470 1.9608 2.3722 3.2816 ║</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║0.8714 1.2160 1.6958 1.7712 1.9731 2.5810 3.3063 ║</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>           ╚═════════════════════════════════════════════════╝</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     - Bootstrapped visual signal strength: [100 draws]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Mean: 2.701 (p-value = 0.02)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>        - Mean: 2.615 (p-value = 0.04)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>        - Quantiles: </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>           ╔══════════════════════════════════════════╗</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>           ║  25%   50%   75%   80%   90%   95%   99% ║</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║2.339 2.734 3.172 3.244 3.436 3.507 3.746 ║</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>           ║2.118 2.884 3.230 3.255 3.372 3.451 3.625 ║</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>           ╚══════════════════════════════════════════╝</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     - Likelihood ratio: 0.6073 (boot) / 0.02073 (null) = 29.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     - Likelihood ratio: 0.6446 (boot) / 0.03116 (null) = 20.69 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
