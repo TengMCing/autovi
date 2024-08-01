@@ -52,9 +52,9 @@ residual plot. This visual signal strength is essentially an
 approximation of a Kullback–Leibler divergence based distance metric
 which quantifies the difference between the actual residual distribution
 and the reference residual distribution assumed under correct model
-specification. Details about the methodologies are provided in our draft
-paper
-<https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf>.
+specification. Details about the methodologies are provided in [Chapter
+3 of Patrick Li’s PhD
+thesis](https://patrick-li-thesis.netlify.app/03-chap3).
 
 ``` r
 list_keras_model() %>% pull(model_name)

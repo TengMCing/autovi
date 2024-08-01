@@ -38,6 +38,9 @@
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -81,7 +84,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tengmcing.github.io/autovi/">autovi</a></span><span class="op">)</span></span></code></pre></div>
-<p>All the available trained Keras models are listed in <code><a href="reference/list_keras_model.html">list_keras_model()</a></code>. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in our draft paper <a href="https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf" class="external-link uri">https://github.com/TengMCing/auto_residual_reading/blob/master/paper/paper.pdf</a>.</p>
+<p>All the available trained Keras models are listed in <code><a href="reference/list_keras_model.html">list_keras_model()</a></code>. All the trained Keras models listed below will predict a visual signal strength for the visual patterns of the input residual plot. This visual signal strength is essentially an approximation of a Kullback–Leibler divergence based distance metric which quantifies the difference between the actual residual distribution and the reference residual distribution assumed under correct model specification. Details about the methodologies are provided in <a href="https://patrick-li-thesis.netlify.app/03-chap3" class="external-link">Chapter 3 of Patrick Li’s PhD thesis</a>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/list_keras_model.html">list_keras_model</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">model_name</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "vss_32"      "vss_64"      "vss_128"     "vss_phn_32"  "vss_phn_64" </span></span>
