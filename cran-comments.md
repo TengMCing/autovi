@@ -12,4 +12,5 @@ There were no ERRORs or WARNINGs.
 
 This is a patch version. In this version I have:
 * attempted to fix a bug in one of the core methods `AUTO_VI$vss()` caused by invalid passed arguments.
-* introduced a new method `AUTO_VI$save_plot()` to allow the user to specify arbitrary plot saving method 
+* introduced a new method `AUTO_VI$save_plot()` to allow the user to specify arbitrary plot saving method. 
+* introduced a better p-value computation formula in `AUTO_VI$p_value()`. 

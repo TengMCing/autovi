@@ -18,9 +18,6 @@
 hypothesis distribution. For \code{lm}, the recommended method is residual
 rotation \code{\link[=AUTO_VI$rotate_resid]{AUTO_VI$rotate_resid()}}.}
 
-\item{p_value_type}{Character. Either "quantile" or "lineup". See
-also \code{\link[=AUTO_VI$p_value]{AUTO_VI$p_value()}}.}
-
 \item{data}{Data frame. The data used to fit the model.
 See also \code{\link[=AUTO_VI$get_data]{AUTO_VI$get_data()}}.}
 
@@ -50,7 +47,6 @@ check with a computer vision model. The result will be stored in
   fitted_model = self$fitted_model,
   keras_model = self$keras_model,
   null_method = self$null_method,
-  p_value_type = "quantile",
   data = self$get_data(),
   node_index = self$node_index,
   keep_data = FALSE,

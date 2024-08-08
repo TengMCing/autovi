@@ -421,7 +421,6 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                      fitted_model = self$fitted_model,
                      keras_model = self$keras_model,
                      null_method = self$null_method,
-                     p_value_type = "quantile",
                      data = self$get_data(),
                      node_index = self$node_index,
                      keep_data = FALSE,
@@ -474,9 +473,9 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
     # Compute the p-values.
     if (null_draws > 0)
-      self$check_result$p_value <- self$p_value(observed$vss, type = p_value_type)
+      self$check_result$p_value <- self$p_value(observed$vss)
     if (null_draws > 0 && boot_draws > 0)
-      self$check_result$boot_p_value <- self$p_value(mean(boot_dist$vss), type = p_value_type)
+      self$check_result$boot_p_value <- self$p_value(mean(boot_dist$vss))
 
     # Compute the likelihoods and ratio.
     if (null_draws > 0 && boot_draws > 0) {
@@ -512,7 +511,6 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                fitted_model = fitted_model,
                keras_model = keras_model,
                null_method = null_method,
-               p_value_type = "lineup",
                data = data,
                node_index = node_index,
                keep_data = TRUE,
@@ -557,31 +555,12 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 # p_value -----------------------------------------------------------------
 
   p_value_ <- function(vss = self$check_result$observed$vss,
-                       null_dist = self$check_result$null$vss,
-                       type = "auto") {
+                       null_dist = self$check_result$null$vss) {
 
     if (is.null(vss)) stop("Missing observed visual signal strength!")
     if (is.null(null_dist)) stop("Missing results for null distribution!")
 
-    if (type == "auto") {
-      if (!is.null(self$check_result$lineup_check) && self$check_result$lineup_check) {
-        total <- length(null_dist) + 1
-        return(1/total + sum(null_dist > vss)/total)
-      } else {
-        return(mean(null_dist >= vss))
-      }
-    }
-
-    if (type == "quantile") {
-      return(mean(null_dist >= vss))
-    }
-
-    if (type == "lineup") {
-      total <- length(null_dist) + 1
-      return(1/total + sum(null_dist > vss)/total)
-    }
-
-    stop("Argument `type` is neither 'quantile' nor 'lineup'!")
+    return(mean(c(null_dist, vss) >= vss))
   }
 
 

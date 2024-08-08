@@ -480,7 +480,6 @@ AUTO_VI$boot_vss
 #'   fitted_model = self$fitted_model,
 #'   keras_model = self$keras_model,
 #'   null_method = self$null_method,
-#'   p_value_type = "quantile",
 #'   data = self$get_data(),
 #'   node_index = self$node_index,
 #'   keep_data = FALSE,
@@ -498,8 +497,6 @@ AUTO_VI$boot_vss
 #' @param null_method Function. A method to simulate residuals from the null
 #' hypothesis distribution. For `lm`, the recommended method is residual
 #' rotation [AUTO_VI$rotate_resid()].
-#' @param p_value_type Character. Either "quantile" or "lineup". See
-#' also [AUTO_VI$p_value()].
 #' @param data Data frame. The data used to fit the model.
 #' See also [AUTO_VI$get_data()].
 #' @param node_index Integer. An index indicating which node of the output layer
@@ -612,23 +609,14 @@ AUTO_VI$likelihood_ratio
 #' ```
 #' AUTO_VI$p_value(
 #'   vss = self$check_result$observed$vss,
-#'   null_dist = self$check_result$null$vss,
-#'   type = "auto"
+#'   null_dist = self$check_result$null$vss
 #' )
 #' ```
 #'
-#' @details There are two types of p-value calculation. Option "quantile"
-#' calculates the percentage of null visual signal strength greater than or
-#' equal to the observed visual signal strength. Option "lineup" combines
-#' the null visual signal strength and the observed visual signal strength
-#' in one vector, and calculates the percentage of entries in this vector
-#' greater than or equal to the observed visual signal strength. The "lineup"
-#' option ensures the p-value will not be smaller than 1 over the size of the
-#' lineup.
-#'
-#' @param type Character. Either  "auto", "quantile" or "lineup". Option
-#' "auto" will use the Boolean flag `self$check_result$lineup_check`
-#' to determine the correct option.
+#' @param vss Numrice. A single numeric value indicating the visual signal
+#' strength for the true residual plot.
+#' @param null_dist Numeric. A vector of numeric values indicating the visual
+#' signal strength for null residual plots.
 #' @return A numeric value representing the desired p-value.
 #' @examples
 #' vss <- 1

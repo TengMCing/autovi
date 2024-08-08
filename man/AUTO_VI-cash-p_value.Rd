@@ -4,9 +4,11 @@
 \alias{AUTO_VI$p_value}
 \title{Compute the p-value based on the check result}
 \arguments{
-\item{type}{Character. Either  "auto", "quantile" or "lineup". Option
-"auto" will use the Boolean flag \code{self$check_result$lineup_check}
-to determine the correct option.}
+\item{vss}{Numrice. A single numeric value indicating the visual signal
+strength for the true residual plot.}
+
+\item{null_dist}{Numeric. A vector of numeric values indicating the visual
+signal strength for null residual plots.}
 }
 \value{
 A numeric value representing the desired p-value.
@@ -19,21 +21,10 @@ distribution.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$p_value(
   vss = self$check_result$observed$vss,
-  null_dist = self$check_result$null$vss,
-  type = "auto"
+  null_dist = self$check_result$null$vss
 )
 }\if{html}{\out{</div>}}
 }
-}
-\details{
-There are two types of p-value calculation. Option "quantile"
-calculates the percentage of null visual signal strength greater than or
-equal to the observed visual signal strength. Option "lineup" combines
-the null visual signal strength and the observed visual signal strength
-in one vector, and calculates the percentage of entries in this vector
-greater than or equal to the observed visual signal strength. The "lineup"
-option ensures the p-value will not be smaller than 1 over the size of the
-lineup.
 }
 \examples{
 vss <- 1
