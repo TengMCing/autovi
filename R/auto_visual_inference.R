@@ -130,6 +130,36 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
   }
 
 
+# plot_pair ---------------------------------------------------------------
+
+  plot_pair_ <- function(data = self$get_fitted_and_resid(),
+                         null_data = self$null_method(),
+                         theme = ggplot2::theme_light(),
+                         alpha = 1,
+                         size = 0.5,
+                         stroke = 0.5,
+                         remove_axis = TRUE,
+                         remove_legend = TRUE,
+                         remove_grid_line = TRUE,
+                         add_zero_line = TRUE) {
+    data$type <- "true"
+    null_data$type <- "null"
+    data$type <- factor(data$type, levels = c("true", "null"))
+    null_data$type <- factor(null_data$type, levels = c("true", "null"))
+
+    self$plot_resid(rbind(data, null_data),
+                    theme,
+                    alpha,
+                    size,
+                    stroke,
+                    remove_axis,
+                    remove_legend,
+                    remove_grid_line,
+                    add_zero_line) +
+      ggplot2::facet_wrap(~type)
+  }
+
+
 # save_plot ---------------------------------------------------------------
 
   save_plot_ <- function(p) {
@@ -929,6 +959,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                              get_data = get_data_,
                              auxiliary = auxiliary_,
                              plot_resid = plot_resid_,
+                             plot_pair = plot_pair_,
                              save_plot = save_plot_,
                              vss = vss_,
                              null_method = null_method_,

@@ -3,6 +3,7 @@
 ## New Features
 * Introduce `AUTO_VI$save_plot()` which is the default method of saving a plot by calling `save_plot()`. This allows user to override the plot saving method if needed.
 * Introduce a method `AUTO_VI$summary()` which allows user to get computed statistics provided in `AUTO_VI$..str..()`.
+* Introduce a method `AUTO_VI$plot_pair()` which allows user to put the true residual plot and a null plot side-by-side.
 
 ## Changes
 * Integrate the `AUTO_VI$select_feature()` method into `AUTO_VI$feature_pca()` for clarity. Now the `AUTO_VI$feature_pca()` method has one more parameter `pattern` for specifying feature name pattern.

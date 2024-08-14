@@ -54,6 +54,7 @@ AUTO_VI <- new.env()
 #'    * [AUTO_VI$null_vss()]
 #' * P:
 #'    * [AUTO_VI$p_value()]
+#'    * [AUTO_VI$plot_pair()]
 #'    * [AUTO_VI$plot_resid()]
 #' * R:
 #'    * [AUTO_VI$rotate_resid()]
@@ -281,6 +282,51 @@ AUTO_VI$auxiliary
 #' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi$plot_resid()
 AUTO_VI$plot_resid
+
+
+#' Draw a pair of standard residual plots
+#'
+#' @name AUTO_VI$plot_pair
+#'
+#' @description This function draws a pair of standard residual plots
+#' consisting of a true residual plot and a null residual plot.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$plot_pair(
+#'   data = self$get_fitted_and_resid(),
+#'   null_data = self$null_method(),
+#'   theme = ggplot2::theme_light(),
+#'   alpha = 1,
+#'   size = 0.5,
+#'   stroke = 0.5,
+#'   remove_axis = TRUE,
+#'   remove_legend = TRUE,
+#'   remove_grid_line = TRUE,
+#'   add_zero_line = TRUE
+#' )
+#' ```
+#'
+#' @param data Data frame. A data frame containing variables `.resid` and
+#' `.fitted`. See also [AUTO_VI$get_fitted_and_resid()].
+#' @param null_data Data frame. A data frame containing variables `.resid` and
+#' `.fitted`. See also [AUTO_VI$null_method()].
+#' @param theme `ggtheme`. A `ggplot` theme object.
+#' See also [ggplot2::theme_light()].
+#' @param alpha Numeric. Alpha of dot. Value between 0 and 1.
+#' @param size Numeric. Size of dot. Value between 0 and 1.
+#' @param stroke Numeric. Stroke of dot. Value between 0 and 1.
+#' @param remove_axis Boolean. Whether or not to remove the axis.
+#' @param remove_legend Boolean. Whether or not to remove the legend.
+#' @param remove_grid_line Boolean. Whether or not to remove the grid lines.
+#' @param add_zero_line Boolean. Whether or not to add a zero horizontal line.
+#' @return A `ggplot`.
+#'
+#' @examples
+#'
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
+#' my_vi$plot_pair()
+AUTO_VI$plot_pair
 
 #' Save a plot
 #'

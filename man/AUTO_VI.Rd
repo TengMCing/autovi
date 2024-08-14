@@ -103,6 +103,7 @@ with S3 class \code{bandicoot_oop}.
 \item P:
 \itemize{
 \item \code{\link[=AUTO_VI$p_value]{AUTO_VI$p_value()}}
+\item \code{\link[=AUTO_VI$plot_pair]{AUTO_VI$plot_pair()}}
 \item \code{\link[=AUTO_VI$plot_resid]{AUTO_VI$plot_resid()}}
 }
 \item R:
