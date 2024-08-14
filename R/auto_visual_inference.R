@@ -665,27 +665,31 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     stop("Argument `type` is neither 'density' nor 'rank'!")
   }
 
-
-# select_feature ----------------------------------------------------------
-
-
-  select_feature_ <- function(data = self$check_result$observed, pattern = "f_") {
-    if (!is.data.frame(data)) {
-      return(data.frame())
-    }
-    result <- data[, grep(pattern, names(data))]
-    if (ncol(result) == 0) warning("No features found in the provided data frame. Did you forget to specify a layer name or layer index for `extract_feature_from_layer` when estimating the visual signal strength or conducting the check?")
-    return(result)
-  }
-
-
 # feature_pca -------------------------------------------------------------
 
-  feature_pca_ <- function(feature = self$select_feature(self$check_result$observed),
-                           null_feature = self$select_feature(self$check_result$null),
-                           boot_feature = self$select_feature(self$check_result$boot),
+  feature_pca_ <- function(feature = self$check_result$observed,
+                           null_feature = self$check_result$null,
+                           boot_feature = self$check_result$boot,
                            center = TRUE,
-                           scale = TRUE) {
+                           scale = TRUE,
+                           pattern = "^f_.*$") {
+
+    select_feature <- function(data, pattern) {
+      if (!is.data.frame(data)) {
+        return(data.frame())
+      }
+      result <- data[, grep(pattern, names(data))]
+      if (ncol(result) == 0) {
+        warning(paste0("No matching features found in the provided data frame.",
+                       " Did you forget to specify a layer name",
+                       " or layer index for `extract_feature_from_layer`",
+                       " when estimating the visual signal strength or conducting the check?"))}
+      return(result)
+    }
+
+    feature <- select_feature(feature, pattern)
+    null_feature <- select_feature(null_feature, pattern)
+    boot_feature <- select_feature(boot_feature, pattern)
 
     all_feature <- data.frame()
     tags <- c()
@@ -750,6 +754,49 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     }
 
     return(p)
+  }
+
+
+# summary -----------------------------------------------------------------
+
+  summary_ <- function() {
+
+    # New a summary class
+    AUTO_VI_SUMMARY <- bandicoot::new_class(class_name = "AUTO_VI_SUMMARY")
+
+    # Capture the summary string and store in the summary class
+    AUTO_VI_SUMMARY$summary_string <- gsub("AUTO_VI object",
+                                           "AUTO_VI_SUMMARY object",
+                                           self$..str..())
+
+    # Reuse the summary string as `..str..` output
+    bandicoot::register_method(AUTO_VI_SUMMARY,
+                               ..str.. = function() self$summary_string)
+
+    # Store necessary information users may need in the class
+    AUTO_VI_SUMMARY$observed_vss <- self$check_result$observed$vss
+
+    null_dist <- self$check_result$null$vss
+    if (length(null_dist) > 0) {
+      AUTO_VI_SUMMARY$null_draws <- length(null_dist)
+      AUTO_VI_SUMMARY$null_mean <- mean(null_dist)
+      AUTO_VI_SUMMARY$null_quantiles <- stats::quantile(null_dist, c(0.25, 0.5, 0.75, 0.8, 0.9, 0.95, 0.99))
+    }
+
+    boot_dist <- self$check_result$boot$vss
+    if (length(boot_dist) > 0) {
+      AUTO_VI_SUMMARY$boot_draws <- length(boot_dist)
+      AUTO_VI_SUMMARY$boot_mean <- mean(boot_dist)
+      AUTO_VI_SUMMARY$boot_quantiles <- stats::quantile(boot_dist, c(0.25, 0.5, 0.75, 0.8, 0.9, 0.95, 0.99))
+    }
+
+    AUTO_VI_SUMMARY$p_value <- self$check_result$p_value
+    AUTO_VI_SUMMARY$boot_p_value <- self$check_result$boot_p_value
+    AUTO_VI_SUMMARY$boot_likelihood <- self$check_result$boot_likelihood
+    AUTO_VI_SUMMARY$null_likelihood <- self$check_result$null_likelihood
+    AUTO_VI_SUMMARY$likelihood_ratio <- self$check_result$likelihood_ratio
+
+    return(AUTO_VI_SUMMARY$instantiate())
   }
 
 # str ---------------------------------------------------------------------
@@ -844,7 +891,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
       # Get the boot p-value.
       boot_p_value <- self$check_result$boot_p_value
-      if (!is.null(boot_p_value)) result <- paste0(result, " (p-value = ", boot_p_value, ")")
+      if (!is.null(boot_p_value)) result <- paste0(result, " (p-value = ", format(boot_p_value, digits = 4), ")")
 
       result <- paste0(result, "\n        - Quantiles: ")
       result <- paste0(result, "\n           \u2554", paste(rep("\u2550", nchar(qts[1])), collapse = ""), "\u2557")
@@ -892,12 +939,11 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                              lineup_check = lineup_check_,
                              likelihood_ratio = likelihood_ratio_,
                              p_value = p_value_,
+                             summary = summary_,
                              summary_density_plot = summary_density_plot_,
                              summary_rank_plot = summary_rank_plot_,
                              summary_plot = summary_plot_,
-                             select_feature = select_feature_,
                              feature_pca = feature_pca_,
                              feature_pca_plot = feature_pca_plot_,
                              ..str.. = str_)
 }
-

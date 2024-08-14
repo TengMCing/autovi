@@ -112,8 +112,8 @@ with S3 class \code{bandicoot_oop}.
 \item S:
 \itemize{
 \item \code{\link[=AUTO_VI$save_plot]{AUTO_VI$save_plot()}}
-\item \code{\link[=AUTO_VI$select_feature]{AUTO_VI$select_feature()}}
 \item \code{\link[=AUTO_VI$..str..]{AUTO_VI$..str..()}}
+\item \code{\link[=AUTO_VI$summary]{AUTO_VI$summary()}}
 \item \code{\link[=AUTO_VI$summary_density_plot]{AUTO_VI$summary_density_plot()}}
 \item \code{\link[=AUTO_VI$summary_plot]{AUTO_VI$summary_plot()}}
 \item \code{\link[=AUTO_VI$summary_rank_plot]{AUTO_VI$summary_rank_plot()}}

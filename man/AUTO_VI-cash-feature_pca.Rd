@@ -19,6 +19,9 @@ during the evaluation of bootstrapped plots.}
 
 \item{scale}{Boolean. Whether to divide the feature by its standard
 deviation.}
+
+\item{pattern}{Character. A regrex pattern to search for features in the
+provided DataFrame. See also \code{\link[=grep]{grep()}}.}
 }
 \value{
 A tibble of the raw features and the rotated features with
@@ -32,11 +35,12 @@ features extracted from keras model.
 \subsection{Usage}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$feature_pca(
-  feature = self$select_feature(self$check_result$observed),
-  null_feature = self$select_feature(self$check_result$null),
-  boot_feature = self$select_feature(self$check_result$boot),
+  feature = self$check_result$observed,
+  null_feature = self$check_result$null,
+  boot_feature = self$check_result$boot,
   center = TRUE,
-  scale = TRUE
+  scale = TRUE,
+  pattern = "^f_.*$"
 )
 }\if{html}{\out{</div>}}
 }
@@ -45,7 +49,9 @@ features extracted from keras model.
 Features need to be extracted while running the method
 \code{\link[=AUTO_VI$check]{AUTO_VI$check()}} and \code{\link[=AUTO_VI$lineup_check]{AUTO_VI$lineup_check()}} by providing the argument
 \code{extract_feature_from_layer}. Features with zero variance will be ignored
-from the analysis. See also \code{\link[stats:prcomp]{stats::prcomp()}}.
+from the analysis. See also \code{\link[stats:prcomp]{stats::prcomp()}}. By default, features are
+assumed to follow the naming convention
+"f_(index)", where index is from one to the number of features.
 }
 \examples{
 keras_model <- try(get_keras_model("vss_phn_32"))

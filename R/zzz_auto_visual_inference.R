@@ -59,8 +59,8 @@ AUTO_VI <- new.env()
 #'    * [AUTO_VI$rotate_resid()]
 #' * S:
 #'    * [AUTO_VI$save_plot()]
-#'    * [AUTO_VI$select_feature()]
 #'    * [AUTO_VI$..str..()]
+#'    * [AUTO_VI$summary()]
 #'    * [AUTO_VI$summary_density_plot()]
 #'    * [AUTO_VI$summary_plot()]
 #'    * [AUTO_VI$summary_rank_plot()]
@@ -118,6 +118,35 @@ AUTO_VI$check_result
 #' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi
 AUTO_VI$..init..
+
+#' Summary of the object
+#'
+#' @name AUTO_VI$summary
+#'
+#' @description The [AUTO_VI$..str..()] method provides a string
+#' representation of the object. If a check is performed, the string
+#' will contain some simple statistics of the check result. This method
+#' does this same thing as [AUTO_VI$..str..()], but it returns an
+#' `AUTO_VI_SUMMARY` object which stores those statistics, such as sample
+#' quantiles of the distribution of null visual signal strength, in the object.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$summary()
+#' ```
+#' @return An `AUTO_VI_SUMMARY` object.
+#'
+#' @examples
+#' keras_model <- try(get_keras_model("vss_phn_32"))
+#' if (!inherits(keras_model, "try-error")) {
+#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
+#'
+#'   myvi$check()
+#'   myvi_summary <- myvi$summary()
+#'   print(myvi_summary)
+#'   names(myvi_summary)
+#' }
+AUTO_VI$summary
 
 #' String representation of the object
 #'
@@ -732,18 +761,21 @@ AUTO_VI$summary_rank_plot
 #' ## Usage
 #' ```
 #' AUTO_VI$feature_pca(
-#'   feature = self$select_feature(self$check_result$observed),
-#'   null_feature = self$select_feature(self$check_result$null),
-#'   boot_feature = self$select_feature(self$check_result$boot),
+#'   feature = self$check_result$observed,
+#'   null_feature = self$check_result$null,
+#'   boot_feature = self$check_result$boot,
 #'   center = TRUE,
-#'   scale = TRUE
+#'   scale = TRUE,
+#'   pattern = "^f_.*$"
 #' )
 #' ```
 #'
 #' @details Features need to be extracted while running the method
 #' [AUTO_VI$check()] and [AUTO_VI$lineup_check()] by providing the argument
 #' `extract_feature_from_layer`. Features with zero variance will be ignored
-#' from the analysis. See also [stats::prcomp()].
+#' from the analysis. See also [stats::prcomp()]. By default, features are
+#' assumed to follow the naming convention
+#' "f_(index)", where index is from one to the number of features.
 #'
 #'
 #' @param feature Dataframe. A data frame where columns represent
@@ -757,6 +789,8 @@ AUTO_VI$summary_rank_plot
 #' @param center Boolean. Whether to subtract the mean from the feature.
 #' @param scale Boolean. Whether to divide the feature by its standard
 #' deviation.
+#' @param pattern Character. A regrex pattern to search for features in the
+#' provided DataFrame. See also [grep()].
 #' @return A tibble of the raw features and the rotated features with
 #' attributes `sdev` and `rotation` representing the
 #' standard deviation of the principal
@@ -771,37 +805,6 @@ AUTO_VI$summary_rank_plot
 #' }
 #'
 AUTO_VI$feature_pca
-
-#' Select features from the check result
-#'
-#' @name AUTO_VI$select_feature
-#'
-#' @description This function select features from the check result.
-#'
-#' ## Usage
-#' ```
-#' AUTO_VI$feature_pca(data = self$check_result$observed, pattern = "f_")
-#' ```
-#'
-#' @details By default, features are assumed to follow the naming convention
-#' "f_(index)", where index is from one to the number of features.
-#'
-#' @param data Dataframe. A data frame where some columns represent
-#' features and rows represent observations.
-#' @param pattern Character. A regrex pattern to search for features.
-#' See also [grep()].
-#' @return A tibble where columns represent
-#' features and rows represent observations.
-#' @examples
-#' keras_model <- try(get_keras_model("vss_phn_32"))
-#' if (!inherits(keras_model, "try-error")) {
-#'   myvi <- auto_vi(lm(dist ~ speed, data = cars), keras_model)
-#'
-#'   myvi$lineup_check(extract_feature_from_layer = "global_max_pooling2d")
-#'   myvi$select_feature()
-#' }
-#'
-AUTO_VI$select_feature
 
 #' Draw a summary Plot for principal component analysis conducted on extracted features
 #'
