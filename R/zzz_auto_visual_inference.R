@@ -35,6 +35,7 @@ AUTO_VI <- new.env()
 #' * A:
 #'    * [AUTO_VI$auxiliary()]
 #' * B:
+#'    * [AUTO_VI$boot_method()]
 #'    * [AUTO_VI$boot_vss()]
 #' * C:
 #'    * [AUTO_VI$check()]
@@ -451,7 +452,6 @@ AUTO_VI$null_method
 #' my_vi$plot_resid(rotated_resid)
 AUTO_VI$rotate_resid
 
-
 #' Simulate null plots and predict the visual signal strength
 #'
 #' @name AUTO_VI$null_vss
@@ -496,12 +496,41 @@ AUTO_VI$rotate_resid
 #' }
 AUTO_VI$null_vss
 
+#' Get bootstrapped residuals from a fitted model
+#'
+#' @name AUTO_VI$boot_method
+#'
+#' @description This default method gets bootstrapped residuals from a
+#' fitted linear model by sampling the observations with replacement
+#' then refit the model. User needs to override this method if
+#' a different bootstrapping scheme is needed.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$boot_method(
+#'   fitted_model = self$fitted_model,
+#'   data = self$get_data()
+#' )
+#' ```
+#'
+#' @param fitted_model `lm`. A linear model object.
+#' @param data Data frame. The data used to fit the model.
+#' See also [AUTO_VI$get_data()].
+#' @return A tibble with two columns `.fitted` and `.resid`.
+#' @examples
+#'
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
+#' null_resid <- my_vi$boot_method()
+#' my_vi$plot_resid(null_resid)
+AUTO_VI$boot_method
+
 #' Predict visual signal strength for bootstrapped residual plots
 #'
 #' @name AUTO_VI$boot_vss
 #'
-#' @description This function bootstrap the data and refits the model, then
-#' predicts the visual signal strength of the bootstrapped residual plots.
+#' @description This function bootstrap the data and refits the model by using
+#' [AUTO_VI$boot_method()], then predicts the visual signal strength
+#' of the bootstrapped residual plots.
 #'
 #' ## Usage
 #' ```

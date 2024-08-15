@@ -28,8 +28,9 @@ integer layer index for extracting features from a layer.}
 A tibble.
 }
 \description{
-This function bootstrap the data and refits the model, then
-predicts the visual signal strength of the bootstrapped residual plots.
+This function bootstrap the data and refits the model by using
+\code{\link[=AUTO_VI$boot_method]{AUTO_VI$boot_method()}}, then predicts the visual signal strength
+of the bootstrapped residual plots.
 \subsection{Usage}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$boot_vss(

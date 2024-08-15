@@ -39,6 +39,7 @@ reference:
   - AUTO_VI$vss
   - AUTO_VI$rotate_resid
   - AUTO_VI$null_method
+  - AUTO_VI$boot_method
   - AUTO_VI$null_vss
   - AUTO_VI$boot_vss
   - AUTO_VI$check

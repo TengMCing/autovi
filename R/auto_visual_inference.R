@@ -294,6 +294,21 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
   }
 
 
+# boot_method -------------------------------------------------------------
+
+  boot_method_ <- function(fitted_model = self$fitted_model,
+                           data = self$get_data()) {
+
+    # Sampling row ids with replacement.
+    new_row_id <- sample(1:nrow(data), replace = TRUE)
+
+    # Refit the model.
+    new_mod <- stats::update(fitted_model, data = data[new_row_id, ])
+
+    return(tibble::tibble(.fitted = new_mod$fitted.values,
+                          .resid = new_mod$residuals))
+  }
+
 # rotate_resid ------------------------------------------------------------
 
   rotate_resid_ <- function(fitted_model = self$fitted_model) {
@@ -391,14 +406,8 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     # Bootstrap and refit regression models.
     dat_list <- lapply(1:draws, function(i) {
 
-      # Sampling row ids with replacement.
-      new_row_id <- sample(1:nrow(data), replace = TRUE)
-
-      # Refit the model.
-      new_mod <- stats::update(fitted_model, data = data[new_row_id, ])
-
-      tibble::tibble(.fitted = new_mod$fitted.values,
-                     .resid = new_mod$residuals)
+      self$boot_method(fitted_model = fitted_model,
+                       data = data)
     })
 
 
@@ -963,6 +972,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                              save_plot = save_plot_,
                              vss = vss_,
                              null_method = null_method_,
+                             boot_method = boot_method_,
                              rotate_resid = rotate_resid_,
                              null_vss = null_vss_,
                              boot_vss = boot_vss_,

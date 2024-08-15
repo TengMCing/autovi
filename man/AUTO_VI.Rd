@@ -70,6 +70,7 @@ with S3 class \code{bandicoot_oop}.
 }
 \item B:
 \itemize{
+\item \code{\link[=AUTO_VI$boot_method]{AUTO_VI$boot_method()}}
 \item \code{\link[=AUTO_VI$boot_vss]{AUTO_VI$boot_vss()}}
 }
 \item C:
