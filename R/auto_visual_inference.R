@@ -159,7 +159,6 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
       ggplot2::facet_wrap(~type)
   }
 
-
 # save_plot ---------------------------------------------------------------
 
   save_plot_ <- function(p) {
@@ -785,8 +784,12 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
     set <- NULL
 
     if (col_by_set) {
+
       p <- ggplot2::ggplot(feature_pca) +
-        ggplot2::geom_point(ggplot2::aes({{x}}, {{y}}, col = set))
+        ggplot2::geom_point(data = ~.x[.x$set == "null", ], ggplot2::aes({{x}}, {{y}}, col = "null")) +
+        ggplot2::geom_point(data = ~.x[.x$set == "boot", ], ggplot2::aes({{x}}, {{y}}, col = "boot")) +
+        ggplot2::geom_point(data = ~.x[.x$set == "observed", ], ggplot2::aes({{x}}, {{y}}, col = "observed"))
+
     } else {
       p <- ggplot2::ggplot(feature_pca) +
         ggplot2::geom_point(ggplot2::aes({{x}}, {{y}}))

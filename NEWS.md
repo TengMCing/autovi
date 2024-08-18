@@ -9,6 +9,7 @@
 ## Changes
 * Integrate the `AUTO_VI$select_feature()` method into `AUTO_VI$feature_pca()` for clarity. Now the `AUTO_VI$feature_pca()` method has one more parameter `pattern` for specifying feature name pattern.
 * Remove the `type` parameter and `p_value_type` parameter from `AUTO_VI$p_value()` and `AUTO_VI$check()`, respectively, and unify the p-value formula. Now the p-value is always calculated as `mean(c(null_dist, vss) >= vss)`, where `null_dist` is a vector of visual signal strength for null residual plots, and `vss` is the visual signal strength for the true residual plot.
+* Improve `AUTO_VI$feature_pca_plot()`. Now the observed point is always displayed on top of other groups.
 
 ## Bug Fix
 * Fix a bug in `AUTO_VI$vss()` that arguments will be passed incorrectly to `KERAS_WRAPPER$image_to_array()` when a `data.frame` or a `tibble` is provided by the user to predict visual signal strength.

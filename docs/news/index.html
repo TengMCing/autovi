@@ -57,6 +57,7 @@
 <h3 id="changes-0-4-1">Changes<a class="anchor" aria-label="anchor" href="#changes-0-4-1"></a></h3>
 <ul><li>Integrate the <code>AUTO_VI$select_feature()</code> method into <code>AUTO_VI$feature_pca()</code> for clarity. Now the <code>AUTO_VI$feature_pca()</code> method has one more parameter <code>pattern</code> for specifying feature name pattern.</li>
 <li>Remove the <code>type</code> parameter and <code>p_value_type</code> parameter from <code>AUTO_VI$p_value()</code> and <code>AUTO_VI$check()</code>, respectively, and unify the p-value formula. Now the p-value is always calculated as <code>mean(c(null_dist, vss) &gt;= vss)</code>, where <code>null_dist</code> is a vector of visual signal strength for null residual plots, and <code>vss</code> is the visual signal strength for the true residual plot.</li>
+<li>Improve <code>AUTO_VI$feature_pca_plot()</code>. Now the observed point is always displayed on top of other groups.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fix-0-4-1">Bug Fix<a class="anchor" aria-label="anchor" href="#bug-fix-0-4-1"></a></h3>
