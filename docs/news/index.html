@@ -51,6 +51,7 @@
 <ul><li>Introduce <code>AUTO_VI$save_plot()</code> which is the default method of saving a plot by calling <code><a href="../reference/save_plot.html">save_plot()</a></code>. This allows user to override the plot saving method if needed.</li>
 <li>Introduce a method <code>AUTO_VI$summary()</code> which allows user to get computed statistics provided in <code>AUTO_VI$..str..()</code>.</li>
 <li>Introduce a method <code>AUTO_VI$plot_pair()</code> which allows user to put the true residual plot and a null plot side-by-side.</li>
+<li>Introduce a method <code>AUTO_VI$plot_lineup()</code> which allows user to generate a lineup for manual inspection.</li>
 <li>Introduce <code>AUTO_VI$boot_method()</code> which is the default method of generating bootstrapped residuals. This allows user to override the bootstrapping scheme if needed.</li>
 </ul></div>
 <div class="section level3">
@@ -58,6 +59,10 @@
 <ul><li>Integrate the <code>AUTO_VI$select_feature()</code> method into <code>AUTO_VI$feature_pca()</code> for clarity. Now the <code>AUTO_VI$feature_pca()</code> method has one more parameter <code>pattern</code> for specifying feature name pattern.</li>
 <li>Remove the <code>type</code> parameter and <code>p_value_type</code> parameter from <code>AUTO_VI$p_value()</code> and <code>AUTO_VI$check()</code>, respectively, and unify the p-value formula. Now the p-value is always calculated as <code>mean(c(null_dist, vss) &gt;= vss)</code>, where <code>null_dist</code> is a vector of visual signal strength for null residual plots, and <code>vss</code> is the visual signal strength for the true residual plot.</li>
 <li>Improve <code>AUTO_VI$feature_pca_plot()</code>. Now the observed point is always displayed on top of other groups.</li>
+<li>
+<code>AUTO_VI$check()</code> and <code>AUTO_VI$lineup_check()</code> now returns <code>self</code> instead of <code>invisible(self)</code> to provide a visible summary of the check result.</li>
+<li>
+<code><a href="../reference/get_keras_model.html">get_keras_model()</a></code> now downloads models in the <code>TensorFlow</code> “SavedModel” format by default, rather than the <code>.keras</code> format. While this change may slow down the model loading process due to the larger file size, it ensures better backward compatibility with various Python and <code>TensorFlow</code> versions. User can still choose to download the <code>.keras</code> format by using the <code>format</code> argument.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fix-0-4-1">Bug Fix<a class="anchor" aria-label="anchor" href="#bug-fix-0-4-1"></a></h3>

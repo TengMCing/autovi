@@ -4,10 +4,13 @@
 \alias{get_keras_model}
 \title{Download and load the keras model}
 \usage{
-get_keras_model(model_name)
+get_keras_model(model_name, format = "SavedModel")
 }
 \arguments{
 \item{model_name}{String. The model name. See also \code{\link[=list_keras_model]{list_keras_model()}}.}
+
+\item{format}{String. The model format to download.
+Either "SavedModel" or "keras".}
 }
 \value{
 A keras model.

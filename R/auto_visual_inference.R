@@ -159,6 +159,56 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
       ggplot2::facet_wrap(~type)
   }
 
+
+# plot_lineup -------------------------------------------------------------
+
+  plot_lineup_ <- function(lineup_size = 20L,
+                           data = self$get_fitted_and_resid(),
+                           null_method = self$null_method,
+                           theme = ggplot2::theme_light(),
+                           alpha = 1,
+                           size = 0.5,
+                           stroke = 0.5,
+                           remove_axis = TRUE,
+                           remove_legend = TRUE,
+                           remove_grid_line = TRUE,
+                           add_zero_line = TRUE,
+                           remove_facet_label = FALSE,
+                           display_answer = TRUE) {
+
+    if (lineup_size < 1) stop("Lineup size must be greater than one!")
+
+    true_pos <- sample(1:lineup_size, 1)
+    data$pos <- true_pos
+    for (i in 1:lineup_size) {
+      if (i == true_pos) next
+      null_data <- null_method(self$fitted_model)
+      null_data$pos <- i
+      data <- rbind(data, null_data)
+    }
+
+    p <- self$plot_resid(data,
+                         theme,
+                         alpha,
+                         size,
+                         stroke,
+                         remove_axis,
+                         remove_legend,
+                         remove_grid_line,
+                         add_zero_line) +
+      ggplot2::facet_wrap(~pos)
+
+    if (remove_facet_label) {
+      p <- p + ggplot2::theme(strip.text = ggplot2::element_blank())
+    }
+
+    if (display_answer) {
+      p <- p + ggplot2::ggtitle(paste0("The true residual plot is at position ", true_pos, "."))
+    }
+
+    return(p)
+  }
+
 # save_plot ---------------------------------------------------------------
 
   save_plot_ <- function(p) {
@@ -529,7 +579,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
     self$check_result$lineup_check <- FALSE
 
-    return(invisible(self))
+    return(self)
   }
 
 
@@ -557,7 +607,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
     self$check_result$lineup_check <- TRUE
 
-    return(invisible(self))
+    return(self)
   }
 
 
@@ -972,6 +1022,7 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
                              auxiliary = auxiliary_,
                              plot_resid = plot_resid_,
                              plot_pair = plot_pair_,
+                             plot_lineup = plot_lineup_,
                              save_plot = save_plot_,
                              vss = vss_,
                              null_method = null_method_,

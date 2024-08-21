@@ -35,6 +35,7 @@ reference:
   - AUTO_VI$get_data
   - AUTO_VI$plot_resid
   - AUTO_VI$plot_pair
+  - AUTO_VI$plot_lineup
   - AUTO_VI$save_plot
   - AUTO_VI$vss
   - AUTO_VI$rotate_resid

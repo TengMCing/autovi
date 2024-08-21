@@ -56,6 +56,7 @@ AUTO_VI <- new.env()
 #' * P:
 #'    * [AUTO_VI$p_value()]
 #'    * [AUTO_VI$plot_pair()]
+#'    * [AUTO_VI$plot_lineup()]
 #'    * [AUTO_VI$plot_resid()]
 #' * R:
 #'    * [AUTO_VI$rotate_resid()]
@@ -328,6 +329,57 @@ AUTO_VI$plot_resid
 #' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
 #' my_vi$plot_pair()
 AUTO_VI$plot_pair
+
+#' Draw a lineup of standard residual plots
+#'
+#' @name AUTO_VI$plot_lineup
+#'
+#' @description This function draws a lineup of standard residual plots
+#' consisting of a true residual plot and several null residual plots.
+#'
+#' ## Usage
+#' ```
+#' AUTO_VI$plot_lineup(
+#'   lineup_size = 20L,
+#'   data = self$get_fitted_and_resid(),
+#'   null_method = self$null_method,
+#'   theme = ggplot2::theme_light(),
+#'   alpha = 1,
+#'   size = 0.5,
+#'   stroke = 0.5,
+#'   remove_axis = TRUE,
+#'   remove_legend = TRUE,
+#'   remove_grid_line = TRUE,
+#'   add_zero_line = TRUE,
+#'   remove_facet_label = FALSE,
+#'   display_answer = TRUE
+#' )
+#' ```
+#'
+#' @param lineup_size Numeric. Number of plots in a lineup.
+#' @param data Data frame. A data frame containing variables `.resid` and
+#' `.fitted`. See also [AUTO_VI$get_fitted_and_resid()].
+#' @param null_method Function. A function that takes a fitted model as input,
+#' and outputs a data frame containing variables `.resid` and
+#' `.fitted`. See also [AUTO_VI$null_method()].
+#' @param theme `ggtheme`. A `ggplot` theme object.
+#' See also [ggplot2::theme_light()].
+#' @param alpha Numeric. Alpha of dot. Value between 0 and 1.
+#' @param size Numeric. Size of dot. Value between 0 and 1.
+#' @param stroke Numeric. Stroke of dot. Value between 0 and 1.
+#' @param remove_axis Boolean. Whether or not to remove the axis.
+#' @param remove_legend Boolean. Whether or not to remove the legend.
+#' @param remove_grid_line Boolean. Whether or not to remove the grid lines.
+#' @param add_zero_line Boolean. Whether or not to add a zero horizontal line.
+#' @param remove_facet_label Boolean. Whether or not to remove facet labels.
+#' @param display_answer Boolean. Whether or not to display the answer in title.
+#' @return A `ggplot`.
+#'
+#' @examples
+#'
+#' my_vi <- auto_vi(fitted_model = lm(speed ~ dist, data = cars))
+#' my_vi$plot_lineup()
+AUTO_VI$plot_lineup
 
 #' Save a plot
 #'
