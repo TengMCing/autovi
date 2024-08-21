@@ -3,11 +3,21 @@
 \name{AUTO_VI}
 \alias{AUTO_VI}
 \alias{auto_vi}
+\alias{residual_checker}
 \title{AUTO_VI class environment}
 \usage{
 auto_vi(
   fitted_model,
   keras_model = NULL,
+  data = NULL,
+  node_index = 1L,
+  env = new.env(parent = parent.frame()),
+  init_call = sys.call()
+)
+
+residual_checker(
+  fitted_model,
+  keras_model_name = "vss_phn_32",
   data = NULL,
   node_index = 1L,
   env = new.env(parent = parent.frame()),
@@ -29,6 +39,9 @@ when the keras model has more than one output nodes.}
 
 \item{init_call}{Call. Contents of the \code{..init_call...} It is recommended to leave it
 as default.}
+
+\item{keras_model_name}{Character. A model name to be used by
+\code{\link[=get_keras_model]{get_keras_model()}}. See also \code{\link[=list_keras_model]{list_keras_model()}}.}
 }
 \value{
 An instance environment.
@@ -41,6 +54,9 @@ with S3 class \code{bandicoot_oop}.
 \section{Functions}{
 \itemize{
 \item \code{auto_vi()}: Class constructor, same as \code{AUTO_VI$instantiate()}.
+
+\item \code{residual_checker()}: Class constructor, same as \code{AUTO_VI$instantiate()}, but
+uses the \code{keras_model_name} argument rather than \code{keras_model}.
 
 }}
 \section{Class information}{

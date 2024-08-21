@@ -12,6 +12,8 @@ AUTO_VI <- new.env()
 #' with S3 class `bandicoot_oop`.
 #'
 #' @param fitted_model Model. A model object, e.g. `lm`.
+#' @param keras_model_name Character. A model name to be used by
+#' [get_keras_model()]. See also [list_keras_model()].
 #' @param keras_model Keras model. A trained computer vision model.
 #' @param data Data frame. The data used to fit the model.
 #' @param node_index Integer. An index indicating which node of the output layer
@@ -83,6 +85,23 @@ auto_vi <- function(fitted_model,
                     init_call = sys.call()) {
   AUTO_VI$instantiate(fitted_model = fitted_model,
                       keras_model = keras_model,
+                      data = data,
+                      node_index = node_index,
+                      env = env,
+                      init_call = init_call)
+}
+
+#' @describeIn AUTO_VI Class constructor, same as `AUTO_VI$instantiate()`, but
+#' uses the `keras_model_name` argument rather than `keras_model`.
+#' @export
+residual_checker <- function(fitted_model,
+                             keras_model_name = "vss_phn_32",
+                             data = NULL,
+                             node_index = 1L,
+                             env = new.env(parent = parent.frame()),
+                             init_call = sys.call()) {
+  AUTO_VI$instantiate(fitted_model = fitted_model,
+                      keras_model = get_keras_model(keras_model_name),
                       data = data,
                       node_index = node_index,
                       env = env,

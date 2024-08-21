@@ -64,6 +64,15 @@ with S3 class <code>bandicoot_oop</code>.</p>
 <span>  node_index <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">new.env</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  init_call <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">sys.call</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">residual_checker</span><span class="op">(</span></span>
+<span>  <span class="va">fitted_model</span>,</span>
+<span>  keras_model_name <span class="op">=</span> <span class="st">"vss_phn_32"</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  node_index <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">new.env</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  init_call <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">sys.call</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,6 +104,11 @@ when the keras model has more than one output nodes.</p></dd>
 <dd><p>Call. Contents of the <code>..init_call...</code> It is recommended to leave it
 as default.</p></dd>
 
+
+<dt>keras_model_name</dt>
+<dd><p>Character. A model name to be used by
+<code><a href="get_keras_model.html">get_keras_model()</a></code>. See also <code><a href="list_keras_model.html">list_keras_model()</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -106,6 +120,8 @@ as default.</p></dd>
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
     
 <ul><li><p><code>auto_vi()</code>: Class constructor, same as <code>AUTO_VI$instantiate()</code>.</p></li>
+<li><p><code>residual_checker()</code>: Class constructor, same as <code>AUTO_VI$instantiate()</code>, but
+uses the <code>keras_model_name</code> argument rather than <code>keras_model</code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="class-information">Class information<a class="anchor" aria-label="anchor" href="#class-information"></a></h2>

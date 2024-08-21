@@ -6,6 +6,7 @@
 * Introduce a method `AUTO_VI$plot_pair()` which allows user to put the true residual plot and a null plot side-by-side.
 * Introduce a method `AUTO_VI$plot_lineup()` which allows user to generate a lineup for manual inspection.
 * Introduce `AUTO_VI$boot_method()` which is the default method of generating bootstrapped residuals. This allows user to override the bootstrapping scheme if needed.
+* Introduce `residual_checker()` as a new class constructor of `AUTO_VI`. It has an argument `keras_model_name` that will be passed to `get_keras_model()`.
 
 ## Changes
 * Integrate the `AUTO_VI$select_feature()` method into `AUTO_VI$feature_pca()` for clarity. Now the `AUTO_VI$feature_pca()` method has one more parameter `pattern` for specifying feature name pattern.
