@@ -2,14 +2,14 @@
 % Please edit documentation in R/utils.R
 \name{save_plot}
 \alias{save_plot}
-\title{Save a plot}
+\title{Save plot(s)}
 \usage{
 save_plot(p, path = NULL, width = 7/5, height = 7/4, ...)
 }
 \arguments{
 \item{p}{\code{ggplot}. A plot.}
 
-\item{path}{Character. Path to save the image.}
+\item{path}{Character. Path(s) to save the image.}
 
 \item{width}{Numeric. Width of the image.}
 
@@ -18,10 +18,10 @@ save_plot(p, path = NULL, width = 7/5, height = 7/4, ...)
 \item{...}{Other arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
 }
 \value{
-The image path.
+The image path(s).
 }
 \description{
-This function save a plot to a provided path.
+This function save a plot of a list of plots to provided path(s).
 }
 \examples{
 p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))

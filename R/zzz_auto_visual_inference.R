@@ -400,21 +400,23 @@ AUTO_VI$plot_pair
 #' my_vi$plot_lineup()
 AUTO_VI$plot_lineup
 
-#' Save a plot
+#' Save plot(s)
 #'
 #' @name AUTO_VI$save_plot
 #'
-#' @description This is the default method of saving a plot. It will use
+#' @description This is the default method of saving plot(s). It will use
 #' [save_plot()] to save the ggplot to a 420 (width) * 525 (height) PNG
 #' file. If the trained images are generated differently, one can override
 #' this method using [bandicoot::register_method()].
 #'
 #' ## Usage
 #' ```
-#' AUTO_VI$save_plot(p)
+#' AUTO_VI$save_plot(p, path = NULL)
 #' ```
 #'
-#' @param p ggplot. A plot.
+#' @param p ggplot. A plot or a list of plots.
+#' @param path Character. Character. Path(s) to save the image.
+#'
 #' @return The image path.
 #'
 #' @examples

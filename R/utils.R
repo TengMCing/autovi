@@ -26,16 +26,16 @@ check_python_library_available <- function(lib_name) {
 
 # save_plot ---------------------------------------------------------------
 
-#' Save a plot
+#' Save plot(s)
 #'
-#' This function save a plot to a provided path.
+#' This function save a plot of a list of plots to provided path(s).
 #'
 #' @param p `ggplot`. A plot.
-#' @param path Character. Path to save the image.
+#' @param path Character. Path(s) to save the image.
 #' @param width Numeric. Width of the image.
 #' @param height Numeric. Height of the image.
 #' @param ... Other arguments passed to [ggplot2::ggsave()].
-#' @return The image path.
+#' @return The image path(s).
 #' @examples
 #' p <- ggplot2::ggplot(cars) + ggplot2::geom_point(ggplot2::aes(dist, speed))
 #' save_plot(p)
@@ -52,9 +52,14 @@ save_plot <- function(p,
     if (all(unlist(lapply(p, ggplot2::is.ggplot)))) {
 
       cli::cli_progress_bar("Saving images", total = length(p))
-      path <- list()
+
+      if (is.null(path)) {
+        path <- unlist(lapply(1:length(p), function(i) tempfile(fileext = ".png")))
+      }
+
+      if (length(path) != length(p)) stop("The number of paths does not match the number of plots provided!")
+
       for (i in 1:length(p)) {
-        path[[i]] <- tempfile(fileext = ".png")
         ggplot2::ggsave(path[[i]], plot = p[[i]], width = width, height = height, ...)
         cli::cli_progress_update()
       }
@@ -65,7 +70,9 @@ save_plot <- function(p,
   }
 
   # If a single plot provided
-  path <- tempfile(fileext = ".png")
+  if (is.null(path)) {
+    path <- tempfile(fileext = ".png")
+  }
   ggplot2::ggsave(path, plot = p, width = width, height = height, ...)
   return(path)
 }

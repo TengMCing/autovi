@@ -212,8 +212,8 @@ auxiliary_ <- function(data = self$get_fitted_and_resid()) {
 
 # save_plot ---------------------------------------------------------------
 
-  save_plot_ <- function(p) {
-    autovi::save_plot(p)
+  save_plot_ <- function(p, path = NULL) {
+    autovi::save_plot(p, path = path)
   }
 
 # vss ---------------------------------------------------------------------

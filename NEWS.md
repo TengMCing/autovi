@@ -17,6 +17,7 @@
 
 ## Bug Fix
 * Fix a bug in `AUTO_VI$vss()` that arguments will be passed incorrectly to `KERAS_WRAPPER$image_to_array()` when a `data.frame` or a `tibble` is provided by the user to predict visual signal strength.
+* Fix a bug in `save_plot()` where the `path` argument was not functioning as intended.. 
 
 # autovi 0.4.0
 

@@ -2,21 +2,23 @@
 % Please edit documentation in R/zzz_auto_visual_inference.R
 \name{AUTO_VI$save_plot}
 \alias{AUTO_VI$save_plot}
-\title{Save a plot}
+\title{Save plot(s)}
 \arguments{
-\item{p}{ggplot. A plot.}
+\item{p}{ggplot. A plot or a list of plots.}
+
+\item{path}{Character. Character. Path(s) to save the image.}
 }
 \value{
 The image path.
 }
 \description{
-This is the default method of saving a plot. It will use
+This is the default method of saving plot(s). It will use
 \code{\link[=save_plot]{save_plot()}} to save the ggplot to a 420 (width) * 525 (height) PNG
 file. If the trained images are generated differently, one can override
 this method using \code{\link[bandicoot:register_method]{bandicoot::register_method()}}.
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$save_plot(p)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{AUTO_VI$save_plot(p, path = NULL)
 }\if{html}{\out{</div>}}
 }
 }
