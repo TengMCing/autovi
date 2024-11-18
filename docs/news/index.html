@@ -63,7 +63,7 @@
 <li>
 <code>AUTO_VI$check()</code> and <code>AUTO_VI$lineup_check()</code> now returns <code>self</code> instead of <code>invisible(self)</code> to provide a visible summary of the check result.</li>
 <li>
-<code><a href="../reference/get_keras_model.html">get_keras_model()</a></code> now downloads models in the <code>TensorFlow</code> “SavedModel” format by default, rather than the <code>.keras</code> format. While this change may slow down the model loading process due to the larger file size, it ensures better backward compatibility with various Python and <code>TensorFlow</code> versions. User can still choose to download the <code>.keras</code> format by using the <code>format</code> argument.</li>
+<code><a href="../reference/get_keras_model.html">get_keras_model()</a></code> now have an option <code>format</code> to specify the format of the model to download, including “npz”, “SavedModel” and “keras”. The previous version of <code>autovi</code> downloads the pre-trained model in the “.keras”, which could cause backward compatibility issue due to difference in Python or <code>TensorFlow</code> versions. The “SavedModel” format can better handle this aspect but come with a larger file size so it may slow down the model loading process. The “npz” format is the most recommend one, as it will download a Python script to rebuild the model from scratch and load weights from a “.npz” file. This overcomes many of the issues mentioned above.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fix-0-4-1">Bug Fix<a class="anchor" aria-label="anchor" href="#bug-fix-0-4-1"></a></h3>
