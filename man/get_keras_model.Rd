@@ -4,22 +4,29 @@
 \alias{get_keras_model}
 \title{Download and load the keras model}
 \usage{
-get_keras_model(model_name, format = "SavedModel")
+get_keras_model(model_name, format = "npz")
 }
 \arguments{
 \item{model_name}{String. The model name. See also \code{\link[=list_keras_model]{list_keras_model()}}.}
 
 \item{format}{String. The model format to download.
-Either "SavedModel" or "keras".}
+Either "npz", "SavedModel" or "keras".}
 }
 \value{
 A keras model.
 }
 \description{
 This functions download the keras model from the \code{TengMCing/autovi_data}
-Github repo using \code{\link[=download.file]{download.file()}} and load the model using
-\code{reticulate::import("tensorflow")$keras$models$load_model}. Note that
-\code{tensorflow} version greater than 2.15 is not supported.
+Github repo using \code{\link[=download.file]{download.file()}} and load the model.
+}
+\details{
+Note that the "SavedModel" and "keras" formats are not supported in
+\code{tensorflow} versions above 2.15, as
+\code{reticulate::import("tensorflow")$keras$models$load_model} encounters issues
+when loading models saved with the Keras 2 API.
+Instead, using the "npz" format allows for rebuilding the model
+from scratch and loading the weights from a ".npz" file, offering a more
+reliable alternative.
 }
 \examples{
 keras_model <- try(get_keras_model("vss_phn_32"))
