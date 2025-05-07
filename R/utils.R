@@ -1,3 +1,12 @@
+# Re-export some bandicoot functions --------------------------------------
+
+#' @export
+#' @importFrom bandicoot new_class
+bandicoot::new_class
+
+#' @export
+#' @importFrom bandicoot register_method
+bandicoot::register_method
 
 # check_python_library_available ------------------------------------------
 
