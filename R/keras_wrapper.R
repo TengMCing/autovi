@@ -1,7 +1,7 @@
 class_KERAS_WRAPPER <- function(env = new.env(parent = parent.frame())) {
   self <- NULL
 
-  bandicoot::new_class(bandicoot::BASE, env = env, class_name = "KERAS_WRAPPER")
+  bandicoot::new_class(bandicoot::BASE, env = env, class_name = "KERAS_WRAPPER", doc_pkg = "autovi")
 
 
 # init --------------------------------------------------------------------

@@ -8,7 +8,7 @@ class_AUTO_VI <- function(env = new.env(parent = parent.frame())) {
   # Pass CMD check
   self <- PC1 <- PC2 <- NULL
 
-  bandicoot::new_class(bandicoot::BASE, env = env, class_name = "AUTO_VI")
+  bandicoot::new_class(bandicoot::BASE, env = env, class_name = "AUTO_VI", doc_pkg = "autovi")
 
   # A list for storing the result of `self$check()`.
   env$check_result <- list()
