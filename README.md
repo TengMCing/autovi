@@ -208,26 +208,26 @@ checker$boot_vss(20L,
 #> # A tibble: 20 × 1
 #>      vss
 #>    <dbl>
-#>  1  4.20
-#>  2  4.68
-#>  3  5.56
-#>  4  4.15
-#>  5  4.37
-#>  6  5.28
-#>  7  4.36
-#>  8  4.12
-#>  9  4.70
-#> 10  4.03
-#> 11  4.11
-#> 12  4.16
-#> 13  5.09
+#>  1  4.32
+#>  2  4.80
+#>  3  5.69
+#>  4  4.26
+#>  5  4.50
+#>  6  5.42
+#>  7  4.49
+#>  8  4.24
+#>  9  4.84
+#> 10  4.16
+#> 11  4.23
+#> 12  4.29
+#> 13  5.23
 #> 14  4.54
-#> 15  3.83
-#> 16  4.31
-#> 17  4.72
-#> 18  5.33
-#> 19  4.85
-#> 20  4.08
+#> 15  3.94
+#> 16  4.44
+#> 17  4.85
+#> 18  5.46
+#> 19  4.99
+#> 20  4.19
 ```
 
 To run a comprehensive check including the analysis of null residuals
@@ -244,6 +244,30 @@ checker$check(null_draws = 20L, boot_draws = 20L)
 #> ✔ Compute auxilary inputs.
 #> ✔ Predict visual signal strength for 20 images.
 #> ✔ Predict visual signal strength for 1 image.
+#> 
+#> ── <AUTO_VI object>
+#> Status:
+#>  - Fitted model: lm
+#>  - Keras model: (None, 32, 32, 3) + (None, 5) -> (None, 1)
+#>     - Output node index: 1
+#>  - Result:
+#>     - Observed visual signal strength: 4.461 (p-value = 0.04762)
+#>     - Null visual signal strength: [20 draws]
+#>        - Mean: 1.14
+#>        - Quantiles: 
+#>           ╔═════════════════════════════════════════════════╗
+#>           ║   25%    50%    75%    80%    90%    95%    99% ║
+#>           ║0.8896 1.0072 1.1204 1.2076 1.3012 1.5755 3.3615 ║
+#>           ╚═════════════════════════════════════════════════╝
+#>     - Bootstrapped visual signal strength: [20 draws]
+#>        - Mean: 4.537 (p-value = 0.04762)
+#>        - Quantiles: 
+#>           ╔══════════════════════════════════════════╗
+#>           ║  25%   50%   75%   80%   90%   95%   99% ║
+#>           ║4.210 4.457 4.921 5.037 5.294 5.318 5.409 ║
+#>           ╚══════════════════════════════════════════╝
+#>     - Likelihood ratio: 0.6794 (boot) / 4.626e-14 (null) = 1.469e+13
+#> ℹ See ?autovi::AUTO_VI for the documentation.
 ```
 
 The check result is stored in the `check_result` attribute. If you print
@@ -258,7 +282,7 @@ checker
 #>  - Keras model: (None, 32, 32, 3) + (None, 5) -> (None, 1)
 #>     - Output node index: 1
 #>  - Result:
-#>     - Observed visual signal strength: 4.461 (p-value = 0)
+#>     - Observed visual signal strength: 4.461 (p-value = 0.04762)
 #>     - Null visual signal strength: [20 draws]
 #>        - Mean: 1.14
 #>        - Quantiles: 
@@ -267,13 +291,14 @@ checker
 #>           ║0.8896 1.0072 1.1204 1.2076 1.3012 1.5755 3.3615 ║
 #>           ╚═════════════════════════════════════════════════╝
 #>     - Bootstrapped visual signal strength: [20 draws]
-#>        - Mean: 4.445 (p-value = 0)
+#>        - Mean: 4.537 (p-value = 0.04762)
 #>        - Quantiles: 
 #>           ╔══════════════════════════════════════════╗
 #>           ║  25%   50%   75%   80%   90%   95%   99% ║
-#>           ║4.162 4.395 4.789 4.905 5.185 5.292 5.293 ║
+#>           ║4.210 4.457 4.921 5.037 5.294 5.318 5.409 ║
 #>           ╚══════════════════════════════════════════╝
-#>     - Likelihood ratio: 0.7295 (boot) / 5.232e-14 (null) = 1.394e+13
+#>     - Likelihood ratio: 0.6794 (boot) / 4.626e-14 (null) = 1.469e+13
+#> ℹ See ?autovi::AUTO_VI for the documentation.
 ```
 
 A summary plot can be drawn with the `summary_plot()` method. The solid
@@ -351,36 +376,26 @@ To check all the available layer names, one can list them with the
 
 ``` r
 KERAS_WRAPPER$list_layer_name(keras_model)
-#>  [1] "input_1"                  "tf.__operators__.getitem"
-#>  [3] "tf.nn.bias_add"           "grey_scale"              
-#>  [5] "block1_conv1"             "batch_normalization"     
-#>  [7] "activation"               "block1_conv2"            
-#>  [9] "batch_normalization_1"    "activation_1"            
-#> [11] "block1_pool"              "dropout"                 
-#> [13] "block2_conv1"             "batch_normalization_2"   
-#> [15] "activation_2"             "block2_conv2"            
-#> [17] "batch_normalization_3"    "activation_3"            
-#> [19] "block2_pool"              "dropout_1"               
-#> [21] "block3_conv1"             "batch_normalization_4"   
-#> [23] "activation_4"             "block3_conv2"            
-#> [25] "batch_normalization_5"    "activation_5"            
-#> [27] "block3_conv3"             "batch_normalization_6"   
-#> [29] "activation_6"             "block3_pool"             
-#> [31] "dropout_2"                "block4_conv1"            
-#> [33] "batch_normalization_7"    "activation_7"            
-#> [35] "block4_conv2"             "batch_normalization_8"   
-#> [37] "activation_8"             "block4_conv3"            
-#> [39] "batch_normalization_9"    "activation_9"            
-#> [41] "block4_pool"              "dropout_3"               
-#> [43] "block5_conv1"             "batch_normalization_10"  
-#> [45] "activation_10"            "block5_conv2"            
-#> [47] "batch_normalization_11"   "activation_11"           
-#> [49] "block5_conv3"             "batch_normalization_12"  
-#> [51] "activation_12"            "block5_pool"             
-#> [53] "dropout_4"                "global_max_pooling2d"    
-#> [55] "additional_input"         "concatenate"             
-#> [57] "dense"                    "dropout_5"               
-#> [59] "activation_13"            "dense_1"
+#>  [1] "input_1"                "grey_scale"             "block1_conv1"          
+#>  [4] "batch_normalization"    "activation"             "block1_conv2"          
+#>  [7] "batch_normalization_1"  "activation_1"           "block1_pool"           
+#> [10] "dropout"                "block2_conv1"           "batch_normalization_2" 
+#> [13] "activation_2"           "block2_conv2"           "batch_normalization_3" 
+#> [16] "activation_3"           "block2_pool"            "dropout_1"             
+#> [19] "block3_conv1"           "batch_normalization_4"  "activation_4"          
+#> [22] "block3_conv2"           "batch_normalization_5"  "activation_5"          
+#> [25] "block3_conv3"           "batch_normalization_6"  "activation_6"          
+#> [28] "block3_pool"            "dropout_2"              "block4_conv1"          
+#> [31] "batch_normalization_7"  "activation_7"           "block4_conv2"          
+#> [34] "batch_normalization_8"  "activation_8"           "block4_conv3"          
+#> [37] "batch_normalization_9"  "activation_9"           "block4_pool"           
+#> [40] "dropout_3"              "block5_conv1"           "batch_normalization_10"
+#> [43] "activation_10"          "block5_conv2"           "batch_normalization_11"
+#> [46] "activation_11"          "block5_conv3"           "batch_normalization_12"
+#> [49] "activation_12"          "block5_pool"            "dropout_4"             
+#> [52] "global_max_pooling2d"   "additional_input"       "concatenate"           
+#> [55] "dense"                  "dropout_5"              "activation_13"         
+#> [58] "dense_1"
 ```
 
 While running the comprehensive check with the `check()` method, one can
@@ -397,6 +412,30 @@ checker$check(null_draws = 20L, boot_draws = 20L, extract_feature_from_layer = "
 #> ✔ Compute auxilary inputs.
 #> ✔ Predict visual signal strength for 20 images.
 #> ✔ Predict visual signal strength for 1 image.
+#> 
+#> ── <AUTO_VI object>
+#> Status:
+#>  - Fitted model: lm
+#>  - Keras model: (None, 32, 32, 3) + (None, 5) -> (None, 1)
+#>     - Output node index: 1
+#>  - Result:
+#>     - Observed visual signal strength: 4.461 (p-value = 0.04762)
+#>     - Null visual signal strength: [20 draws]
+#>        - Mean: 0.9429
+#>        - Quantiles: 
+#>           ╔═════════════════════════════════════════════════╗
+#>           ║   25%    50%    75%    80%    90%    95%    99% ║
+#>           ║0.7677 0.8874 1.0052 1.0308 1.1291 1.5355 1.7229 ║
+#>           ╚═════════════════════════════════════════════════╝
+#>     - Bootstrapped visual signal strength: [20 draws]
+#>        - Mean: 4.285 (p-value = 0.04762)
+#>        - Quantiles: 
+#>           ╔══════════════════════════════════════════╗
+#>           ║  25%   50%   75%   80%   90%   95%   99% ║
+#>           ║3.934 4.158 4.409 4.526 4.895 5.184 5.461 ║
+#>           ╚══════════════════════════════════════════╝
+#>     - Likelihood ratio: 0.5776 (boot) / 0 (null) = Extremely large
+#> ℹ See ?autovi::AUTO_VI for the documentation.
 ```
 
 The features are also stored in the `check_result` attribute.
